@@ -8,35 +8,60 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Playful Pause Design System - Joyful & Calming */
+    --background: 315 100% 98%;
+    --foreground: 240 8% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 240 8% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 240 8% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Joyful primary colors */
+    --primary: 280 85% 70%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 285 95% 85%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Soft secondary palette */
+    --secondary: 165 60% 88%;
+    --secondary-foreground: 165 25% 25%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Gentle muted tones */
+    --muted: 320 25% 96%;
+    --muted-foreground: 240 4% 46%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Playful accent colors */
+    --accent: 45 95% 85%;
+    --accent-foreground: 45 30% 20%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Joy colors */
+    --joy-mint: 165 85% 75%;
+    --joy-peach: 25 95% 85%;
+    --joy-lavender: 260 85% 85%;
+    --joy-sunshine: 55 95% 80%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --destructive: 0 75% 65%;
+    --destructive-foreground: 0 0% 100%;
 
-    --radius: 0.5rem;
+    --border: 320 15% 90%;
+    --input: 320 15% 94%;
+    --ring: 280 85% 70%;
+
+    --radius: 1rem;
+
+    /* Magical gradients */
+    --gradient-joy: linear-gradient(135deg, hsl(var(--joy-mint)), hsl(var(--joy-peach)));
+    --gradient-calm: linear-gradient(180deg, hsl(var(--joy-lavender)), hsl(var(--primary-glow)));
+    --gradient-sunshine: linear-gradient(45deg, hsl(var(--joy-sunshine)), hsl(var(--accent)));
+    
+    /* Gentle shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(var(--primary) / 0.15);
+    --shadow-glow: 0 0 30px hsl(var(--primary-glow) / 0.4);
+    
+    /* Smooth transitions */
+    --transition-gentle: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
