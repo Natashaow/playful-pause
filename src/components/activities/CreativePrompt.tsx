@@ -51,6 +51,8 @@ const SparkleDoodle = () => (
 
 export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
   const [context, setContext] = useState<string>("");
+  const [response, setResponse] = useState<string>("");
+  const [showContext, setShowContext] = useState<boolean>(false);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [animSeed, setAnimSeed] = useState(0);
 
@@ -59,9 +61,7 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved != null) setContext(saved);
-    } catch (_e) {
-      void _e;
-    }
+    } catch (_e) { void _e; }
   }, []);
 
   const personalized = useMemo(() => {
@@ -71,11 +71,8 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
   const saveContext = () => {
     try {
       localStorage.setItem(STORAGE_KEY, context);
-    } catch (_e) {
-      void _e;
-    }
+    } catch (_e) { void _e; }
     window.dispatchEvent(new CustomEvent("pp:userContextUpdated", { detail: { context } }));
-    // Refresh personalization by bumping key/animation and possibly new base
     setCurrentIdx((i) => i);
     setAnimSeed((s) => s + 1);
   };
@@ -83,9 +80,7 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
   const clearContext = () => {
     try {
       localStorage.removeItem(STORAGE_KEY);
-    } catch (_e) {
-      void _e;
-    }
+    } catch (_e) { void _e; }
     setContext("");
     window.dispatchEvent(new CustomEvent("pp:userContextUpdated", { detail: { context: "" } }));
     setCurrentIdx((i) => i);
@@ -100,9 +95,13 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
   const copyPrompt = async () => {
     try {
       await navigator.clipboard.writeText(personalized);
-    } catch (_e) {
-      void _e;
-    }
+    } catch (_e) { void _e; }
+  };
+
+  const copyResponse = async () => {
+    try {
+      await navigator.clipboard.writeText(response);
+    } catch (_e) { void _e; }
   };
 
   // Soft header band gradient
@@ -133,37 +132,64 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
             <p className="text-muted-foreground font-jakarta">Let your imagination wander for a few minutes</p>
           </div>
 
-          <div className="grid gap-4">
-            <label htmlFor="context" className="text-sm text-muted-foreground font-jakarta">Share a bit about what you enjoy or how you feel</label>
+          {/* Current prompt */}
+          <div className="mb-4">
+            <div key={animSeed} className="prompt-enter relative flex items-start gap-3">
+              <div className="text-primary mt-1"><SparkleDoodle /></div>
+              <p className="text-lg font-jakarta leading-relaxed text-foreground">
+                {personalized}
+              </p>
+            </div>
+          </div>
+
+          {/* Response box */}
+          <div className="grid gap-3">
+            <label htmlFor="response" className="text-sm text-muted-foreground font-jakarta">Your response</label>
             <Textarea
-              id="context"
-              rows={4}
-              aria-label="Your context"
-              placeholder="e.g., I love quiet mornings, plants, and soft pastel colors. Lately I feel a little overwhelmed but hopeful."
-              value={context}
-              onChange={(e) => setContext(e.target.value)}
+              id="response"
+              aria-label="Type your response to the prompt"
+              rows={6}
+              placeholder="Write, doodle ideas in words, or describe what you’d make…"
+              value={response}
+              onChange={(e) => setResponse(e.target.value)}
             />
-            <p className="text-xs text-muted-foreground font-jakarta">
-              Your text won’t be shown to anyone. It’s stored locally to suggest better prompts across the site.
-            </p>
+            <p className="text-xs text-muted-foreground font-jakarta">Your response isn’t sent anywhere.</p>
 
             <div className="flex flex-wrap gap-2">
-              <Button onClick={saveContext} className="px-4">Save & refresh prompts</Button>
-              <Button variant="secondary" onClick={clearContext}>Clear</Button>
               <Button variant="outline" onClick={newPrompt}>New prompt</Button>
-              <Button variant="outline" onClick={copyPrompt}>Copy</Button>
+              <Button variant="outline" onClick={copyPrompt}>Copy prompt</Button>
+              <Button variant="secondary" onClick={copyResponse}>Copy response</Button>
+              <Button onClick={() => setShowContext((v) => !v)} aria-expanded={showContext} aria-controls="personalize">
+                {showContext ? "Hide personalize" : "Personalize prompts"}
+              </Button>
             </div>
           </div>
         </div>
 
-        <div className="px-6 pb-8">
-          <div key={animSeed} className="prompt-enter relative flex items-start gap-3">
-            <div className="text-primary mt-1"><SparkleDoodle /></div>
-            <p className="text-lg font-jakarta leading-relaxed text-foreground">
-              {personalized}
-            </p>
+        {/* Optional personalization panel */}
+        {showContext && (
+          <div id="personalize" className="px-6 pb-6">
+            <div className="grid gap-3">
+              <label htmlFor="context" className="text-sm text-muted-foreground font-jakarta">Personal context (optional)</label>
+              <Textarea
+                id="context"
+                rows={3}
+                aria-label="Your personal context"
+                placeholder="e.g., I love quiet mornings, plants, and soft pastel colors. Lately I feel a little overwhelmed but hopeful."
+                value={context}
+                onChange={(e) => setContext(e.target.value)}
+              />
+              <p className="text-xs text-muted-foreground font-jakarta">
+                Your context won’t be shown to anyone. It’s stored locally to suggest better prompts across the site.
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+                <Button onClick={saveContext} className="px-4">Save & refresh prompts</Button>
+                <Button variant="secondary" onClick={clearContext}>Clear</Button>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </Card>
     </div>
   );
