@@ -4,14 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 const BASE_PROMPTS = [
-  "Draw five tiny shapes that feel like today. Now rearrange them into something unexpected.",
-  "Give a mundane object (like a spoon) a superpower. Describe or doodle its first mission.",
-  "Invent a new cloud type. What’s its name and what mood does it carry?",
-  "Design a postcard from a place that doesn’t exist but should.",
-  "Write a two‑line poem about a color you can’t quite name.",
-  "Turn your to‑do list into a constellation. What connects the stars?",
-  "Imagine a room where gravity works sideways. What’s on the walls?",
-  "Create a secret symbol for ‘I’m taking a tiny break’. Sketch or describe it.",
+  "Describe a tiny, imaginary place you'd visit if you could shrink to the size of a teacup.",
+  "Invent a weather forecast for a magical town (e.g., 'sprinkles of joy, occasional cloud of curiosity').",
+  "If your day were a small creature, what would it look like and what would it carry?",
+  "Name a color that doesn't exist yet and describe what it feels like.",
+  "Imagine a mini celebration happening on your desk right now — what's it for?",
+  "Turn a household object into a character. What's its secret talent?",
+  "Write a postcard from a dream you half-remember.",
+  "If calmness had a taste and a texture, what would it be?",
+  "Describe a cloud you'd keep in a jar and when you'd let it out.",
+  "What would the moon write to you if it could send letters?",
+  "Your favorite cup has a hidden superpower — what is it?",
+  "Invent a tiny festival only two people know about.",
+  "Turn a sound you love into a little visual scene.",
+  "Imagine a library of scents — what's the book you'd check out today?",
+  "Give a name and story to the shadow you see right now."
 ];
 
 const STORAGE_KEY = "pp_user_context";
@@ -89,6 +96,7 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
 
   const newPrompt = () => {
     setCurrentIdx((i) => pickNewIndex(i, BASE_PROMPTS.length));
+    setResponse(""); // Clear the response when switching prompts
     setAnimSeed((s) => s + 1);
   };
 
