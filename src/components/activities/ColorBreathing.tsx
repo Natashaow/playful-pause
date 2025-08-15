@@ -104,7 +104,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
 
       {!selected && (
         <>
-          <div className="text-center mb-8">
+          <div className="text-center mb-8 whimsy-letter">
             <h2 className="text-3xl font-recoleta font-bold mb-4 text-primary">What color makes you feel good right now?</h2>
             <p className="font-jakarta text-muted-foreground">Choose a color that speaks to your current mood</p>
           </div>
@@ -113,7 +113,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
             {COLORS.map((c) => (
               <Card
                 key={c.name}
-                className="p-4 cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 border-2 border-border hover:border-primary/50"
+                className="p-4 cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 border-2 border-border hover:border-primary/50 whimsy-doodle"
                 onClick={() => setSelected(c)}
                 aria-label={`Choose ${c.name}`}
                 role="button"
@@ -128,9 +128,9 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
 
       {selected && (
         <Card className="p-10 sm:p-12 text-center bg-card/70 backdrop-blur border-0 shadow-soft min-h-[60vh] flex flex-col items-center justify-center transition-opacity duration-500 ease-in-out">
-          <div className="relative mb-6">
+          <div className="relative mb-6 whimsy-doodle">
             <div
-              className="w-32 h-32 rounded-full mx-auto"
+              className="w-32 h-32 rounded-full mx-auto whimsy-loop-sway"
               aria-label="Breathing bubble"
               style={{
                 transform: bubbleTransform,
@@ -142,7 +142,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
             <div className="absolute inset-0 w-32 h-32 rounded-full border-2 border-primary/30 animate-pulse" />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 whimsy-letter">
             <h4 className="text-2xl font-recoleta font-semibold">
               {phase === "inhale" ? "Breathe In" : phase === "hold" ? "Hold" : "Breathe Out"}
             </h4>
