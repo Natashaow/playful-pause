@@ -273,12 +273,23 @@ export const WhimsyWishes: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         ← Back to Activities
       </Button>
 
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-recoleta font-bold mb-3 bg-gradient-sunshine bg-clip-text text-transparent">
-          Whimsy Wishes
-        </h2>
-        <p className="text-muted-foreground font-jakarta">Tiny, magical messages to soften your day</p>
-      </div>
+      <Card className="p-0 border-0 shadow-soft overflow-hidden mb-8">
+        <div className="relative p-6 text-center">
+          {/* Pastel radial glow band */}
+          <div 
+            aria-hidden 
+            className="absolute inset-x-0 top-0 -z-10 h-24" 
+            style={{
+              background: "radial-gradient(60% 60% at 50% 10%, rgba(255, 182, 193, 0.3) 0%, transparent 70%)",
+            }}
+          />
+          
+          <h2 className="text-3xl font-heading font-bold mb-3 bg-gradient-sunshine bg-clip-text text-transparent">
+            Whimsy Wishes
+          </h2>
+          <p className="text-muted-foreground font-sans">Tiny, magical messages to soften your day</p>
+        </div>
+      </Card>
 
       <Card className="p-8 border-0 shadow-soft relative overflow-hidden">
         <div aria-hidden className="absolute inset-0 -z-10" style={bgStyle} />
@@ -292,7 +303,7 @@ export const WhimsyWishes: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
           <div className="mx-auto max-w-xl whimsy-letter">
             <div className="rounded-xl bg-white/70 backdrop-blur px-5 py-4 shadow-soft border border-border">
-              <p className="text-lg md:text-xl leading-relaxed text-foreground font-jakarta" aria-live="polite">
+              <p className="text-lg md:text-xl leading-relaxed text-foreground font-sans" aria-live="polite">
                 {wish}
               </p>
             </div>

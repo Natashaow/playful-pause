@@ -144,8 +144,8 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
         <div className="relative p-6">
           <div aria-hidden className="absolute inset-x-0 top-0 -z-10" style={headerGlowStyle} />
           <div className="text-center mb-4">
-            <h2 className="text-3xl font-recoleta font-bold mb-2 text-primary">Creative Spark</h2>
-            <p className="text-muted-foreground font-jakarta">Let your imagination wander for a few minutes</p>
+            <h2 className="text-3xl font-heading font-bold mb-2 text-primary">Creative Spark</h2>
+            <p className="text-muted-foreground font-sans">Let your imagination wander for a few minutes</p>
           </div>
 
           {/* Current prompt with doodle */}
@@ -165,7 +165,7 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
 
           {/* Response box */}
           <div className="grid gap-3">
-            <label htmlFor="response" className="text-sm text-muted-foreground font-jakarta">Your response</label>
+            <label htmlFor="response" className="text-sm text-muted-foreground font-sans">Your response</label>
             <Textarea
               id="response"
               aria-label="Your response"
@@ -174,7 +174,7 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
               value={response}
               onChange={(e) => setResponse(e.target.value)}
             />
-            <p className="text-xs text-muted-foreground font-jakarta">Your response isn't sent anywhere.</p>
+            <p className="text-xs text-muted-foreground font-sans">Your response isn't sent anywhere.</p>
 
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" onClick={newPrompt}>New prompt</Button>
@@ -191,7 +191,7 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
         {showContext && (
           <div id="personalize" className="px-6 pb-6">
             <div className="grid gap-3">
-              <label htmlFor="context" className="text-sm text-muted-foreground font-jakarta">Personal context (optional)</label>
+              <label htmlFor="context" className="text-sm text-muted-foreground font-sans">Personal context (optional)</label>
               <Textarea
                 id="context"
                 rows={3}
@@ -200,7 +200,7 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
                 value={context}
                 onChange={(e) => setContext(e.target.value)}
               />
-              <p className="text-xs text-muted-foreground font-jakarta">
+              <p className="text-xs text-muted-foreground font-sans">
                 Your context won't be shown to anyone. It's stored locally to suggest better prompts across the site.
               </p>
 

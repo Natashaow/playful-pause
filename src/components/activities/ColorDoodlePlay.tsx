@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { IconPalette } from "@/components/doodles/Icons";
 
 // Palette (8 soft colors)
 const PALETTE = [
@@ -39,6 +40,7 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
   const [selectedColor, setSelectedColor] = useState<string>(PALETTE[0].value);
   const [stroke, setStroke] = useState<number>(5);
   const [softBackground, setSoftBackground] = useState<boolean>(true);
+  const [showTwinkles, setShowTwinkles] = useState<boolean>(false);
   const isDrawingRef = useRef<boolean>(false);
   const pointsRef = useRef<Array<{x:number;y:number;time:number}>>([]);
   const clearGlowTimeout = useRef<number | null>(null);
@@ -155,6 +157,11 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
     isDrawingRef.current = true;
     pointsRef.current = [];
 
+    // Show twinkles on first stroke
+    if (!showTwinkles) {
+      setShowTwinkles(true);
+    }
+
     // Start glow
     ctx.shadowBlur = Math.max(0, stroke * 0.9);
     ctx.shadowColor = hexToRgba(selectedColor, 0.35);
@@ -225,59 +232,75 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
     <div className="max-w-3xl mx-auto p-6">
       <Button onClick={onBack} variant="ghost" className="mb-6" aria-label="Back to Activities">← Back to Activities</Button>
 
-      <div className="mb-6">
-        <h2 className="text-3xl font-recoleta font-bold text-primary">Doodle Play</h2>
-        <p className="text-muted-foreground">Create playful doodles to relax your mind and spark creativity</p>
-      </div>
+      <Card className="p-0 border-0 shadow-soft overflow-hidden">
+        <div className="relative p-6">
+          {/* Pastel radial glow band */}
+          <div 
+            aria-hidden 
+            className="absolute inset-x-0 top-0 -z-10 h-24" 
+            style={{
+              background: "radial-gradient(60% 60% at 50% 10%, rgba(164, 234, 218, 0.3) 0%, transparent 70%)",
+            }}
+          />
+          
+          {/* Header with doodle */}
+          <div className="flex items-center gap-3 mb-6">
+            <IconPalette className="h-6 w-6 text-foreground/80 animate-float-slow" />
+            <div>
+              <h2 className="text-3xl font-heading font-bold text-primary">Doodle Play</h2>
+              <p className="font-sans text-muted-foreground">Create playful doodles to relax your mind and spark creativity</p>
+            </div>
+          </div>
 
-      <Card className="p-4 border-0 shadow-soft mb-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          {/* Colors */}
-          <div className="flex items-center gap-2 flex-wrap" aria-label="Choose color">
-            {PALETTE.map((c) => (
-              <button
-                key={c.name}
-                aria-label={`Color ${c.name}`}
-                onClick={() => setSelectedColor(c.value)}
-                className={`w-8 h-8 rounded-full ring-offset-2 transition-transform hover:scale-110 ${selectedColor === c.value ? 'ring-2 ring-primary shadow-glow' : ''}`}
-                style={{ backgroundColor: c.value }}
+          {/* Toolbar */}
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
+            {/* Colors */}
+            <div className="flex items-center gap-2 flex-wrap" aria-label="Choose color">
+              {PALETTE.map((c) => (
+                <button
+                  key={c.name}
+                  aria-label={`Color ${c.name}`}
+                  onClick={() => setSelectedColor(c.value)}
+                  className={`w-8 h-8 rounded-full ring-offset-2 transition-transform hover:scale-110 ${selectedColor === c.value ? 'ring-2 ring-primary shadow-glow' : ''}`}
+                  style={{ backgroundColor: c.value }}
+                />
+              ))}
+            </div>
+
+            {/* Stroke slider */}
+            <div className="flex items-center gap-3">
+              <label htmlFor="stroke" className="text-sm text-muted-foreground">Stroke</label>
+              <input
+                id="stroke"
+                aria-label="Stroke width"
+                type="range"
+                min={1}
+                max={10}
+                value={stroke}
+                onChange={(e) => setStroke(parseInt(e.target.value))}
+                className="w-40 accent-primary"
               />
-            ))}
-          </div>
+              <span className="text-sm tabular-nums w-6 text-center">{stroke}</span>
+            </div>
 
-          {/* Stroke slider */}
-          <div className="flex items-center gap-3">
-            <label htmlFor="stroke" className="text-sm text-muted-foreground">Stroke</label>
-            <input
-              id="stroke"
-              aria-label="Stroke width"
-              type="range"
-              min={1}
-              max={10}
-              value={stroke}
-              onChange={(e) => setStroke(parseInt(e.target.value))}
-              className="w-40 accent-primary"
-            />
-            <span className="text-sm tabular-nums w-6 text-center">{stroke}</span>
-          </div>
+            {/* Background toggle */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Background:</span>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                aria-pressed={softBackground}
+                onClick={() => setSoftBackground((v) => !v)}
+              >
+                {softBackground ? 'Soft' : 'Plain'}
+              </Button>
+            </div>
 
-          {/* Background toggle */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Background:</span>
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              aria-pressed={softBackground}
-              onClick={() => setSoftBackground((v) => !v)}
-            >
-              {softBackground ? 'Soft' : 'Plain'}
-            </Button>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button type="button" variant="outline" onClick={clearCanvas} aria-label="Clear canvas">Clear</Button>
-            <Button type="button" variant="default" onClick={savePng} aria-label="Save PNG">Save PNG</Button>
+            <div className="flex items-center gap-2">
+              <Button type="button" variant="outline" onClick={clearCanvas} aria-label="Clear canvas">Clear</Button>
+              <Button type="button" variant="default" onClick={savePng} aria-label="Save PNG">Save PNG</Button>
+            </div>
           </div>
         </div>
       </Card>
@@ -296,6 +319,14 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
             aria-label="Doodle canvas"
             role="img"
           />
+          
+          {/* Twinkles on first stroke */}
+          {showTwinkles && (
+            <>
+              <div className="absolute top-8 left-8 size-2 rounded-full bg-foreground/20 animate-twinkle" />
+              <div className="absolute top-12 right-12 size-1.5 rounded-full bg-foreground/20 animate-twinkle" />
+            </>
+          )}
         </div>
       </Card>
     </div>

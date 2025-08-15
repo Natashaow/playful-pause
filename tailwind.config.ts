@@ -135,6 +135,15 @@ export default {
 					'0%': { transform: 'translateY(6px)', opacity: '0' },
 					'100%': { transform: 'translateY(0)', opacity: '1' },
 				},
+				'breathe-scale': {
+					'0%': { transform: 'scale(1)' },
+					'50%': { transform: 'scale(1.5)' },
+					'100%': { transform: 'scale(1)' },
+				},
+				'ripple-soft': {
+					'0%': { opacity: '0.6', transform: 'scale(1)' },
+					'100%': { opacity: '0', transform: 'scale(1.6)' },
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
@@ -144,6 +153,8 @@ export default {
 				'float-slow': 'float-slow 4s ease-in-out infinite',
 				'twinkle': 'twinkle 2.2s ease-in-out infinite',
 				'card-pop': 'card-pop .45s ease-out both',
+				'breathe': 'breathe-scale 4s ease-in-out infinite',
+				'ripple-soft': 'ripple-soft 1600ms ease-out',
 			}
 		}
 	},

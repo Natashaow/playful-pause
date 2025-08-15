@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { IconBreath } from "@/components/doodles/Icons";
 
 const COLORS = [
   { name: "Sunshine", value: "#FFE66D" },
@@ -70,7 +71,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
       background:
         `radial-gradient(60% 60% at 50% 28%, ${base} ${strength}, transparent 80%), ` +
         `radial-gradient(70% 60% at 50% 100%, rgba(255,255,255,0.65) 0%, transparent 70%)`,
-      transition: "background 4s ease-in-out",
+      transition: "background 4s ease-out",
     } as React.CSSProperties;
   }, [selected, phase]);
 
@@ -105,15 +106,15 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
       {!selected && (
         <>
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-recoleta font-bold mb-4 text-primary">What color makes you feel good right now?</h2>
-            <p className="font-jakarta text-muted-foreground">Choose a color that speaks to your current mood</p>
+            <h2 className="text-3xl font-heading font-bold mb-4 text-primary">What color makes you feel good right now?</h2>
+            <p className="font-sans text-muted-foreground">Choose a color that speaks to your current mood</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             {COLORS.map((c) => (
               <Card
                 key={c.name}
-                className="p-4 cursor-pointer transition-all duration-300 ease-in-out hover:scale-105 border-2 border-border hover:border-primary/50"
+                className="p-4 cursor-pointer transition-all duration-300 ease-out hover:scale-105 border-2 border-border hover:border-primary/50"
                 onClick={() => setSelected(c)}
                 aria-label={`Choose ${c.name}`}
                 role="button"
@@ -127,35 +128,56 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
       )}
 
       {selected && (
-        <Card className="p-10 sm:p-12 text-center bg-card/70 backdrop-blur border-0 shadow-soft min-h-[60vh] flex flex-col items-center justify-center transition-opacity duration-500 ease-in-out">
-          <div className="relative mb-6">
-            <div
-              className="w-32 h-32 rounded-full mx-auto"
-              aria-label="Breathing bubble"
+        <Card className="p-0 border-0 shadow-soft overflow-hidden">
+          <div className="relative p-10 sm:p-12 text-center bg-white/70 backdrop-blur min-h-[60vh] flex flex-col items-center justify-center">
+            {/* Pastel radial glow band */}
+            <div 
+              aria-hidden 
+              className="absolute inset-x-0 top-0 -z-10 h-32" 
               style={{
-                transform: bubbleTransform,
-                transition: "transform 4s ease-in-out, box-shadow 0.6s ease-in-out",
-                background: `radial-gradient(circle at 40% 35%, ${selected.value} 0%, rgba(255,255,255,0.7) 70%)`,
-                boxShadow: bubbleShadow,
+                background: `radial-gradient(60% 60% at 50% 10%, ${selected.value}40 0%, transparent 70%)`,
               }}
             />
-            <div className="absolute inset-0 w-32 h-32 rounded-full border-2 border-primary/30 animate-pulse" />
-          </div>
+            
+            {/* Header with doodle */}
+            <div className="flex items-center justify-center gap-3 mb-8">
+              <IconBreath className="h-6 w-6 text-foreground/80 animate-float-slow" />
+              <h2 className="text-2xl font-heading font-semibold text-foreground">Color Breathing</h2>
+            </div>
 
-          <div className="space-y-2">
-            <h4 className="text-2xl font-recoleta font-semibold">
-              {phase === "inhale" ? "Breathe In" : phase === "hold" ? "Hold" : "Breathe Out"}
-            </h4>
-            <p className="text-4xl font-mono font-bold text-primary">{secondsLeft}</p>
-          </div>
+            <div className="relative mb-6">
+              {/* Breathing circle */}
+              <div
+                className="w-32 h-32 rounded-full mx-auto animate-breathe"
+                aria-label="Breathing bubble"
+                style={{
+                  background: `radial-gradient(circle at 40% 35%, ${selected.value} 0%, rgba(255,255,255,0.7) 70%)`,
+                  boxShadow: bubbleShadow,
+                }}
+              />
+              <div className="absolute inset-0 w-32 h-32 rounded-full border-2 border-primary/30 animate-pulse" />
+              
+              {/* Sparkles */}
+              <div className="absolute -top-2 -right-2 size-2 rounded-full bg-foreground/20 animate-twinkle" />
+              <div className="absolute top-4 -left-4 size-1.5 rounded-full bg-foreground/20 animate-twinkle" />
+              <div className="absolute bottom-2 right-4 size-1.5 rounded-full bg-foreground/20 animate-twinkle" />
+            </div>
 
-          <div className="flex items-center justify-center gap-3 mt-6">
-            <Button onClick={() => setRunning((r) => !r)} variant={running ? "secondary" : "default"} size="lg" className="px-8">
-              {running ? "Pause" : "Start"}
-            </Button>
-            <Button variant="ghost" onClick={resetPicker} aria-label="Pick another color">
-              Pick another color
-            </Button>
+            <div className="space-y-2">
+              <h4 className="text-2xl font-heading font-semibold animate-letter-in">
+                {phase === "inhale" ? "Breathe In" : phase === "hold" ? "Hold" : "Breathe Out"}
+              </h4>
+              <p className="text-4xl font-mono font-bold text-primary">{secondsLeft}</p>
+            </div>
+
+            <div className="flex items-center justify-center gap-3 mt-6">
+              <Button onClick={() => setRunning((r) => !r)} variant={running ? "secondary" : "default"} size="lg" className="px-8">
+                {running ? "Pause" : "Start"}
+              </Button>
+              <Button variant="ghost" onClick={resetPicker} aria-label="Pick another color">
+                Pick another color
+              </Button>
+            </div>
           </div>
         </Card>
       )}
