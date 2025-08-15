@@ -1,85 +1,168 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
-const prompts = [
-  "If you could have any superpower for just one day, what would you do with it?",
-  "Describe your perfect day using only words that start with the same letter",
-  "What would you tell your favorite childhood toy if you could talk to it now?",
-  "If colors had personalities, which color would be your best friend?",
-  "Create a new holiday - what would people celebrate and how?",
-  "If you could live inside any piece of art, which would you choose?",
-  "What kind of store would you open if money wasn't a concern?",
-  "If you were a character in a fairy tale, what would your story be?",
-  "Describe the most beautiful sound you can imagine",
-  "What would you build if you had infinite LEGOs?",
-  "If you could change one rule about the world, what would it be?",
-  "What would you name a pet dragon and where would you keep it?",
-  "If you could only communicate through drawings for a day, what would you draw first?",
-  "What magical ingredient would you add to cookies to make them special?",
-  "If you were tiny and could live anywhere in your house, where would you set up home?",
+const BASE_PROMPTS = [
+  "Draw five tiny shapes that feel like today. Now rearrange them into something unexpected.",
+  "Give a mundane object (like a spoon) a superpower. Describe or doodle its first mission.",
+  "Invent a new cloud type. What’s its name and what mood does it carry?",
+  "Design a postcard from a place that doesn’t exist but should.",
+  "Write a two‑line poem about a color you can’t quite name.",
+  "Turn your to‑do list into a constellation. What connects the stars?",
+  "Imagine a room where gravity works sideways. What’s on the walls?",
+  "Create a secret symbol for ‘I’m taking a tiny break’. Sketch or describe it.",
 ];
 
-export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
-  const [currentPrompt, setCurrentPrompt] = useState<string | null>(null);
-  const [isAnimating, setIsAnimating] = useState(false);
+const STORAGE_KEY = "pp_user_context";
 
-  const generatePrompt = () => {
-    setIsAnimating(true);
-    setTimeout(() => {
-      const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
-      setCurrentPrompt(randomPrompt);
-      setIsAnimating(false);
-    }, 300);
+function pickNewIndex(current: number, max: number) {
+  if (max <= 1) return 0;
+  let idx = Math.floor(Math.random() * max);
+  while (idx === current) idx = Math.floor(Math.random() * max);
+  return idx;
+}
+
+function personalizePrompt(base: string, context: string): string {
+  const ctx = (context || "").toLowerCase();
+  let tail = " Let the result stay small and satisfying on its own.";
+
+  if (/stress|overwhelm|anxious|anxiety|busy/.test(ctx)) {
+    tail = " Keep it gentle: soft lines, slow pacing, one calming color.";
+  } else if (/nature|tree|trees|ocean|sea|sky|garden|outdoor|woods/.test(ctx)) {
+    tail = " Bring nature in: leaves, clouds, or tiny waves as motifs.";
+  } else if (/work|deadline|meeting|project|study|school/.test(ctx)) {
+    tail = " Keep it bite‑sized: doable in under three minutes.";
+  } else if (/playful|play|fun|whimsy|whimsical/.test(ctx)) {
+    tail = " Add a playful twist: include a doodle character reacting.";
+  } else if (/calm|quiet|soft|rest|slow|soothe|soothing/.test(ctx)) {
+    tail = " Make it soothing: minimal shapes and soft gradients.";
+  }
+
+  return `${base} ${tail}`;
+}
+
+const SparkleDoodle = () => (
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+    <path d="M14 3l2.4 4.8L21 10l-4.6 2.2L14 17l-2.4-4.8L7 10l4.6-2.2L14 3z" fill="currentColor" opacity="0.9" />
+    <path d="M6 16l1.2 2.4L10 19l-2.3 1.1L6 22l-1.1-1.9L2 19l2.9-.6L6 16zM22 16l1.2 2.4 2.8.6-2.3 1.1L22 22l-1.1-1.9L18.6 19l2.8-.6L22 16z" fill="currentColor" opacity="0.6" />
+  </svg>
+);
+
+export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
+  const [context, setContext] = useState<string>("");
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [animSeed, setAnimSeed] = useState(0);
+
+  // Load saved context on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved != null) setContext(saved);
+    } catch (_e) {
+      void _e;
+    }
+  }, []);
+
+  const personalized = useMemo(() => {
+    return personalizePrompt(BASE_PROMPTS[currentIdx], context);
+  }, [currentIdx, context]);
+
+  const saveContext = () => {
+    try {
+      localStorage.setItem(STORAGE_KEY, context);
+    } catch (_e) {
+      void _e;
+    }
+    window.dispatchEvent(new CustomEvent("pp:userContextUpdated", { detail: { context } }));
+    // Refresh personalization by bumping key/animation and possibly new base
+    setCurrentIdx((i) => i);
+    setAnimSeed((s) => s + 1);
   };
+
+  const clearContext = () => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (_e) {
+      void _e;
+    }
+    setContext("");
+    window.dispatchEvent(new CustomEvent("pp:userContextUpdated", { detail: { context: "" } }));
+    setCurrentIdx((i) => i);
+    setAnimSeed((s) => s + 1);
+  };
+
+  const newPrompt = () => {
+    setCurrentIdx((i) => pickNewIndex(i, BASE_PROMPTS.length));
+    setAnimSeed((s) => s + 1);
+  };
+
+  const copyPrompt = async () => {
+    try {
+      await navigator.clipboard.writeText(personalized);
+    } catch (_e) {
+      void _e;
+    }
+  };
+
+  // Soft header band gradient
+  const headerGlowStyle = useMemo(() => ({
+    background:
+      "radial-gradient(60% 60% at 50% 10%, rgba(164, 234, 218, 0.55) 0%, transparent 70%)," +
+      "radial-gradient(60% 50% at 50% 100%, rgba(255, 240, 252, 0.55) 0%, transparent 60%)",
+    height: "96px",
+  }) as React.CSSProperties, []);
 
   return (
     <div className="max-w-2xl mx-auto p-6">
-      <Button onClick={onBack} variant="ghost" className="mb-6">
+      {/* Local animations */}
+      <style>{`
+        @keyframes prompt-fade-in { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: translateY(0) } }
+        .prompt-enter { animation: prompt-fade-in 420ms ease-out both }
+      `}</style>
+
+      <Button onClick={onBack} variant="ghost" className="mb-6" aria-label="Back to Activities">
         ← Back to Activities
       </Button>
 
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold mb-4 bg-gradient-joy bg-clip-text text-transparent">
-          Creative Spark
-        </h2>
-        <p className="text-muted-foreground">
-          Let your imagination run wild with these playful prompts
-        </p>
-      </div>
+      <Card className="p-0 border-0 shadow-soft overflow-hidden">
+        <div className="relative p-6">
+          <div aria-hidden className="absolute inset-x-0 top-0 -z-10" style={headerGlowStyle} />
+          <div className="text-center mb-4">
+            <h2 className="text-3xl font-recoleta font-bold mb-2 text-primary">Creative Spark</h2>
+            <p className="text-muted-foreground font-jakarta">Let your imagination wander for a few minutes</p>
+          </div>
 
-      <Card className="p-8 text-center bg-gradient-joy border-0 shadow-soft">
-        <div className="space-y-6">
-          {currentPrompt ? (
-            <div className={`transition-all duration-300 ${isAnimating ? "opacity-0 scale-95" : "opacity-100 scale-100"}`}>
-              <div className="text-4xl mb-6">🎨</div>
-              <p className="text-xl font-medium text-foreground leading-relaxed">
-                {currentPrompt}
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <div className="text-6xl">💭</div>
-              <p className="text-lg text-muted-foreground">
-                Ready to explore your imagination?
-              </p>
-            </div>
-          )}
-
-          <Button
-            onClick={generatePrompt}
-            size="lg"
-            className="px-8"
-            disabled={isAnimating}
-          >
-            {currentPrompt ? "Inspire Me Again! 🌟" : "Give Me A Prompt ✨"}
-          </Button>
-
-          {currentPrompt && (
-            <p className="text-sm text-muted-foreground mt-4">
-              Take your time with this one. There are no wrong answers - just let your creativity flow! 🎭
+          <div className="grid gap-4">
+            <label htmlFor="context" className="text-sm text-muted-foreground font-jakarta">Share a bit about what you enjoy or how you feel</label>
+            <Textarea
+              id="context"
+              rows={4}
+              aria-label="Your context"
+              placeholder="e.g., I love quiet mornings, plants, and soft pastel colors. Lately I feel a little overwhelmed but hopeful."
+              value={context}
+              onChange={(e) => setContext(e.target.value)}
+            />
+            <p className="text-xs text-muted-foreground font-jakarta">
+              Your text won’t be shown to anyone. It’s stored locally to suggest better prompts across the site.
             </p>
-          )}
+
+            <div className="flex flex-wrap gap-2">
+              <Button onClick={saveContext} className="px-4">Save & refresh prompts</Button>
+              <Button variant="secondary" onClick={clearContext}>Clear</Button>
+              <Button variant="outline" onClick={newPrompt}>New prompt</Button>
+              <Button variant="outline" onClick={copyPrompt}>Copy</Button>
+            </div>
+          </div>
+        </div>
+
+        <div className="px-6 pb-8">
+          <div key={animSeed} className="prompt-enter relative flex items-start gap-3">
+            <div className="text-primary mt-1"><SparkleDoodle /></div>
+            <p className="text-lg font-jakarta leading-relaxed text-foreground">
+              {personalized}
+            </p>
+          </div>
         </div>
       </Card>
     </div>
