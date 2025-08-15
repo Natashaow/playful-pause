@@ -128,9 +128,9 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
 
       {selected && (
         <Card className="p-10 sm:p-12 text-center bg-card/70 backdrop-blur border-0 shadow-soft min-h-[60vh] flex flex-col items-center justify-center transition-opacity duration-500 ease-in-out">
-          <div className="relative mb-6 whimsy-doodle">
+          <div className="relative mb-6">
             <div
-              className="w-32 h-32 rounded-full mx-auto whimsy-loop-sway"
+              className="w-32 h-32 rounded-full mx-auto"
               aria-label="Breathing bubble"
               style={{
                 transform: bubbleTransform,
