@@ -30,12 +30,15 @@ const Index = () => {
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12 space-y-4">
-          <div className="inline-block text-6xl mb-4 animate-bounce">✨</div>
-          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-joy bg-clip-text text-transparent">
+        <div className="text-center mb-12 space-y-6">
+          <div className="inline-block text-6xl mb-4 animate-bounce">🎈</div>
+          <h1 className="text-5xl md:text-6xl font-recoleta font-bold text-primary mb-4">
             Playful Pause
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="text-2xl font-jakarta font-medium text-primary/80 mb-6">
+            Where Whimsy Takes Flight
+          </p>
+          <p className="text-lg font-jakarta text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Quick, joyful distractions that refresh your mind and spirit in under 3 minutes. 
             No streaks, no pressure—just pure, simple joy.
           </p>
@@ -46,15 +49,15 @@ const Index = () => {
           <ActivityCard
             title="Color Your Mood"
             description="Choose colors that make you feel good right now and discover what they say about your energy"
-            icon="🌈"
+            icon="🎨"
             onClick={() => setCurrentActivity("colors")}
-            gradient="bg-gradient-joy"
+            gradient="bg-gradient-whimsy"
           />
           
           <ActivityCard
             title="Gentle Breathing"
             description="Follow a soothing visual guide for mindful breathing that calms your nervous system"
-            icon="🫁"
+            icon="☁️"
             onClick={() => setCurrentActivity("breathing")}
             gradient="bg-gradient-calm"
           />
@@ -62,17 +65,17 @@ const Index = () => {
           <ActivityCard
             title="Daily Kindness"
             description="Receive a heartfelt compliment designed to remind you of your wonderful qualities"
-            icon="💝"
+            icon="✨"
             onClick={() => setCurrentActivity("compliments")}
-            gradient="bg-gradient-sunshine"
+            gradient="bg-gradient-warm"
           />
           
           <ActivityCard
             title="Creative Spark"
             description="Get a delightful prompt to ignite your imagination and see the world from a fresh perspective"
-            icon="🎨"
+            icon="🌙"
             onClick={() => setCurrentActivity("creative")}
-            gradient="bg-gradient-joy"
+            gradient="bg-gradient-whimsy"
           />
         </div>
 
