@@ -6,8 +6,9 @@ import ColorBreathing from "@/components/activities/ColorBreathing";
 import { ColorDoodlePlay } from "@/components/activities/ColorDoodlePlay";
 import { ComplimentGenerator } from "@/components/activities/ComplimentGenerator";
 import { CreativePrompt } from "@/components/activities/CreativePrompt";
+import { WhimsyWishes } from "@/components/activities/WhimsyWishes";
 
-type Activity = "home" | "colorBreathing" | "doodlePlay" | "compliments" | "creative";
+type Activity = "home" | "colorBreathing" | "doodlePlay" | "compliments" | "creative" | "wishes";
 
 const Index = () => {
   const [currentActivity, setCurrentActivity] = useState<Activity>("home");
@@ -23,6 +24,9 @@ const Index = () => {
   }
   if (currentActivity === "creative") {
     return <CreativePrompt onBack={() => setCurrentActivity("home")} />;
+  }
+  if (currentActivity === "wishes") {
+    return <WhimsyWishes onBack={() => setCurrentActivity("home")} />;
   }
 
   return (
@@ -58,11 +62,11 @@ const Index = () => {
             gradient="bg-gradient-calm"
           />
           <ActivityCard
-            title="Daily Kindness"
-            description="Receive a heartfelt compliment designed to remind you of your wonderful qualities."
-            icon="💝"
-            onClick={() => setCurrentActivity("compliments")}
-            gradient="bg-gradient-warm"
+            title="Whimsy Wishes"
+            description="Tiny, magical messages to soften your day"
+            icon="✨"
+            onClick={() => setCurrentActivity("wishes")}
+            gradient="bg-gradient-sunshine"
           />
           <ActivityCard
             title="Creative Spark"
