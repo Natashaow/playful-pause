@@ -73,3 +73,5 @@ export const ColorMoodPicker = ({ onBack }: { onBack: () => void }) => {
     </div>
   );
 };
+
+export default ColorMoodPicker;

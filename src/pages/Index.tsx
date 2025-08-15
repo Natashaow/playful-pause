@@ -2,20 +2,20 @@ import { useState } from "react";
 import { ActivityCard } from "@/components/ActivityCard";
 
 // ✅ Activities
-import { ColorMoodPicker as ColorBreathing } from "@/components/activities/ColorBreathing";
-import ColorDoodlePlay from "@/components/activities/ColorDoodlePlay";
+import ColorBreathing from "@/components/activities/ColorBreathing";
+import { ColorDoodlePlay } from "@/components/activities/ColorDoodlePlay";
 import { ComplimentGenerator } from "@/components/activities/ComplimentGenerator";
 import { CreativePrompt } from "@/components/activities/CreativePrompt";
 
-type Activity = "home" | "colorbreathing" | "doodleplay" | "compliments" | "creative";
+type Activity = "home" | "colorBreathing" | "doodlePlay" | "compliments" | "creative";
 
 const Index = () => {
   const [currentActivity, setCurrentActivity] = useState<Activity>("home");
 
-  if (currentActivity === "colorbreathing") {
+  if (currentActivity === "colorBreathing") {
     return <ColorBreathing onBack={() => setCurrentActivity("home")} />;
   }
-  if (currentActivity === "doodleplay") {
+  if (currentActivity === "doodlePlay") {
     return <ColorDoodlePlay onBack={() => setCurrentActivity("home")} />;
   }
   if (currentActivity === "compliments") {
@@ -47,14 +47,14 @@ const Index = () => {
             title="Color Breathing"
             description="Pick a color, then breathe with it to calm your mind and let go of tension."
             icon="🌈"
-            onClick={() => setCurrentActivity("colorbreathing")}
+            onClick={() => setCurrentActivity("colorBreathing")}
             gradient="bg-gradient-joy"
           />
           <ActivityCard
             title="Doodle Play"
-            description="Express yourself freely with playful, calming doodles."
+            description="Create playful doodles to relax your mind and spark creativity"
             icon="✏️"
-            onClick={() => setCurrentActivity("doodleplay")}
+            onClick={() => setCurrentActivity("doodlePlay")}
             gradient="bg-gradient-calm"
           />
           <ActivityCard

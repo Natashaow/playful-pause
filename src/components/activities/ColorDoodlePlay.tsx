@@ -2,300 +2,302 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-/* --- Color options --- */
-const COLORS = [
-  { name: "Sunshine", value: "#FFE66D", emotion: "energized" },
-  { name: "Ocean", value: "#4ECDC4", emotion: "calm" },
-  { name: "Lavender", value: "#C7CEEA", emotion: "peaceful" },
-  { name: "Coral", value: "#FF6B6B", emotion: "passionate" },
-  { name: "Mint", value: "#95E1D3", emotion: "fresh" },
-  { name: "Peach", value: "#FFB4B4", emotion: "warm" },
-  { name: "Sky", value: "#A8E6CF", emotion: "hopeful" },
-  { name: "Rose", value: "#FFD93D", emotion: "joyful" },
+// Palette (8 soft colors)
+const PALETTE = [
+  { name: "Ocean", value: "#4ECDC4" },
+  { name: "Lavender", value: "#C7CEEA" },
+  { name: "Coral", value: "#FF6B6B" },
+  { name: "Mint", value: "#95E1D3" },
+  { name: "Peach", value: "#FFB4B4" },
+  { name: "Sky", value: "#A8E6CF" },
+  { name: "Rose", value: "#FFD93D" },
+  { name: "Bluebell", value: "#A0C4FF" },
 ] as const;
 
-type Chip = typeof COLORS[number];
-type Phase = "inhale" | "hold" | "exhale" | "hold2";
-type Mode = "let-go" | "invite-calm";
-type Pattern = { inhale: number; hold: number; exhale: number; hold2?: number };
-
-/* emotion → gentle pattern */
-function patternFor(emotion: string): Pattern {
-  switch (emotion) {
-    case "peaceful":   return { inhale: 4, hold: 4, exhale: 4, hold2: 4 };
-    case "calm":       return { inhale: 5, hold: 0, exhale: 5 };
-    case "energized":  return { inhale: 3, hold: 0, exhale: 3 };
-    case "passionate": return { inhale: 4, hold: 0, exhale: 6 };
-    case "fresh":      return { inhale: 5, hold: 0, exhale: 5 };
-    case "warm":       return { inhale: 4, hold: 0, exhale: 4 };
-    case "hopeful":    return { inhale: 4, hold: 0, exhale: 6 };
-    case "joyful":     return { inhale: 3, hold: 0, exhale: 4 };
-    default:           return { inhale: 4, hold: 0, exhale: 6 };
-  }
+function hexToRgba(hex: string, alpha: number) {
+  const clean = hex.replace('#', '');
+  const bigint = parseInt(clean, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-/* color personality → motion profile */
-function motionProfile(name: string) {
-  switch (name) {
-    case "Sunshine":
-    case "Peach":
-    case "Rose":
-      return { amp: 36, drift: { x: 6,  y: -20 } };
-    case "Ocean":
-    case "Mint":
-    case "Sky":
-      return { amp: 28, drift: { x: 18, y: -8 } };
-    case "Lavender":
-      return { amp: 24, drift: { x: 12, y: -12 } };
-    case "Coral":
-      return { amp: 32, drift: { x: 20, y: -18 } };
-    default:
-      return { amp: 28, drift: { x: 10, y: -10 } };
-  }
+function midpoint(a: {x:number;y:number}, b: {x:number;y:number}) {
+  return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
 }
 
-function transformForPhase(phase: Phase, profile: { amp: number; drift: { x: number; y: number } }) {
-  const { amp, drift } = profile;
-  if (phase === "inhale")   return `translate(${drift.x}px, ${drift.y - amp}px) scale(1.5)`;
-  if (phase === "hold" || phase === "hold2")
-                            return `translate(${Math.round(drift.x * 0.8)}px, ${Math.round(drift.y - amp * 0.9)}px) scale(1.5)`;
-  return "translate(0px, 0px) scale(1)";
+function jitter(amount: number) {
+  // tiny hand-drawn jitter
+  return (Math.random() - 0.5) * 2 * amount;
 }
 
-function nextPhase(p: Phase, pat: Pattern): Phase {
-  if (p === "inhale") return pat.hold ? "hold" : "exhale";
-  if (p === "hold")   return "exhale";
-  if (p === "exhale") return pat.hold2 ? "hold2" : "inhale";
-  if (p === "hold2")  return "inhale";
-  return "inhale";
-}
-function durationFor(p: Phase, pat: Pattern): number {
-  if (p === "inhale") return pat.inhale;
-  if (p === "hold")   return pat.hold || 0;
-  if (p === "exhale") return pat.exhale;
-  if (p === "hold2")  return pat.hold2 || 0;
-  return 4;
-}
+export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const dprRef = useRef<number>(1);
+  const [selectedColor, setSelectedColor] = useState<string>(PALETTE[0].value);
+  const [stroke, setStroke] = useState<number>(5);
+  const [softBackground, setSoftBackground] = useState<boolean>(true);
+  const isDrawingRef = useRef<boolean>(false);
+  const pointsRef = useRef<Array<{x:number;y:number;time:number}>>([]);
+  const clearGlowTimeout = useRef<number | null>(null);
 
-export const BreathingAnimation = ({ onBack }: { onBack: () => void }) => {
-  /* steps: color → prompt → breathe */
-  const [step, setStep] = useState<"color" | "prompt" | "breathe">("color");
-  const [selected, setSelected] = useState<Chip | null>(null);
-  const [mode, setMode] = useState<Mode>("let-go");
+  const canvasHeightCss = 420; // ~420px
 
-  // engine
-  const [running, setRunning] = useState(false);
-  const [phase, setPhase] = useState<Phase>("inhale");
-  const [seconds, setSeconds] = useState(0);
-  const [phaseDuration, setPhaseDuration] = useState(0);
-  const timerRef = useRef<number | null>(null);
+  const bgClass = useMemo(() => softBackground ? "bg-gradient-calm" : "bg-white", [softBackground]);
 
-  const pattern = useMemo(() => patternFor(selected?.emotion ?? "calm"), [selected]);
-
-  /* when entering breathe step */
+  // Setup canvas size, DPR-aware, and resize observer
   useEffect(() => {
-    if (step !== "breathe") return;
-    setPhase("inhale");
-    setSeconds(pattern.inhale);
-    setPhaseDuration(pattern.inhale);
-    setRunning(true);
-  }, [step, pattern]);
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
 
-  /* tick */
-  useEffect(() => {
-    if (!running) return;
-    timerRef.current = window.setInterval(() => {
-      setSeconds((t) => {
-        if (t > 1) return t - 1;
-        setPhase((p) => {
-          const nxt = nextPhase(p, pattern);
-          const nextDur = durationFor(nxt, pattern);
-          queueMicrotask(() => { setSeconds(nextDur); setPhaseDuration(nextDur); });
-          return nxt;
-        });
-        return 0;
-      });
-    }, 1000);
-    return () => { if (timerRef.current) window.clearInterval(timerRef.current); };
-  }, [running, pattern]);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-  /* keyboard: Space to start/pause on prompt/breathe; Esc back to color */
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === " ") {
-        e.preventDefault();
-        if (step === "prompt") { setStep("breathe"); return; }
-        if (step === "breathe") setRunning(r => !r);
+    const applySize = () => {
+      const rect = container.getBoundingClientRect();
+      const widthCss = Math.max(0, Math.floor(rect.width));
+      const heightCss = canvasHeightCss;
+      const dpr = Math.max(1, Math.floor(window.devicePixelRatio || 1));
+      dprRef.current = dpr;
+
+      canvas.style.width = `${widthCss}px`;
+      canvas.style.height = `${heightCss}px`;
+      const nextW = Math.max(1, Math.floor(widthCss * dpr));
+      const nextH = Math.max(1, Math.floor(heightCss * dpr));
+      if (canvas.width !== nextW || canvas.height !== nextH) {
+        // Optionally preserve drawing by copying to offscreen, but we keep it simple and clear
+        canvas.width = nextW;
+        canvas.height = nextH;
       }
-      if (e.key === "Escape") setStep("color");
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      // Clear to transparent; background handled by wrapper
+      ctx.clearRect(0, 0, widthCss, heightCss);
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [step]);
 
-  /* bg tint (soft) */
-  const bgStyle = useMemo(() => {
-    const base = selected?.value ?? "hsl(var(--background))";
-    const calm = "rgba(195,245,230,0.55)";
-    const strength = step === "breathe"
-      ? (phase === "inhale" ? "85%" : phase.includes("hold") ? "65%" : "45%")
-      : "60%";
-    return {
-      background:
-        `radial-gradient(60% 60% at 50% 28%, ${base} ${strength}, transparent 80%),` +
-        `radial-gradient(70% 60% at 50% 100%, ${calm} 0%, transparent 70%)`,
-      transition: "background 600ms ease",
-    } as React.CSSProperties;
-  }, [selected, phase, step]);
+    applySize();
 
-  const profile = motionProfile(selected?.name ?? "");
-  const bubbleTransform = step === "breathe"
-    ? transformForPhase(phase, profile)
-    : "translate(0px, 0px) scale(1)";
+    const ro = new ResizeObserver(() => {
+      applySize();
+    });
+    ro.observe(container);
 
-  /* —— RENDER —— */
+    return () => {
+      ro.disconnect();
+    };
+  }, []);
+
+  // Clear canvas
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+    const rect = canvas.getBoundingClientRect();
+    ctx.clearRect(0, 0, rect.width, canvasHeightCss);
+  };
+
+  // Save PNG (nice to have)
+  const savePng = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const dpr = dprRef.current;
+    const cssWidth = canvas.clientWidth;
+    const cssHeight = canvasHeightCss;
+    const pxW = Math.max(1, Math.floor(cssWidth * dpr));
+    const pxH = Math.max(1, Math.floor(cssHeight * dpr));
+
+    const off = document.createElement('canvas');
+    off.width = pxW;
+    off.height = pxH;
+    const octx = off.getContext('2d');
+    if (!octx) return;
+
+    // Background
+    if (softBackground) {
+      const grad = octx.createLinearGradient(0, 0, 0, pxH);
+      grad.addColorStop(0, '#f6fcff');
+      grad.addColorStop(1, '#fff7fb');
+      octx.fillStyle = grad;
+    } else {
+      octx.fillStyle = '#ffffff';
+    }
+    octx.fillRect(0, 0, pxW, pxH);
+
+    // Draw current canvas content
+    octx.drawImage(canvas, 0, 0);
+
+    const url = off.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'doodle.png';
+    a.click();
+  };
+
+  const getPos = (evt: React.PointerEvent<HTMLCanvasElement>) => {
+    const rect = (evt.target as HTMLCanvasElement).getBoundingClientRect();
+    const x = evt.clientX - rect.left;
+    const y = evt.clientY - rect.top;
+    return { x, y };
+  };
+
+  const beginStroke = (evt: React.PointerEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+
+    (evt.target as HTMLCanvasElement).setPointerCapture(evt.pointerId);
+
+    isDrawingRef.current = true;
+    pointsRef.current = [];
+
+    // Start glow
+    ctx.shadowBlur = Math.max(0, stroke * 0.9);
+    ctx.shadowColor = hexToRgba(selectedColor, 0.35);
+
+    const p = getPos(evt);
+    pointsRef.current.push({ ...p, time: performance.now() });
+  };
+
+  const drawSmooth = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+
+    const pts = pointsRef.current;
+    if (pts.length < 3) return;
+
+    const i = pts.length - 3;
+    const p0 = pts[i];
+    const p1 = pts[i + 1];
+    const p2 = pts[i + 2];
+
+    const m1 = midpoint(p0, p1);
+    const m2 = midpoint(p1, p2);
+
+    const jitterAmt = Math.min(1.2, 0.22 * stroke);
+    const widthJitter = 1 + (Math.random() - 0.5) * 0.12; // +/-6%
+
+    ctx.strokeStyle = selectedColor;
+    ctx.lineWidth = Math.max(1, stroke * widthJitter);
+
+    ctx.beginPath();
+    ctx.moveTo(m1.x, m1.y);
+    ctx.quadraticCurveTo(
+      p1.x + jitter(jitterAmt),
+      p1.y + jitter(jitterAmt),
+      m2.x,
+      m2.y
+    );
+    ctx.stroke();
+  };
+
+  const moveStroke = (evt: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!isDrawingRef.current) return;
+    const p = getPos(evt);
+    pointsRef.current.push({ ...p, time: performance.now() });
+    drawSmooth();
+  };
+
+  const endStroke = (evt: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!isDrawingRef.current) return;
+    isDrawingRef.current = false;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+
+    // Gentle glow fade
+    if (clearGlowTimeout.current) window.clearTimeout(clearGlowTimeout.current);
+    clearGlowTimeout.current = window.setTimeout(() => {
+      ctx.shadowBlur = 0;
+    }, 500);
+
+    pointsRef.current = [];
+    try { (evt.target as HTMLCanvasElement).releasePointerCapture(evt.pointerId); } catch (_e) { void _e; }
+  };
+
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <Button onClick={onBack} variant="ghost" className="mb-6">← Back to Activities</Button>
-      <div aria-hidden className="fixed inset-0 -z-10" style={bgStyle} />
+      <Button onClick={onBack} variant="ghost" className="mb-6" aria-label="Back to Activities">← Back to Activities</Button>
 
-      {/* STEP 1 — Color picker UI */}
-      {step === "color" && (
-        <>
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-heading mb-2 bg-gradient-joy bg-clip-text text-transparent">
-              What color makes you feel good right now?
-            </h2>
-            <p className="text-muted-foreground">Choose a color that speaks to your current mood.</p>
-          </div>
+      <div className="mb-6">
+        <h2 className="text-3xl font-recoleta font-bold text-primary">Doodle Play</h2>
+        <p className="text-muted-foreground">Create playful doodles to relax your mind and spark creativity</p>
+      </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-            {COLORS.map((c) => (
-              <Card
+      <Card className="p-4 border-0 shadow-soft mb-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          {/* Colors */}
+          <div className="flex items-center gap-2 flex-wrap" aria-label="Choose color">
+            {PALETTE.map((c) => (
+              <button
                 key={c.name}
-                className={`p-4 cursor-pointer transition-all duration-300 hover:scale-105 border-2 ${
-                  selected?.name === c.name ? "border-primary shadow-glow" : "border-border hover:border-primary/50"
-                }`}
-                onClick={() => setSelected(c)}
-              >
-                <div className="w-full h-16 rounded-lg mb-3 shadow-soft" style={{ backgroundColor: c.value }} />
-                <h3 className="font-semibold text-center text-sm">{c.name}</h3>
-              </Card>
+                aria-label={`Color ${c.name}`}
+                onClick={() => setSelectedColor(c.value)}
+                className={`w-8 h-8 rounded-full ring-offset-2 transition-transform hover:scale-110 ${selectedColor === c.value ? 'ring-2 ring-primary shadow-glow' : ''}`}
+                style={{ backgroundColor: c.value }}
+              />
             ))}
           </div>
 
-          {selected && (
-            <Card className="p-6 text-center bg-gradient-calm border-0 shadow-soft">
-              <div className="flex flex-col items-center gap-3">
-                <div className="w-16 h-16 rounded-full shadow-soft" style={{ backgroundColor: selected.value }} />
-                <h3 className="text-xl font-semibold">You chose {selected.name}!</h3>
-                <p className="text-muted-foreground">Perfect for feeling <span className="font-medium">{selected.emotion}</span>.</p>
-
-                {/* Ready prompt */}
-                <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-                  <ModeToggle mode={mode} onChange={setMode} />
-                  <Button size="lg" className="px-8" onClick={() => setStep("prompt")}>
-                    Continue
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          )}
-        </>
-      )}
-
-      {/* STEP 2 — Ready prompt (asks user to start breathing) */}
-      {step === "prompt" && selected && (
-        <Card className="p-10 sm:p-12 text-center bg-card/70 backdrop-blur border-0 shadow-soft min-h-[60vh] flex flex-col items-center justify-center">
-          <div className="relative mb-6">
-            <div
-              className="w-28 h-28 rounded-full transition-transform ease-gentle-custom"
-              style={{
-                transitionDuration: "1s",
-                transform: "translate(0,0) scale(1.1)",
-                background: `radial-gradient(circle at 40% 35%, ${selected.value} 0%, rgba(255,255,255,0.6) 70%)`,
-                boxShadow: "var(--shadow-soft)",
-              }}
+          {/* Stroke slider */}
+          <div className="flex items-center gap-3">
+            <label htmlFor="stroke" className="text-sm text-muted-foreground">Stroke</label>
+            <input
+              id="stroke"
+              aria-label="Stroke width"
+              type="range"
+              min={1}
+              max={10}
+              value={stroke}
+              onChange={(e) => setStroke(parseInt(e.target.value))}
+              className="w-40 accent-primary"
             />
+            <span className="text-sm tabular-nums w-6 text-center">{stroke}</span>
           </div>
-          <h3 className="text-2xl font-heading mb-2">When you’re ready…</h3>
-          <p className="text-muted-foreground">
-            Focus on <span className="font-medium">{selected.name}</span>.  
-            Inhale as the bubble grows, exhale as it returns.  
-            Press <kbd>Start</kbd> or hit <kbd>Space</kbd> to begin.
-          </p>
-          <div className="mt-6">
-            <Button size="lg" className="px-8" onClick={() => setStep("breathe")}>
-              Start
+
+          {/* Background toggle */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Background:</span>
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              aria-pressed={softBackground}
+              onClick={() => setSoftBackground((v) => !v)}
+            >
+              {softBackground ? 'Soft' : 'Plain'}
             </Button>
           </div>
-        </Card>
-      )}
 
-      {/* STEP 3 — Breathing animation */}
-      {step === "breathe" && selected && (
-        <Card className="p-10 sm:p-12 text-center bg-gradient-calm border-0 shadow-soft flex flex-col items-center justify-center min-h-[70vh]">
-          <div className="relative mx-auto mb-6 flex items-center justify-center">
-            <div
-              className="w-32 h-32 rounded-full transition-transform ease-gentle-custom"
-              style={{
-                transitionDuration: `${Math.max(0.9, phaseDuration)}s`,
-                transform: running ? bubbleTransform : "translate(0,0) scale(1)",
-                background: `radial-gradient(circle at 40% 35%, ${selected.value} 0%, rgba(255,255,255,0.6) 70%)`,
-                boxShadow: phase.includes("hold")
-                  ? "0 0 0 0 rgba(0,0,0,0.0), 0 6px 22px -6px rgba(0,0,0,0.12)"
-                  : "var(--shadow-soft)",
-              }}
-            />
-            <div className="absolute inset-0 w-32 h-32 rounded-full border-2 border-primary/30 animate-pulse" />
+          <div className="flex items-center gap-2">
+            <Button type="button" variant="outline" onClick={clearCanvas} aria-label="Clear canvas">Clear</Button>
+            <Button type="button" variant="default" onClick={savePng} aria-label="Save PNG">Save PNG</Button>
           </div>
+        </div>
+      </Card>
 
-          <div className="space-y-2">
-            <h4 className="text-2xl font-heading">
-              {phase === "inhale" ? "Breathe In" : phase.includes("hold") ? "Hold" : "Breathe Out"}
-            </h4>
-            <p className="text-4xl font-mono font-bold text-primary">{seconds}</p>
-          </div>
-
-          <div className="flex items-center justify-center gap-3 mt-6">
-            <Button onClick={() => setRunning((r) => !r)} variant={running ? "secondary" : "default"} size="lg" className="px-8">
-              {running ? "Pause" : "Start"}
-            </Button>
-            <Button variant="ghost" onClick={() => { setStep("color"); setRunning(false); }}>
-              Choose another color
-            </Button>
-            <Button variant="ghost" onClick={onBack}>Done</Button>
-          </div>
-
-          {!running && (
-            <p className="text-xs text-muted-foreground mt-4">
-              Tip: <kbd>Space</kbd> to pause/resume · <kbd>Esc</kbd> to go back
-            </p>
-          )}
-        </Card>
-      )}
+      {/* Canvas area */}
+      <Card className={`border-0 shadow-soft ${bgClass}`}>
+        <div ref={containerRef} className="relative w-full rounded-lg overflow-hidden">
+          <canvas
+            ref={canvasRef}
+            className="block w-full h-[420px] touch-none"
+            onPointerDown={beginStroke}
+            onPointerMove={moveStroke}
+            onPointerUp={endStroke}
+            onPointerCancel={endStroke}
+            onPointerLeave={endStroke}
+            aria-label="Doodle canvas"
+            role="img"
+          />
+        </div>
+      </Card>
     </div>
   );
 };
-
-/* small UI helpers */
-function ModeToggle({ mode, onChange }: { mode: Mode; onChange: (m: Mode) => void }) {
-  return (
-    <div className="inline-flex items-center gap-1 rounded-full bg-muted px-1 py-1">
-      <button
-        className={`px-3 py-1.5 rounded-full text-sm ${mode === "let-go" ? "bg-foreground text-background" : "opacity-80"}`}
-        onClick={() => onChange("let-go")}
-      >
-        Let it go
-      </button>
-      <button
-        className={`px-3 py-1.5 rounded-full text-sm ${mode === "invite-calm" ? "bg-foreground text-background" : "opacity-80"}`}
-        onClick={() => onChange("invite-calm")}
-      >
-        Invite calm
-      </button>
-    </div>
-  );
-}
-
-export default BreathingAnimation;
