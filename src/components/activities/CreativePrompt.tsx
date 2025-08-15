@@ -127,14 +127,14 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
       <Card className="p-0 border-0 shadow-soft overflow-hidden">
         <div className="relative p-6">
           <div aria-hidden className="absolute inset-x-0 top-0 -z-10" style={headerGlowStyle} />
-          <div className="text-center mb-4 whimsy-letter">
+          <div className="text-center mb-4">
             <h2 className="text-3xl font-recoleta font-bold mb-2 text-primary">Creative Spark</h2>
             <p className="text-muted-foreground font-jakarta">Let your imagination wander for a few minutes</p>
           </div>
 
           {/* Current prompt */}
           <div className="mb-4">
-            <div key={animSeed} className="prompt-enter relative flex items-start gap-3 whimsy-doodle">
+            <div key={animSeed} className="prompt-enter relative flex items-start gap-3">
               <div className="text-primary mt-1"><SparkleDoodle /></div>
               <p className="text-lg font-jakarta leading-relaxed text-foreground">
                 {personalized}

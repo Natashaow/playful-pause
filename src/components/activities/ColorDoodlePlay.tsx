@@ -225,12 +225,12 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
     <div className="max-w-3xl mx-auto p-6">
       <Button onClick={onBack} variant="ghost" className="mb-6" aria-label="Back to Activities">← Back to Activities</Button>
 
-      <div className="mb-6 whimsy-letter">
+      <div className="mb-6">
         <h2 className="text-3xl font-recoleta font-bold text-primary">Doodle Play</h2>
         <p className="text-muted-foreground">Create playful doodles to relax your mind and spark creativity</p>
       </div>
 
-      <Card className="p-4 border-0 shadow-soft mb-6 whimsy-doodle">
+      <Card className="p-4 border-0 shadow-soft mb-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           {/* Colors */}
           <div className="flex items-center gap-2 flex-wrap" aria-label="Choose color">
