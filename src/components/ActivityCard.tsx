@@ -20,8 +20,8 @@ export const ActivityCard = ({ title, description, icon, onClick, gradient }: Ac
           {icon}
         </div>
         <div>
-          <h3 className="text-xl font-semibold text-foreground mb-2">{title}</h3>
-          <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
+          <h3 className="text-xl font-recoleta font-semibold text-foreground mb-2">{title}</h3>
+          <p className="text-sm font-jakarta text-muted-foreground leading-relaxed">{description}</p>
         </div>
       </div>
     </Card>

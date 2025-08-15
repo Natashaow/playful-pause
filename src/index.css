@@ -8,38 +8,38 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Playful Pause Design System - Joyful & Calming */
-    --background: 315 100% 98%;
-    --foreground: 240 8% 15%;
+    /* Playful Pause Design System - Whimsical & Teal */
+    --background: 20 50% 96%;
+    --foreground: 180 25% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 240 8% 15%;
+    --card-foreground: 180 25% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 8% 15%;
+    --popover-foreground: 180 25% 15%;
 
-    /* Joyful primary colors */
-    --primary: 280 85% 70%;
+    /* Deep teal as grounding color */
+    --primary: 175 85% 35%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 285 95% 85%;
+    --primary-glow: 175 60% 65%;
 
-    /* Soft secondary palette */
-    --secondary: 165 60% 88%;
-    --secondary-foreground: 165 25% 25%;
+    /* Soft pastel secondary palette */
+    --secondary: 340 35% 85%;
+    --secondary-foreground: 175 25% 25%;
 
     /* Gentle muted tones */
-    --muted: 320 25% 96%;
-    --muted-foreground: 240 4% 46%;
+    --muted: 20 25% 94%;
+    --muted-foreground: 180 8% 46%;
 
-    /* Playful accent colors */
-    --accent: 45 95% 85%;
-    --accent-foreground: 45 30% 20%;
+    /* Whimsical accent colors */
+    --accent: 55 75% 78%;
+    --accent-foreground: 175 30% 20%;
 
-    /* Joy colors */
-    --joy-mint: 165 85% 75%;
-    --joy-peach: 25 95% 85%;
-    --joy-lavender: 260 85% 85%;
-    --joy-sunshine: 55 95% 80%;
+    /* Whimsy colors inspired by the image */
+    --whimsy-sage: 150 35% 70%;
+    --whimsy-blush: 340 45% 85%;
+    --whimsy-cream: 45 60% 88%;
+    --whimsy-lavender: 260 40% 85%;
 
     --destructive: 0 75% 65%;
     --destructive-foreground: 0 0% 100%;
@@ -50,10 +50,10 @@ All colors MUST be HSL.
 
     --radius: 1rem;
 
-    /* Magical gradients */
-    --gradient-joy: linear-gradient(135deg, hsl(var(--joy-mint)), hsl(var(--joy-peach)));
-    --gradient-calm: linear-gradient(180deg, hsl(var(--joy-lavender)), hsl(var(--primary-glow)));
-    --gradient-sunshine: linear-gradient(45deg, hsl(var(--joy-sunshine)), hsl(var(--accent)));
+    /* Whimsical gradients */
+    --gradient-whimsy: linear-gradient(135deg, hsl(var(--whimsy-sage)), hsl(var(--whimsy-blush)));
+    --gradient-calm: linear-gradient(180deg, hsl(var(--whimsy-lavender)), hsl(var(--primary-glow)));
+    --gradient-warm: linear-gradient(45deg, hsl(var(--whimsy-cream)), hsl(var(--accent)));
     
     /* Gentle shadows */
     --shadow-soft: 0 4px 20px -4px hsl(var(--primary) / 0.15);
