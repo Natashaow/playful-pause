@@ -53,11 +53,11 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				whimsy: {
-					sage: 'hsl(var(--whimsy-sage))',
-					blush: 'hsl(var(--whimsy-blush))',
-					cream: 'hsl(var(--whimsy-cream))',
-					lavender: 'hsl(var(--whimsy-lavender))'
+				joy: {
+					mint: 'hsl(var(--joy-mint))',
+					peach: 'hsl(var(--joy-peach))',
+					lavender: 'hsl(var(--joy-lavender))',
+					sunshine: 'hsl(var(--joy-sunshine))'
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
@@ -71,13 +71,9 @@ export default {
 				}
 			},
 			backgroundImage: {
-				'gradient-whimsy': 'var(--gradient-whimsy)',
+				'gradient-joy': 'var(--gradient-joy)',
 				'gradient-calm': 'var(--gradient-calm)',
-				'gradient-warm': 'var(--gradient-warm)'
-			},
-			fontFamily: {
-				'recoleta': ['Recoleta', 'serif'],
-				'jakarta': ['Plus Jakarta Sans', 'sans-serif'],
+				'gradient-sunshine': 'var(--gradient-sunshine)'
 			},
 			boxShadow: {
 				'soft': 'var(--shadow-soft)',
