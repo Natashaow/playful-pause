@@ -74,11 +74,15 @@ export default {
 			backgroundImage: {
 				'gradient-whimsy': 'var(--gradient-whimsy)',
 				'gradient-calm': 'var(--gradient-calm)',
-				'gradient-warm': 'var(--gradient-warm)'
+				'gradient-warm': 'var(--gradient-warm)',
+				'gradient-joy': 'var(--gradient-joy)',
+				'gradient-sunshine': 'var(--gradient-sunshine)'
 			},
 			fontFamily: {
 				'recoleta': ['Recoleta', 'serif'],
 				'jakarta': ['Plus Jakarta Sans', 'sans-serif'],
+				'heading': ['Recoleta', 'serif'],
+				'sans': ['Plus Jakarta Sans', 'sans-serif'],
 			},
 			boxShadow: {
 				'soft': 'var(--shadow-soft)',
@@ -127,6 +131,10 @@ export default {
 					'0%,100%': { opacity: '0' },
 					'50%':     { opacity: '1' },
 				},
+				'card-pop': {
+					'0%': { transform: 'translateY(6px)', opacity: '0' },
+					'100%': { transform: 'translateY(0)', opacity: '1' },
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
@@ -135,6 +143,7 @@ export default {
 				'rise-fade': 'rise-fade 500ms ease-out both',
 				'float-slow': 'float-slow 4s ease-in-out infinite',
 				'twinkle': 'twinkle 2.2s ease-in-out infinite',
+				'card-pop': 'card-pop .45s ease-out both',
 			}
 		}
 	},

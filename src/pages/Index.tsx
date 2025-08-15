@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ActivityCard } from "@/components/ActivityCard";
+import ActivityCard from "@/components/ActivityCard";
+import { IconRainbow, IconBreath, IconHeartStar, IconPalette } from "@/components/doodles/Icons";
 
 // ✅ Activities
 import ColorBreathing from "@/components/activities/ColorBreathing";
@@ -7,15 +8,7 @@ import { ColorDoodlePlay } from "@/components/activities/ColorDoodlePlay";
 import { WhimsyWishes } from "@/components/activities/ComplimentGenerator";
 import { CreativePrompt } from "@/components/activities/CreativePrompt";
 
-// Simple inline doodle icon for card (matches style, no emojis)
-const SparkleIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M14 3l2.4 4.8L21 10l-4.6 2.2L14 17l-2.4-4.8L7 10l4.6-2.2L14 3z" fill="currentColor" opacity="0.9" />
-    <path d="M6 16l1.2 2.4L10 19l-2.3 1.1L6 22l-1.1-1.9L2 19l2.9-.6L6 16zM22 16l1.2 2.4 2.8.6-2.3 1.1L22 22l-1.1-1.9L18.6 19l2.8-.6L22 16z" fill="currentColor" opacity="0.6" />
-  </svg>
-);
-
-type Activity = "home" | "colorBreathing" | "doodlePlay" | "creative" | "wishes";
+type Activity = "home" | "colorBreathing" | "doodlePlay" | "compliments" | "creative";
 
 const Index = () => {
   const [currentActivity, setCurrentActivity] = useState<Activity>("home");
@@ -29,65 +22,105 @@ const Index = () => {
   if (currentActivity === "creative") {
     return <CreativePrompt onBack={() => setCurrentActivity("home")} />;
   }
-  if (currentActivity === "wishes") {
+  if (currentActivity === "compliments") {
     return <WhimsyWishes onBack={() => setCurrentActivity("home")} />;
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12 space-y-6">
-          <div className="inline-block text-6xl mb-4 animate-bounce">🎈</div>
-          <h1 className="text-5xl md:text-6xl font-recoleta font-bold text-primary mb-4">
-            Playful Pause
-          </h1>
-          <p className="text-2xl font-jakarta font-medium text-primary/80 mb-6">
-            Where Whimsy Takes Flight
-          </p>
-          <p className="text-lg font-jakarta text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Quick, joyful distractions that refresh your mind and spirit in under 3 minutes. 
-            No streaks, no pressure—just pure, simple joy.
-          </p>
-        </div>
+    <div className="min-h-screen text-foreground">
+      {/* Pastel gradient backdrop */}
+      <div
+        className="pointer-events-none fixed inset-0 -z-10"
+        style={{
+          background:
+            "radial-gradient(60% 50% at 20% 10%, hsla(45,95%,90%,0.9) 0%, transparent 65%)," +
+            "radial-gradient(55% 45% at 85% 0%, hsla(165,80%,85%,0.85) 0%, transparent 70%)," +
+            "radial-gradient(70% 60% at 40% 90%, hsla(260,65%,87%,0.8) 0%, transparent 75%)",
+          filter: "saturate(105%)",
+        }}
+      />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <ActivityCard
-            title="Color Breathing"
-            description="Pick a color, then breathe with it to calm your mind and let go of tension."
-            icon="🌈"
-            onClick={() => setCurrentActivity("colorBreathing")}
-            gradient="bg-gradient-joy"
-          />
-          <ActivityCard
-            title="Doodle Play"
-            description="Create playful doodles to relax your mind and spark creativity"
-            icon="✏️"
-            onClick={() => setCurrentActivity("doodlePlay")}
-            gradient="bg-gradient-calm"
-          />
-          <ActivityCard
-            title="Whimsy Wishes"
-            description="Tiny, magical messages to soften your day"
-            icon={<SparkleIcon />}
-            onClick={() => setCurrentActivity("wishes")}
-            gradient="bg-gradient-sunshine"
-          />
-          <ActivityCard
-            title="Creative Spark"
-            description="Get a delightful prompt to ignite your imagination and see the world from a fresh perspective."
-            icon="🎨"
-            onClick={() => setCurrentActivity("creative")}
-            gradient="bg-gradient-whimsy"
-          />
+      {/* Header */}
+      <header className="px-5 sm:px-6 lg:px-8 pt-6">
+        <div className="mx-auto max-w-6xl flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="size-9 rounded-xl bg-white/80 ring-1 ring-white/60 flex items-center justify-center">
+              {/* simple mark: play+pause glyph if you have it; keeping a dot for now */}
+              <span className="block size-2 rounded-full bg-foreground/80" />
+            </div>
+            <span className="font-recoleta text-xl">Playful Pause</span>
+          </div>
+          {/* Optional CTA */}
+          <a href="#"
+             className="hidden sm:inline-flex items-center rounded-full bg-foreground px-4 py-2 font-jakarta text-sm font-semibold text-white/95 shadow-sm hover:opacity-95">
+            Start a pause
+          </a>
         </div>
+      </header>
 
-        <div className="text-center mt-16 space-y-2">
-          <p className="text-sm text-muted-foreground">
-            Take as many pauses as you need. You deserve moments of joy.
+      {/* Title block */}
+      <section className="px-5 sm:px-6 lg:px-8 mt-10">
+        <div className="mx-auto max-w-3xl text-center">
+          <div className="inline-block mb-3 text-foreground/70 animate-float-slow">✧</div>
+          <h1 className="font-recoleta text-4xl sm:text-5xl tracking-tight">Whimsical takes flight</h1>
+          <p className="mt-3 font-jakarta text-[15.5px] text-foreground/70">
+            Tiny, joyful pauses — illustration-first, no pressure, just lighthearted calm.
           </p>
-          <div className="text-2xl">🌸</div>
         </div>
-      </div>
+      </section>
+
+      {/* Activity Grid */}
+      <section className="px-5 sm:px-6 lg:px-8 pb-16 pt-10">
+        <div className="mx-auto max-w-5xl grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="animate-card-pop [animation-delay:20ms]">
+            <ActivityCard
+              title="Color Breathing"
+              description="Pick a color, breathe with it, and let a small calm settle in."
+              onClick={() => setCurrentActivity("colorBreathing")}
+              gradient="bg-gradient-joy"
+              doodle={<IconRainbow className="h-6 w-6" />}
+            />
+          </div>
+
+          <div className="animate-card-pop [animation-delay:60ms]">
+            <ActivityCard
+              title="Doodle Play"
+              description="Free-draw tiny shapes and watch them happily come alive."
+              onClick={() => setCurrentActivity("doodlePlay")}
+              gradient="bg-gradient-calm"
+              doodle={<IconPalette className="h-6 w-6" />}
+            />
+          </div>
+
+          <div className="animate-card-pop [animation-delay:100ms]">
+            <ActivityCard
+              title="Whimsy Wishes"
+              description="Receive a small, kind wish with a gentle animated doodle."
+              onClick={() => setCurrentActivity("compliments")}
+              gradient="bg-gradient-sunshine"
+              doodle={<IconHeartStar className="h-6 w-6" />}
+            />
+          </div>
+
+          <div className="animate-card-pop [animation-delay:140ms]">
+            <ActivityCard
+              title="Creative Spark"
+              description="A quiet writing prompt for playful imagination."
+              onClick={() => setCurrentActivity("creative")}
+              gradient="bg-gradient-joy"
+              doodle={<IconBreath className="h-6 w-6" />}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="pb-10">
+        <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8 flex flex-col items-center gap-3 text-foreground/65">
+          <p className="font-jakarta text-sm">Take as many pauses as you need. You deserve moments of joy.</p>
+          <div className="text-base">🌸</div>
+        </div>
+      </footer>
     </div>
   );
 };

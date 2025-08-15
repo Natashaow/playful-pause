@@ -54,6 +54,8 @@ All colors MUST be HSL.
     --gradient-whimsy: linear-gradient(135deg, hsl(var(--whimsy-sage)), hsl(var(--whimsy-blush)));
     --gradient-calm: linear-gradient(180deg, hsl(var(--whimsy-lavender)), hsl(var(--primary-glow)));
     --gradient-warm: linear-gradient(45deg, hsl(var(--whimsy-cream)), hsl(var(--accent)));
+    --gradient-joy: linear-gradient(135deg, hsl(var(--whimsy-cream)), hsl(var(--accent)));
+    --gradient-sunshine: linear-gradient(45deg, hsl(var(--whimsy-blush)), hsl(var(--primary-glow)));
     
     /* Gentle shadows */
     --shadow-soft: 0 4px 20px -4px hsl(var(--primary) / 0.15);
