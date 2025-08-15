@@ -4,11 +4,18 @@ import { ActivityCard } from "@/components/ActivityCard";
 // ✅ Activities
 import ColorBreathing from "@/components/activities/ColorBreathing";
 import { ColorDoodlePlay } from "@/components/activities/ColorDoodlePlay";
-import { ComplimentGenerator } from "@/components/activities/ComplimentGenerator";
+import { WhimsyWishes } from "@/components/activities/ComplimentGenerator";
 import { CreativePrompt } from "@/components/activities/CreativePrompt";
-import { WhimsyWishes } from "@/components/activities/WhimsyWishes";
 
-type Activity = "home" | "colorBreathing" | "doodlePlay" | "compliments" | "creative" | "wishes";
+// Simple inline doodle icon for card (matches style, no emojis)
+const SparkleIcon = () => (
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14 3l2.4 4.8L21 10l-4.6 2.2L14 17l-2.4-4.8L7 10l4.6-2.2L14 3z" fill="currentColor" opacity="0.9" />
+    <path d="M6 16l1.2 2.4L10 19l-2.3 1.1L6 22l-1.1-1.9L2 19l2.9-.6L6 16zM22 16l1.2 2.4 2.8.6-2.3 1.1L22 22l-1.1-1.9L18.6 19l2.8-.6L22 16z" fill="currentColor" opacity="0.6" />
+  </svg>
+);
+
+type Activity = "home" | "colorBreathing" | "doodlePlay" | "creative" | "wishes";
 
 const Index = () => {
   const [currentActivity, setCurrentActivity] = useState<Activity>("home");
@@ -18,9 +25,6 @@ const Index = () => {
   }
   if (currentActivity === "doodlePlay") {
     return <ColorDoodlePlay onBack={() => setCurrentActivity("home")} />;
-  }
-  if (currentActivity === "compliments") {
-    return <ComplimentGenerator onBack={() => setCurrentActivity("home")} />;
   }
   if (currentActivity === "creative") {
     return <CreativePrompt onBack={() => setCurrentActivity("home")} />;
@@ -64,7 +68,7 @@ const Index = () => {
           <ActivityCard
             title="Whimsy Wishes"
             description="Tiny, magical messages to soften your day"
-            icon="✨"
+            icon={<SparkleIcon />}
             onClick={() => setCurrentActivity("wishes")}
             gradient="bg-gradient-sunshine"
           />
