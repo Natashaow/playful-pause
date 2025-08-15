@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-const BASE_PROMPTS = [
+const PROMPTS = [
   "Describe a tiny, imaginary place you'd visit if you could shrink to the size of a teacup.",
   "Invent a weather forecast for a magical town (e.g., 'sprinkles of joy, occasional cloud of curiosity').",
   "If your day were a small creature, what would it look like and what would it carry?",
@@ -23,45 +23,65 @@ const BASE_PROMPTS = [
 
 const STORAGE_KEY = "pp_user_context";
 
-function pickNewIndex(current: number, max: number) {
-  if (max <= 1) return 0;
-  let idx = Math.floor(Math.random() * max);
-  while (idx === current) idx = Math.floor(Math.random() * max);
-  return idx;
-}
+type DoodleKind = 'letter' | 'cloud' | 'star' | 'sprout';
 
-function personalizePrompt(base: string, context: string): string {
-  const ctx = (context || "").toLowerCase();
-  let tail = " Let the result stay small and satisfying on its own.";
+const Doodle: React.FC<{ kind: DoodleKind; className?: string }> = ({ kind, className }) => {
+  const stroke = 'hsl(var(--foreground) / 0.6)';
+  const fill   = 'hsl(var(--accent))';
 
-  if (/stress|overwhelm|anxious|anxiety|busy/.test(ctx)) {
-    tail = " Keep it gentle: soft lines, slow pacing, one calming color.";
-  } else if (/nature|tree|trees|ocean|sea|sky|garden|outdoor|woods/.test(ctx)) {
-    tail = " Bring nature in: leaves, clouds, or tiny waves as motifs.";
-  } else if (/work|deadline|meeting|project|study|school/.test(ctx)) {
-    tail = " Keep it bite‑sized: doable in under three minutes.";
-  } else if (/playful|play|fun|whimsy|whimsical/.test(ctx)) {
-    tail = " Add a playful twist: include a doodle character reacting.";
-  } else if (/calm|quiet|soft|rest|slow|soothe|soothing/.test(ctx)) {
-    tail = " Make it soothing: minimal shapes and soft gradients.";
+  if (kind === 'letter') {
+    return (
+      <svg viewBox="0 0 64 48" className={className} aria-hidden>
+        <rect x="6" y="10" width="52" height="30" rx="6" fill="white" stroke={stroke} strokeWidth="2" />
+        <path d="M8 12l24 16L56 12" fill="none" stroke={stroke} strokeWidth="2" />
+        <circle cx="50" cy="22" r="2" fill={fill} />
+      </svg>
+    );
   }
+  if (kind === 'cloud') {
+    return (
+      <svg viewBox="0 0 72 40" className={className} aria-hidden>
+        <ellipse cx="28" cy="22" rx="18" ry="12" fill="white" stroke={stroke} strokeWidth="2"/>
+        <ellipse cx="44" cy="20" rx="14" ry="10" fill="white" stroke={stroke} strokeWidth="2"/>
+        <circle cx="22" cy="18" r="2" fill={stroke} />
+        <circle cx="30" cy="18" r="2" fill={stroke} />
+        <path d="M24 24c4 2 8 2 12 0" stroke={stroke} strokeWidth="2" strokeLinecap="round" fill="none"/>
+      </svg>
+    );
+  }
+  if (kind === 'star') {
+    return (
+      <svg viewBox="0 0 40 40" className={className} aria-hidden>
+        <path d="M20 4l3.6 7.8 8.6.9-6.3 5.7 1.8 8.4L20 22.8 12.3 27l1.8-8.4-6.3-5.7 8.6-.9L20 4z"
+              fill="white" stroke={stroke} strokeWidth="2"/>
+      </svg>
+    );
+  }
+  // sprout
+  return (
+    <svg viewBox="0 0 48 48" className={className} aria-hidden>
+      <path d="M24 40V24" stroke={stroke} strokeWidth="2" strokeLinecap="round"/>
+      <path d="M24 24c-4-8-12-8-16-6 6 2 8 8 10 10 2-2 4-4 6-4z" fill="white" stroke={stroke} strokeWidth="2"/>
+      <path d="M24 24c4-8 12-8 16-6-6 2-8 8-10 10-2-2-4-4-6-4z" fill="white" stroke={stroke} strokeWidth="2"/>
+    </svg>
+  );
+};
 
-  return `${base} ${tail}`;
+function pickDoodleFor(text: string): DoodleKind {
+  const t = text.toLowerCase();
+  if (t.includes('letter') || t.includes('postcard') || t.includes('write')) return 'letter';
+  if (t.includes('cloud') || t.includes('sky') || t.includes('weather'))   return 'cloud';
+  if (t.includes('festival') || t.includes('celebration') || t.includes('star')) return 'star';
+  return 'sprout';
 }
-
-const SparkleDoodle = () => (
-  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-    <path d="M14 3l2.4 4.8L21 10l-4.6 2.2L14 17l-2.4-4.8L7 10l4.6-2.2L14 3z" fill="currentColor" opacity="0.9" />
-    <path d="M6 16l1.2 2.4L10 19l-2.3 1.1L6 22l-1.1-1.9L2 19l2.9-.6L6 16zM22 16l1.2 2.4 2.8.6-2.3 1.1L22 22l-1.1-1.9L18.6 19l2.8-.6L22 16z" fill="currentColor" opacity="0.6" />
-  </svg>
-);
 
 export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
   const [context, setContext] = useState<string>("");
   const [response, setResponse] = useState<string>("");
   const [showContext, setShowContext] = useState<boolean>(false);
-  const [currentIdx, setCurrentIdx] = useState(0);
-  const [animSeed, setAnimSeed] = useState(0);
+  const [prompt, setPrompt] = useState<string>(PROMPTS[0]);
+  const [pulseKey, setPulseKey] = useState<number>(0);
+  const [doodle, setDoodle] = useState<DoodleKind>(pickDoodleFor(PROMPTS[0]));
 
   // Load saved context on mount
   useEffect(() => {
@@ -71,17 +91,11 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
     } catch (_e) { void _e; }
   }, []);
 
-  const personalized = useMemo(() => {
-    return personalizePrompt(BASE_PROMPTS[currentIdx], context);
-  }, [currentIdx, context]);
-
   const saveContext = () => {
     try {
       localStorage.setItem(STORAGE_KEY, context);
     } catch (_e) { void _e; }
     window.dispatchEvent(new CustomEvent("pp:userContextUpdated", { detail: { context } }));
-    setCurrentIdx((i) => i);
-    setAnimSeed((s) => s + 1);
   };
 
   const clearContext = () => {
@@ -90,19 +104,19 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
     } catch (_e) { void _e; }
     setContext("");
     window.dispatchEvent(new CustomEvent("pp:userContextUpdated", { detail: { context: "" } }));
-    setCurrentIdx((i) => i);
-    setAnimSeed((s) => s + 1);
   };
 
   const newPrompt = () => {
-    setCurrentIdx((i) => pickNewIndex(i, BASE_PROMPTS.length));
-    setResponse(""); // Clear the response when switching prompts
-    setAnimSeed((s) => s + 1);
+    const next = PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
+    setPrompt(next);
+    setResponse('');
+    setDoodle(pickDoodleFor(next));
+    setPulseKey(k => k + 1); // re-trigger animation
   };
 
   const copyPrompt = async () => {
     try {
-      await navigator.clipboard.writeText(personalized);
+      await navigator.clipboard.writeText(prompt);
     } catch (_e) { void _e; }
   };
 
@@ -113,21 +127,15 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
   };
 
   // Soft header band gradient
-  const headerGlowStyle = useMemo(() => ({
+  const headerGlowStyle = {
     background:
       "radial-gradient(60% 60% at 50% 10%, rgba(164, 234, 218, 0.55) 0%, transparent 70%)," +
       "radial-gradient(60% 50% at 50% 100%, rgba(255, 240, 252, 0.55) 0%, transparent 60%)",
     height: "96px",
-  }) as React.CSSProperties, []);
+  } as React.CSSProperties;
 
   return (
     <div className="max-w-2xl mx-auto p-6">
-      {/* Local animations */}
-      <style>{`
-        @keyframes prompt-fade-in { from { opacity: 0; transform: translateY(6px) } to { opacity: 1; transform: translateY(0) } }
-        .prompt-enter { animation: prompt-fade-in 420ms ease-out both }
-      `}</style>
-
       <Button onClick={onBack} variant="ghost" className="mb-6" aria-label="Back to Activities">
         ← Back to Activities
       </Button>
@@ -140,12 +148,17 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
             <p className="text-muted-foreground font-jakarta">Let your imagination wander for a few minutes</p>
           </div>
 
-          {/* Current prompt */}
+          {/* Current prompt with doodle */}
           <div className="mb-4">
-            <div key={animSeed} className="prompt-enter relative flex items-start gap-3">
-              <div className="text-primary mt-1"><SparkleDoodle /></div>
-              <p className="text-lg font-jakarta leading-relaxed text-foreground">
-                {personalized}
+            <div key={`prompt-${pulseKey}`} className="flex items-start gap-3">
+              <div className="relative">
+                <Doodle key={`d-${pulseKey}`} kind={doodle} className="h-8 w-10 animate-letter-in" />
+                <span className="pointer-events-none absolute -top-1 -right-2 size-2 rounded-full bg-accent/70 animate-twinkle" />
+                <span className="pointer-events-none absolute top-4 -left-1 size-1.5 rounded-full bg-accent/50 animate-twinkle" />
+              </div>
+
+              <p key={`p-${pulseKey}`} className="text-lg sm:text-xl font-sans leading-7 animate-letter-in">
+                {prompt}
               </p>
             </div>
           </div>
@@ -155,13 +168,13 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
             <label htmlFor="response" className="text-sm text-muted-foreground font-jakarta">Your response</label>
             <Textarea
               id="response"
-              aria-label="Type your response to the prompt"
+              aria-label="Your response"
               rows={6}
-              placeholder="Write, doodle ideas in words, or describe what you’d make…"
+              placeholder="Write, doodle ideas in words, or describe what you'd make…"
               value={response}
               onChange={(e) => setResponse(e.target.value)}
             />
-            <p className="text-xs text-muted-foreground font-jakarta">Your response isn’t sent anywhere.</p>
+            <p className="text-xs text-muted-foreground font-jakarta">Your response isn't sent anywhere.</p>
 
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" onClick={newPrompt}>New prompt</Button>
@@ -188,7 +201,7 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
                 onChange={(e) => setContext(e.target.value)}
               />
               <p className="text-xs text-muted-foreground font-jakarta">
-                Your context won’t be shown to anyone. It’s stored locally to suggest better prompts across the site.
+                Your context won't be shown to anyone. It's stored locally to suggest better prompts across the site.
               </p>
 
               <div className="flex flex-wrap gap-2">
