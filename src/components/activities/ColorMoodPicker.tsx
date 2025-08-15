@@ -23,10 +23,10 @@ export const ColorMoodPicker = ({ onBack }: { onBack: () => void }) => {
       </Button>
       
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-recoleta font-bold mb-4 text-primary">
+        <h2 className="text-3xl font-bold mb-4 bg-gradient-joy bg-clip-text text-transparent">
           What color makes you feel good right now?
         </h2>
-        <p className="font-jakarta text-muted-foreground">
+        <p className="text-muted-foreground">
           Choose a color that speaks to your current mood
         </p>
       </div>
