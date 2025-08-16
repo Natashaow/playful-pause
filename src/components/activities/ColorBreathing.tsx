@@ -96,19 +96,45 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
     return {
       background:
         `radial-gradient(60% 60% at 50% 28%, ${base} ${strength}, transparent 80%), ` +
-        `radial-gradient(70% 60% at 50% 100%, rgba(255,255,255,0.65) 0%, transparent 70%)`,
+        `radial-gradient(70% 60% at 100%, rgba(255,255,255,0.65) 0%, transparent 70%)`,
       transition: "background 4s ease-out",
     } as React.CSSProperties;
   }, [selected, phase]);
 
-  // Bubble transform per phase
-  const bubbleTransform = running
-    ? phase === "inhale"
-      ? "translate(0,0) scale(1.5)"
-      : phase === "hold"
-      ? "translate(0,0) scale(1.5)"
-      : "translate(0,0) scale(1)"
-    : "translate(0,0) scale(1)";
+  // Bubble transform per phase with smooth transitions
+  const bubbleTransform = useMemo(() => {
+    if (!running) return "translate(0,0) scale(1)";
+    
+    switch (phase) {
+      case "inhale":
+        return "translate(0,0) scale(1.5)";
+      case "hold":
+        return "translate(0,0) scale(1.5)";
+      case "exhale":
+        return "translate(0,0) scale(1)";
+      default:
+        return "translate(0,0) scale(1)";
+    }
+  }, [running, phase]);
+
+  // Background circle transform to match bubble
+  const backgroundCircleTransform = useMemo(() => {
+    if (!running) return "translate(0,0) scale(1)";
+    
+    switch (phase) {
+      case "inhale":
+        return "translate(0,0) scale(1.5)";
+      case "hold":
+        return "translate(0,0) scale(1.5)";
+      case "exhale":
+        return "translate(0,0) scale(1)";
+      default:
+        return "translate(0,0) scale(1)";
+    }
+  }, [running, phase]);
+
+  // Transition duration based on phase
+  const transitionDuration = phase === "exhale" ? "6s" : "4s";
 
   const bubbleShadow = phase === "hold" ? "var(--shadow-glow)" : "var(--shadow-soft)";
 
@@ -169,58 +195,87 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
       )}
 
       {selected && (
-        <Card className="p-0 border-0 shadow-soft overflow-hidden">
-          <div className="relative p-10 sm:p-12 text-center bg-white/70 backdrop-blur min-h-[60vh] flex flex-col items-center justify-center">
-            {/* Pastel radial glow band */}
-            <div 
-              aria-hidden 
-              className="absolute inset-x-0 top-0 -z-10 h-32" 
+        <div className="relative text-center min-h-[60vh] flex flex-col items-center justify-center">
+          {/* Transparent/frosted background */}
+          <div className="absolute inset-0 bg-white/30 backdrop-blur-sm rounded-3xl" />
+          
+          {/* Header with doodle */}
+          <div className="relative z-10 flex items-center justify-center gap-3 mb-12">
+            <IconBreath className="h-6 w-6 text-foreground/80 animate-float-slow" />
+            <h2 className="text-2xl font-heading font-semibold text-foreground">Color Breathing</h2>
+          </div>
+
+          {/* Breathing visualization container */}
+          <div className="relative mb-8">
+            {/* Background circle - expands/contracts with bubble */}
+            <div
+              className="absolute inset-0 w-32 h-32 rounded-full mx-auto opacity-20"
               style={{
-                background: `radial-gradient(60% 60% at 50% 10%, ${selected.value}40 0%, transparent 70%)`,
+                background: `radial-gradient(circle, ${selected.value} 0%, transparent 70%)`,
+                transform: backgroundCircleTransform,
+                transition: `transform ${transitionDuration} ease-in-out`,
               }}
             />
             
-            {/* Header with doodle */}
-            <div className="flex items-center justify-center gap-3 mb-8">
-              <IconBreath className="h-6 w-6 text-foreground/80 animate-float-slow" />
-              <h2 className="text-2xl font-heading font-semibold text-foreground">Color Breathing</h2>
-            </div>
-
-            <div className="relative mb-6">
-              {/* Breathing circle */}
+            {/* Subtle breathing glow for hold phase */}
+            {phase === "hold" && (
               <div
-                className="w-32 h-32 rounded-full mx-auto animate-breathe"
-                aria-label="Breathing bubble"
+                className="absolute inset-0 w-32 h-32 rounded-full mx-auto opacity-10"
                 style={{
-                  background: `radial-gradient(circle at 40% 35%, ${selected.value} 0%, rgba(255,255,255,0.7) 70%)`,
-                  boxShadow: bubbleShadow,
+                  background: `radial-gradient(circle, ${selected.value} 0%, transparent 70%)`,
+                  transform: "scale(1.02)",
+                  animation: "pulse 2s ease-in-out infinite",
                 }}
               />
-              <div className="absolute inset-0 w-32 h-32 rounded-full border-2 border-primary/30 animate-pulse" />
-              
-              {/* Sparkles */}
-              <div className="absolute -top-2 -right-2 size-2 rounded-full bg-foreground/20 animate-twinkle" />
-              <div className="absolute top-4 -left-4 size-1.5 rounded-full bg-foreground/20 animate-twinkle" />
-              <div className="absolute bottom-2 right-4 size-1.5 rounded-full bg-foreground/20 animate-twinkle" />
-            </div>
-
-            <div className="space-y-2">
-              <h4 className="text-2xl font-heading font-semibold animate-letter-in">
-                {phase === "inhale" ? "Breathe In" : phase === "hold" ? "Hold" : "Breathe Out"}
-              </h4>
-              <p className="text-4xl font-mono font-bold text-primary">{secondsLeft}</p>
-            </div>
-
-            <div className="flex items-center justify-center gap-3 mt-6">
-              <Button onClick={() => setRunning((r) => !r)} variant={running ? "secondary" : "default"} size="lg" className="px-8">
-                {running ? "Pause" : "Start"}
-              </Button>
-              <Button variant="ghost" onClick={resetPicker} aria-label="Pick another color">
-                Pick another color
-              </Button>
-            </div>
+            )}
+            
+            {/* Breathing bubble - main focal point */}
+            <div
+              className={`relative w-32 h-32 rounded-full mx-auto ${phase === "hold" ? "animate-pulse" : ""}`}
+              aria-label="Breathing bubble"
+              style={{
+                background: `radial-gradient(circle at 40% 35%, ${selected.value} 0%, rgba(255,255,255,0.8) 70%)`,
+                transform: bubbleTransform,
+                transition: `transform ${transitionDuration} ease-in-out`,
+                boxShadow: phase === "hold" 
+                  ? "0 0 30px rgba(0,0,0,0.15), 0 0 60px rgba(0,0,0,0.1)" 
+                  : "0 4px 20px rgba(0,0,0,0.1)",
+              }}
+            />
+            
+            {/* Subtle border ring */}
+            <div 
+              className="absolute inset-0 w-32 h-32 rounded-full border border-primary/20"
+              style={{
+                transform: backgroundCircleTransform,
+                transition: `transform ${transitionDuration} ease-in-out`,
+              }}
+            />
+            
+            {/* Sparkles */}
+            <div className="absolute -top-2 -right-2 size-2 rounded-full bg-foreground/20 animate-twinkle" />
+            <div className="absolute top-4 -left-4 size-1.5 rounded-full bg-foreground/20 animate-twinkle" />
+            <div className="absolute bottom-2 right-4 size-1.5 rounded-full bg-foreground/20 animate-twinkle" />
           </div>
-        </Card>
+
+          {/* Breathing prompt text - closer to bubble */}
+          <div className="relative z-10 space-y-3 mb-8">
+            <h4 className="text-2xl font-heading font-semibold text-foreground">
+              {phase === "inhale" ? "Breathe In" : phase === "hold" ? "Hold" : "Breathe Out"}
+            </h4>
+            <p className="text-4xl font-mono font-bold text-primary">{secondsLeft}</p>
+          </div>
+
+          {/* Controls */}
+          <div className="relative z-10 flex items-center justify-center gap-3">
+            <Button onClick={() => setRunning((r) => !r)} variant={running ? "secondary" : "default"} size="lg" className="px-8">
+              {running ? "Pause" : "Start"}
+            </Button>
+            <Button variant="ghost" onClick={resetPicker} aria-label="Pick another color">
+              Pick another color
+            </Button>
+          </div>
+        </div>
       )}
     </div>
   );
