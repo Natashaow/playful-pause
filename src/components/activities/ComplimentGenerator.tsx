@@ -1,32 +1,33 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { loadState, recordWish, pushSticker, logActivity, Sticker } from "@/lib/personalization";
 
-const WISHES = [
-  "A little cloud told me you make the sun feel shy.",
-  "May your tea be warm and your thoughts be gentle.",
-  "Today, the breeze has your name on it—soft and kind.",
-  "A friendly star said your laugh brightens constellations.",
-  "Your presence makes quiet corners feel like home.",
-  "Somewhere, a cat is purring in your honor.",
-  "You are the pause button the day secretly wants.",
-  "Tiny birds practice gratitude when you pass by.",
-  "The moon keeps your secrets and roots for you.",
-  "Your calm is contagious—in the best way.",
-  "May a pocket of luck find you unexpectedly.",
-  "You’re the cozy lamp in a rainy-room afternoon.",
-  "A daisy wishes it had your sense of ease.",
-  "Even the kettle hums a softer tune for you.",
-  "Clouds part politely when you need a moment.",
-  "Your kindness makes small spaces feel bigger.",
-  "The day is softer because you’re in it.",
-  "A gentle hush follows wherever you breathe.",
-  "Your smile is a warm blanket for busy minds.",
-  "You are proof that quiet can be powerful.",
-  "Even your sighs teach the room to relax.",
-  "The sky saved a blush just for you.",
-  "You make ordinary minutes feel like little holidays.",
-  "Somewhere, a paper plane just landed perfectly for you.",
+const WISHES_ENRICHED = [
+  { text: "A little cloud told me you make the sun feel shy.", tags: ["cloud","sun","light","gentle"], doodle: "cloud" },
+  { text: "May your tea be warm and your thoughts be gentle.", tags: ["cozy","warm","kettle"], doodle: "kettle" },
+  { text: "Today, the breeze has your name on it—soft and kind.", tags: ["breeze","calm","bird"], doodle: "bird" },
+  { text: "A friendly star said your laugh brightens constellations.", tags: ["star","light","joy"], doodle: "star" },
+  { text: "Your presence makes quiet corners feel like home.", tags: ["home","cozy","lamp"], doodle: "lamp" },
+  { text: "Somewhere, a cat is purring in your honor.", tags: ["cat","soft","calm"], doodle: "cat" },
+  { text: "You are the pause button the day secretly wants.", tags: ["pause","calm","gentle"], doodle: "cloud" },
+  { text: "Tiny birds practice gratitude when you pass by.", tags: ["bird","light","joy"], doodle: "bird" },
+  { text: "The moon keeps your secrets and roots for you.", tags: ["moon","quiet","soft"], doodle: "moon" },
+  { text: "Your calm is contagious—in the best way.", tags: ["calm","ripple","soft"], doodle: "star" },
+  { text: "May a pocket of luck find you unexpectedly.", tags: ["luck","clover","surprise"], doodle: "clover" },
+  { text: "You're the cozy lamp in a rainy-room afternoon.", tags: ["cozy","lamp","rain"], doodle: "lamp" },
+  { text: "A daisy wishes it had your sense of ease.", tags: ["daisy","ease","soft"], doodle: "daisy" },
+  { text: "Even the kettle hums a softer tune for you.", tags: ["kettle","warm","soft"], doodle: "kettle" },
+  { text: "Clouds part politely when you need a moment.", tags: ["cloud","calm","space"], doodle: "cloud" },
+  { text: "Your kindness makes small spaces feel bigger.", tags: ["kindness","space","soft"], doodle: "star" },
+  { text: "The day is softer because you're in it.", tags: ["soft","day","light"], doodle: "star" },
+  { text: "A gentle hush follows wherever you breathe.", tags: ["hush","calm","breeze"], doodle: "cloud" },
+  { text: "Your smile is a warm blanket for busy minds.", tags: ["warm","cozy","care"], doodle: "lamp" },
+  { text: "You are proof that quiet can be powerful.", tags: ["quiet","power","moon"], doodle: "moon" },
+  { text: "Even your sighs teach the room to relax.", tags: ["sigh","calm","breeze"], doodle: "cloud" },
+  { text: "The sky saved a blush just for you.", tags: ["sky","light","joy"], doodle: "star" },
+  { text: "You make ordinary minutes feel like little holidays.", tags: ["holiday","joy","confetti"], doodle: "star" },
+  { text: "Somewhere, a paper plane just landed perfectly for you.", tags: ["paper-plane","luck","soft"], doodle: "paper-plane" },
 ];
 
 const ACCENTS = [
@@ -47,6 +48,13 @@ function randomIndex(max: number, exclude?: number) {
     while (idx === exclude) idx = Math.floor(Math.random() * max);
   }
   return idx;
+}
+
+function chooseWishBiased() {
+  const { lastColor } = loadState();
+  if (!lastColor?.tags?.length) return WISHES_ENRICHED[Math.floor(Math.random()*WISHES_ENRICHED.length)];
+  const pool = WISHES_ENRICHED.filter(w => w.tags.some(t => lastColor.tags.includes(t)));
+  return (pool.length ? pool : WISHES_ENRICHED)[Math.floor(Math.random() * (pool.length?pool.length:WISHES_ENRICHED.length))];
 }
 
 // --- SVG DOODLES ---
@@ -220,12 +228,29 @@ function doodleFor(idx: number, color: string) {
 }
 
 export const WhimsyWishes: React.FC<{ onBack: () => void }> = ({ onBack }) => {
-  const [idx, setIdx] = useState<number>(() => randomIndex(WISHES.length));
+  const [idx, setIdx] = useState<number>(() => randomIndex(WISHES_ENRICHED.length));
   const [accentIdx, setAccentIdx] = useState<number>(() => randomIndex(ACCENTS.length));
   const [animSeed, setAnimSeed] = useState<number>(0);
 
-  const wish = WISHES[idx];
+  // Get biased wish and record it
+  const wishData = chooseWishBiased();
+  const wish = wishData.text;
   const accent = ACCENTS[accentIdx];
+
+  // Record wish and push sticker on mount
+  useEffect(() => {
+    recordWish({ 
+      text: wishData.text, 
+      doodle: wishData.doodle as Sticker['name'], 
+      accent: loadState().lastColor?.hex || "#C3F5E6", 
+      tags: wishData.tags 
+    });
+    pushSticker({ 
+      name: wishData.doodle as Sticker['name'], 
+      color: loadState().lastColor?.hex || "#C3F5E6" 
+    });
+    logActivity('wishes');
+  }, [wishData.text, wishData.doodle, wishData.tags]);
 
   const bgStyle = useMemo(() => {
     const light = `${accent}55`;
@@ -237,7 +262,7 @@ export const WhimsyWishes: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   }, [accent]);
 
   const onMore = () => {
-    setIdx((i) => randomIndex(WISHES.length, i));
+    setIdx((i) => randomIndex(WISHES_ENRICHED.length, i));
     setAccentIdx((i) => randomIndex(ACCENTS.length, i));
     setAnimSeed((s) => s + 1);
   };

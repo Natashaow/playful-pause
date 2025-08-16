@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { loadState, logActivity, recordKeywords } from "@/lib/personalization";
 
 const PROMPTS = [
   "Describe a tiny, imaginary place you'd visit if you could shrink to the size of a teacup.",
@@ -22,6 +23,16 @@ const PROMPTS = [
 ];
 
 const STORAGE_KEY = "pp_user_context";
+
+function personalizeFromDraw(seed: string): string {
+  const s = loadState();
+  const top = s.drawStats.topColors[0];
+  if (!top) return seed + " Let the result stay small and satisfying on its own.";
+  // lightweight tinting
+  if (/^#(A2D2FF|C3F5E6|C9B6F2)/i.test(top)) return seed + " Bring in sky/mint/lavender hints—soft gradients or a single gentle line.";
+  if (/^#(FFD983|FF8C7A|FFC6B3)/i.test(top)) return seed + " Add a warm spark—peach or coral accents in one small detail.";
+  return seed + " Use one color you loved doodling with recently.";
+}
 
 type DoodleKind = 'letter' | 'cloud' | 'star' | 'sprout';
 
@@ -95,6 +106,9 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
     try {
       localStorage.setItem(STORAGE_KEY, context);
     } catch (_e) { void _e; }
+    // Extract keywords from context for personalization
+    const words = context.toLowerCase().match(/\b\w+\b/g) || [];
+    recordKeywords(words);
     window.dispatchEvent(new CustomEvent("pp:userContextUpdated", { detail: { context } }));
   };
 
@@ -107,11 +121,13 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
   };
 
   const newPrompt = () => {
-    const next = PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
-    setPrompt(next);
+    const seed = PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
+    const personalized = personalizeFromDraw(seed);
+    setPrompt(personalized);
     setResponse('');
-    setDoodle(pickDoodleFor(next));
+    setDoodle(pickDoodleFor(seed));
     setPulseKey(k => k + 1); // re-trigger animation
+    logActivity('creative');
   };
 
   const copyPrompt = async () => {
