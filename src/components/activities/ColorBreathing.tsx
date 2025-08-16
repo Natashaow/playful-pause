@@ -128,7 +128,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
     if (running) {
       const timer = setTimeout(() => {
         setShowAccordion(true);
-      }, 30000); // 30 seconds
+      }, 8000); // 8 seconds
 
       return () => clearTimeout(timer);
     } else {
@@ -143,7 +143,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
   };
 
   return (
-          <div className="mx-auto max-w-5xl p-6">
+          <div className="mx-auto max-w-5xl p-6 pb-16">
       {/* Custom breathing animations */}
       <style>{`
         /* --- Color Breathing keyframes --- */
@@ -212,7 +212,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
                 ))}
               </div>
 
-              <Button onClick={startBreathing} size="lg" className="px-8 bg-foreground text-white hover:bg-foreground/90">
+              <Button onClick={startBreathing} size="lg" className="px-8 bg-black text-white hover:bg-black/90 shadow-md">
                 Start Breathing
               </Button>
             </div>
@@ -259,20 +259,21 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
               {/* Controls */}
               <div className="mt-8 flex items-center gap-4">
                 <Button
-                  variant="secondary"
+                  variant="outline"
                   onClick={() => setRunning(false)}
-                  className="px-6"
+                  className="px-6 border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300"
                 >
                   Stop
                 </Button>
 
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   onClick={() => {
                     // restart from inhale
                     setPhaseIndex(0);
                     setRunning(true);
                   }}
+                  className="border-black text-black hover:bg-black hover:text-white transition-all duration-300"
                 >
                   Restart
                 </Button>
