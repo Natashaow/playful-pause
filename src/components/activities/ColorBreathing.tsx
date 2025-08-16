@@ -15,11 +15,12 @@ const COLORS = [
   { name: "Rose", value: "#FFD93D" },
 ] as const;
 
-type Phase = "inhale" | "hold" | "exhale";
+type Phase = "inhale" | "holdInhale" | "exhale" | "holdExhale";
 
 function nextPhase(p: Phase): Phase {
-  if (p === "inhale") return "hold";
-  if (p === "hold") return "exhale";
+  if (p === "inhale") return "holdInhale";
+  if (p === "holdInhale") return "exhale";
+  if (p === "exhale") return "holdExhale";
   return "inhale";
 }
 
@@ -29,7 +30,12 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
   const [secondsLeft, setSecondsLeft] = useState<number>(4);
   const [running, setRunning] = useState<boolean>(false);
   const [suggestedColor, setSuggestedColor] = useState<string | null>(null);
-  const [timing, setTiming] = useState<{inhale:number;hold:number;exhale:number}>({ inhale:4, hold:4, exhale:4 });
+  const [timing, setTiming] = useState<{inhale:number;holdInhale:number;exhale:number;holdExhale:number}>({ 
+    inhale: 4, 
+    holdInhale: 4, 
+    exhale: 6, 
+    holdExhale: 4 
+  });
   const timerRef = useRef<number | null>(null);
 
   // Personalization setup on mount
@@ -39,13 +45,13 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
 
     if (hints.isStressed || hints.isTired) {
       setSuggestedColor("Lavender");
-      setTiming({ inhale:4, hold:4, exhale:6 }); // longer exhale to downshift
+      setTiming({ inhale:4, holdInhale:4, exhale:6, holdExhale:4 }); // longer exhale to downshift
     } else if (hints.isBlue) {
       setSuggestedColor("Peach");
-      setTiming({ inhale:4, hold:4, exhale:4 });
+      setTiming({ inhale:4, holdInhale:4, exhale:4, holdExhale:4 });
     } else if (hints.isUp) {
       setSuggestedColor("Mint");
-      setTiming({ inhale:4, hold:4, exhale:4 });
+      setTiming({ inhale:4, holdInhale:4, exhale:4, holdExhale:4 });
     }
   }, []);
 
@@ -57,7 +63,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
     setRunning(true);
   }, [selected, timing.inhale]);
 
-  // Phase timer (using personalized timing)
+  // Phase timer (using 4-4-6-4 cycle)
   useEffect(() => {
     if (!running || !selected) return;
     if (timerRef.current) window.clearInterval(timerRef.current);
@@ -69,8 +75,9 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
         setPhase((p) => {
           const next = nextPhase(p);
           if (next === "inhale") setSecondsLeft(timing.inhale);
-          else if (next === "hold") setSecondsLeft(timing.hold);
-          else setSecondsLeft(timing.exhale);
+          else if (next === "holdInhale") setSecondsLeft(timing.holdInhale);
+          else if (next === "exhale") setSecondsLeft(timing.exhale);
+          else setSecondsLeft(timing.holdExhale);
           return next;
         });
         return 0; // Will be set by the phase change above
@@ -89,7 +96,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
       ? "55%"
       : phase === "inhale"
       ? "85%"
-      : phase === "hold"
+      : phase === "holdInhale"
       ? "70%"
       : "50%";
 
@@ -101,42 +108,8 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
     } as React.CSSProperties;
   }, [selected, phase]);
 
-  // Bubble transform per phase with smooth transitions
-  const bubbleTransform = useMemo(() => {
-    if (!running) return "translate(0,0) scale(1)";
-    
-    switch (phase) {
-      case "inhale":
-        return "translate(0,0) scale(1.5)";
-      case "hold":
-        return "translate(0,0) scale(1.5)";
-      case "exhale":
-        return "translate(0,0) scale(1)";
-      default:
-        return "translate(0,0) scale(1)";
-    }
-  }, [running, phase]);
-
-  // Background circle transform to match bubble
-  const backgroundCircleTransform = useMemo(() => {
-    if (!running) return "translate(0,0) scale(1)";
-    
-    switch (phase) {
-      case "inhale":
-        return "translate(0,0) scale(1.5)";
-      case "hold":
-        return "translate(0,0) scale(1.5)";
-      case "exhale":
-        return "translate(0,0) scale(1)";
-      default:
-        return "translate(0,0) scale(1)";
-    }
-  }, [running, phase]);
-
-  // Transition duration based on phase
-  const transitionDuration = phase === "exhale" ? "6s" : "4s";
-
-  const bubbleShadow = phase === "hold" ? "var(--shadow-glow)" : "var(--shadow-soft)";
+  // Enhanced shadow for hold phases
+  const bubbleShadow = (phase === "holdInhale" || phase === "holdExhale") ? "var(--shadow-glow)" : "var(--shadow-soft)";
 
   // Reset to picker
   const resetPicker = () => {
@@ -205,39 +178,58 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
             <h2 className="text-2xl font-heading font-semibold text-foreground">Color Breathing</h2>
           </div>
 
+          {/* Custom breathing animations */}
+          <style>{`
+            /* Breathe In (expand over 4s) */
+            @keyframes breatheIn {
+              0% { transform: scale(1); opacity: 0.9; }
+              100% { transform: scale(1.3); opacity: 1; }
+            }
+
+            /* Hold after inhale (gentle pulse, 4s looped) */
+            @keyframes holdExpanded {
+              0%, 100% { transform: scale(1.3); opacity: 1; }
+              50% { transform: scale(1.32); opacity: 0.95; }
+            }
+
+            /* Breathe Out (contract over 6s) */
+            @keyframes breatheOut {
+              0% { transform: scale(1.3); opacity: 1; }
+              100% { transform: scale(1); opacity: 0.9; }
+            }
+
+            /* Hold after exhale (gentle pulse, 4s looped) */
+            @keyframes holdContracted {
+              0%, 100% { transform: scale(1); opacity: 0.9; }
+              50% { transform: scale(1.02); opacity: 1; }
+            }
+          `}</style>
+
           {/* Breathing visualization container */}
           <div className="relative mb-8">
             {/* Background circle - expands/contracts with bubble */}
             <div
-              className="absolute inset-0 w-32 h-32 rounded-full mx-auto opacity-20"
+              className="absolute inset-0 w-32 h-32 rounded-full mx-auto opacity-15"
               style={{
                 background: `radial-gradient(circle, ${selected.value} 0%, transparent 70%)`,
-                transform: backgroundCircleTransform,
-                transition: `transform ${transitionDuration} ease-in-out`,
+                animation: phase === "inhale" ? "breatheIn 4s ease-in-out forwards" :
+                           phase === "holdInhale" ? "holdExpanded 4s ease-in-out infinite" :
+                           phase === "exhale" ? "breatheOut 6s ease-in-out forwards" :
+                           "holdContracted 4s ease-in-out infinite",
               }}
             />
             
-            {/* Subtle breathing glow for hold phase */}
-            {phase === "hold" && (
-              <div
-                className="absolute inset-0 w-32 h-32 rounded-full mx-auto opacity-10"
-                style={{
-                  background: `radial-gradient(circle, ${selected.value} 0%, transparent 70%)`,
-                  transform: "scale(1.02)",
-                  animation: "pulse 2s ease-in-out infinite",
-                }}
-              />
-            )}
-            
             {/* Breathing bubble - main focal point */}
             <div
-              className={`relative w-32 h-32 rounded-full mx-auto ${phase === "hold" ? "animate-pulse" : ""}`}
+              className="relative w-32 h-32 rounded-full mx-auto"
               aria-label="Breathing bubble"
               style={{
                 background: `radial-gradient(circle at 40% 35%, ${selected.value} 0%, rgba(255,255,255,0.8) 70%)`,
-                transform: bubbleTransform,
-                transition: `transform ${transitionDuration} ease-in-out`,
-                boxShadow: phase === "hold" 
+                animation: phase === "inhale" ? "breatheIn 4s ease-in-out forwards" :
+                           phase === "holdInhale" ? "holdExpanded 4s ease-in-out infinite" :
+                           phase === "exhale" ? "breatheOut 6s ease-in-out forwards" :
+                           "holdContracted 4s ease-in-out infinite",
+                boxShadow: phase === "holdInhale" || phase === "holdExhale"
                   ? "0 0 30px rgba(0,0,0,0.15), 0 0 60px rgba(0,0,0,0.1)" 
                   : "0 4px 20px rgba(0,0,0,0.1)",
               }}
@@ -247,8 +239,10 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
             <div 
               className="absolute inset-0 w-32 h-32 rounded-full border border-primary/20"
               style={{
-                transform: backgroundCircleTransform,
-                transition: `transform ${transitionDuration} ease-in-out`,
+                animation: phase === "inhale" ? "breatheIn 4s ease-in-out forwards" :
+                           phase === "holdInhale" ? "holdExpanded 4s ease-in-out infinite" :
+                           phase === "exhale" ? "breatheOut 6s ease-in-out forwards" :
+                           "holdContracted 4s ease-in-out infinite",
               }}
             />
             
@@ -258,15 +252,18 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
             <div className="absolute bottom-2 right-4 size-1.5 rounded-full bg-foreground/20 animate-twinkle" />
           </div>
 
-          {/* Breathing prompt text - closer to bubble */}
-          <div className="relative z-10 space-y-3 mb-8">
-            <h4 className="text-2xl font-heading font-semibold text-foreground">
-              {phase === "inhale" ? "Breathe In" : phase === "hold" ? "Hold" : "Breathe Out"}
-            </h4>
-            <p className="text-4xl font-mono font-bold text-primary">{secondsLeft}</p>
-          </div>
+            {/* Breathing prompt text - closer to bubble */}
+            <div className="relative z-10 space-y-3 mb-8">
+              <h4 className="text-2xl font-heading font-semibold text-foreground">
+                {phase === "inhale" ? "Breathe In" : 
+                 phase === "holdInhale" ? "Hold" : 
+                 phase === "exhale" ? "Breathe Out" : 
+                 "Hold"}
+              </h4>
+              <p className="text-4xl font-mono font-bold text-primary">{secondsLeft}</p>
+            </div>
 
-          {/* Controls */}
+            {/* Controls */}
           <div className="relative z-10 flex items-center justify-center gap-3">
             <Button onClick={() => setRunning((r) => !r)} variant={running ? "secondary" : "default"} size="lg" className="px-8">
               {running ? "Pause" : "Start"}
