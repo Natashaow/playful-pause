@@ -4,38 +4,41 @@ import { Button } from "@/components/ui/button";
 import { IconPalette } from "@/components/doodles/Icons";
 import { readPersonalization, moodHints } from "@/lib/personalization";
 
-// Palette (8 soft colors)
+// Palette (9 colors from Color Breathing)
 const PALETTE = [
-  { name: "Ocean", value: "#4ECDC4" },
-  { name: "Lavender", value: "#C7CEEA" },
-  { name: "Coral", value: "#FF6B6B" },
-  { name: "Mint", value: "#95E1D3" },
-  { name: "Peach", value: "#FFB4B4" },
-  { name: "Sky", value: "#A8E6CF" },
-  { name: "Rose", value: "#FFD93D" },
-  { name: "Bluebell", value: "#A0C4FF" },
+  { name: "Cream", value: "#FFE5A3" },
+  { name: "Sky", value: "#B8D4E3" },
+  { name: "Blush", value: "#F4B8B8" },
+  { name: "Sage", value: "#C8E6C9" },
+  { name: "Lavender", value: "#D4C5E8" },
+  { name: "Teal", value: "#A8E6CF" },
+  { name: "Lime", value: "#D4ED91" },
+  { name: "Rose", value: "#F8C8D8" },
+  { name: "Peach", value: "#F4D4A3" },
 ];
 
-// Mood-based palette subsets
+// Cool colors subset
 const COOL = [
-  { name: "Ocean", value: "#4ECDC4" },
-  { name: "Lavender", value: "#C7CEEA" },
-  { name: "Sky", value: "#A8E6CF" },
-  { name: "Bluebell", value: "#A0C4FF" },
+  { name: "Sky", value: "#B8D4E3" },
+  { name: "Sage", value: "#C8E6C9" },
+  { name: "Lavender", value: "#D4C5E8" },
+  { name: "Teal", value: "#A8E6CF" },
 ];
 
+// Warm colors subset
 const WARM = [
-  { name: "Coral", value: "#FF6B6B" },
-  { name: "Peach", value: "#FFB4B4" },
-  { name: "Rose", value: "#FFD93D" },
-  { name: "Mint", value: "#95E1D3" },
+  { name: "Cream", value: "#FFE5A3" },
+  { name: "Blush", value: "#F4B8B8" },
+  { name: "Rose", value: "#F8C8D8" },
+  { name: "Peach", value: "#F4D4A3" },
 ];
 
+// Playful mix subset
 const PLAY = [
-  { name: "Coral", value: "#FF6B6B" },
-  { name: "Mint", value: "#95E1D3" },
-  { name: "Rose", value: "#FFD93D" },
-  { name: "Sky", value: "#A8E6CF" },
+  { name: "Lime", value: "#D4ED91" },
+  { name: "Teal", value: "#A8E6CF" },
+  { name: "Peach", value: "#F4D4A3" },
+  { name: "Lavender", value: "#D4C5E8" },
 ];
 
 function hexToRgba(hex: string, alpha: number) {
@@ -62,7 +65,7 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
   const dprRef = useRef<number>(1);
   const [selectedColor, setSelectedColor] = useState<string>(PALETTE[0].value);
   const [stroke, setStroke] = useState<number>(5);
-  const [softBackground, setSoftBackground] = useState<boolean>(true);
+  // Always use white background
   const [showTwinkles, setShowTwinkles] = useState<boolean>(false);
   const [currentPalette, setCurrentPalette] = useState<Array<{name: string; value: string}>>(PALETTE);
   const [themeHint, setThemeHint] = useState<string>("");
@@ -72,7 +75,7 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
 
   const canvasHeightCss = 420; // ~420px
 
-  const bgClass = useMemo(() => softBackground ? "bg-gradient-calm" : "bg-white", [softBackground]);
+  // Always use white background
 
   // Personalization setup on mount
   useEffect(() => {
@@ -167,15 +170,8 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
     const octx = off.getContext('2d');
     if (!octx) return;
 
-    // Background
-    if (softBackground) {
-      const grad = octx.createLinearGradient(0, 0, 0, pxH);
-      grad.addColorStop(0, '#f6fcff');
-      grad.addColorStop(1, '#fff7fb');
-      octx.fillStyle = grad;
-    } else {
-      octx.fillStyle = '#ffffff';
-    }
+    // Background - always white
+    octx.fillStyle = '#ffffff';
     octx.fillRect(0, 0, pxW, pxH);
 
     // Draw current canvas content
@@ -291,7 +287,7 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
             }}
           />
           
-          <h2 className="text-3xl font-heading font-bold mb-3 bg-gradient-calm bg-clip-text text-transparent">
+          <h2 className="text-3xl font-heading font-bold mb-3 text-foreground">
             Doodle Play
           </h2>
           <p className="font-sans text-muted-foreground">Create playful doodles to relax your mind and spark creativity</p>
@@ -336,19 +332,7 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
               <span className="text-sm tabular-nums w-6 text-center">{stroke}</span>
             </div>
 
-            {/* Background toggle */}
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Background:</span>
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                aria-pressed={softBackground}
-                onClick={() => setSoftBackground((v) => !v)}
-              >
-                {softBackground ? 'Soft' : 'Plain'}
-              </Button>
-            </div>
+
 
             <div className="flex items-center gap-2">
               <Button type="button" variant="outline" onClick={clearCanvas} aria-label="Clear canvas">Clear</Button>
@@ -359,7 +343,7 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
       </Card>
 
       {/* Canvas area */}
-      <Card className={`border-0 shadow-soft ${bgClass}`}>
+      <Card className="border-0 shadow-soft bg-white">
         <div ref={containerRef} className="relative w-full rounded-lg overflow-hidden">
           <canvas
             ref={canvasRef}
