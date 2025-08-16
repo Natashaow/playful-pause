@@ -4,54 +4,54 @@ import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const COLORS = [
-  { name: "Joy", value: "#FFE5A3" },        // Soft pastel yellow (like your whimsy-cream)
-  { name: "Sadness", value: "#B8D4E3" },    // Muted pastel blue (complements primary teal)
-  { name: "Anger", value: "#F4B8B8" },      // Soft pastel red (gentle, not harsh)
-  { name: "Disgust", value: "#C8E6C9" },    // Muted pastel green (like your whimsy-sage)
-  { name: "Fear", value: "#D4C5E8" },       // Soft pastel purple (like your whimsy-lavender)
-  { name: "Anxiety", value: "#A8E6CF" },    // Soft teal (aligned with your primary)
-  { name: "Envy", value: "#D4ED91" },       // Gentle pastel lime
-  { name: "Embarrassment", value: "#F8C8D8" }, // Soft pastel pink (like your whimsy-blush)
-  { name: "Nostalgia", value: "#F4D4A3" },  // Warm pastel orange (complements whimsy-cream)
+  { name: "Cream", value: "#FFE5A3" },        // Soft pastel yellow (like your whimsy-cream)
+  { name: "Sky", value: "#B8D4E3" },    // Muted pastel blue (complements primary teal)
+  { name: "Blush", value: "#F4B8B8" },      // Soft pastel red (gentle, not harsh)
+  { name: "Sage", value: "#C8E6C9" },    // Muted pastel green (like your whimsy-sage)
+  { name: "Lavender", value: "#D4C5E8" },       // Soft pastel purple (like your whimsy-lavender)
+  { name: "Teal", value: "#A8E6CF" },    // Soft teal (aligned with your primary)
+  { name: "Lime", value: "#D4ED91" },       // Gentle pastel lime
+  { name: "Rose", value: "#F8C8D8" }, // Soft pastel pink (like your whimsy-blush)
+  { name: "Peach", value: "#F4D4A3" },  // Warm pastel orange (complements whimsy-cream)
 ] as const;
 
 // Color psychology information
 const COLOR_INFO = {
-  "Joy": {
-    description: "Joy is often associated with bright, warm colors like yellow. This color can represent happiness, optimism, and energy. In color therapy, yellow is believed to stimulate mental activity and create feelings of cheerfulness and warmth.",
-    associations: "Associated with: happiness, optimism, creativity, mental clarity, warmth, sunshine"
+  "Cream": {
+    description: "Cream is a soft, warm pastel yellow that creates a gentle, welcoming atmosphere. This color can represent comfort, warmth, and gentle energy. In color therapy, soft yellow tones are believed to stimulate mental activity and create feelings of cheerfulness and warmth.",
+    associations: "Associated with: comfort, warmth, gentleness, mental clarity, sunshine, welcoming"
   },
-  "Sadness": {
-    description: "Sadness is often linked to cool, calming colors like blue. This color can represent tranquility, peace, and reflection. In color therapy, blue is believed to have a calming effect on the mind and body, helping to reduce stress and promote relaxation.",
-    associations: "Associated with: calmness, peace, reflection, trust, stability, depth"
+  "Sky": {
+    description: "Sky is a muted pastel blue that evokes feelings of tranquility and peace. This color can represent openness, calmness, and reflection. In color therapy, blue tones are believed to have a calming effect on the mind and body, helping to reduce stress and promote relaxation.",
+    associations: "Associated with: calmness, peace, reflection, openness, stability, depth"
   },
-  "Anger": {
-    description: "Anger is commonly associated with warm, intense colors like red. This color can represent passion, energy, and strong emotions. In color therapy, red is believed to stimulate energy and can help release pent-up emotions in a controlled way.",
-    associations: "Associated with: passion, energy, courage, strength, determination, warmth"
+  "Blush": {
+    description: "Blush is a soft pastel red that represents gentle warmth and soft energy. This color can symbolize tenderness, care, and gentle passion. In color therapy, soft red tones are believed to stimulate gentle energy and can help create feelings of warmth and comfort.",
+    associations: "Associated with: tenderness, care, gentle warmth, softness, comfort, nurturing"
   },
-  "Disgust": {
-    description: "Disgust is often represented by green tones, which can symbolize nature, growth, and renewal. In color therapy, green is believed to have a balancing effect, helping to restore harmony and promote feelings of safety and security.",
+  "Sage": {
+    description: "Sage is a muted pastel green that symbolizes nature, growth, and renewal. This color can represent balance, harmony, and natural healing. In color therapy, green tones are believed to have a balancing effect, helping to restore harmony and promote feelings of safety and security.",
     associations: "Associated with: balance, harmony, growth, renewal, nature, safety"
   },
-  "Fear": {
-    description: "Fear is often associated with purple tones, which can represent mystery and the unknown. In color therapy, purple is believed to have a calming effect on the nervous system and can help promote spiritual awareness and inner peace.",
-    associations: "Associated with: mystery, spirituality, wisdom, calm, introspection, creativity"
+  "Lavender": {
+    description: "Lavender is a soft pastel purple that represents calmness and gentle spirituality. This color can symbolize peace, introspection, and gentle creativity. In color therapy, purple tones are believed to have a calming effect on the nervous system and can help promote inner peace and tranquility.",
+    associations: "Associated with: peace, tranquility, introspection, gentle creativity, calm, serenity"
   },
-  "Anxiety": {
-    description: "Anxiety is often linked to teal and blue-green colors, which can represent calm and tranquility. In color therapy, these colors are believed to have a soothing effect on the mind, helping to reduce anxiety and promote mental clarity.",
-    associations: "Associated with: calmness, tranquility, mental clarity, emotional balance, peace"
+  "Teal": {
+    description: "Teal is a soft blue-green that represents calm and tranquility. This color can symbolize emotional balance, mental clarity, and peaceful energy. In color therapy, teal tones are believed to have a soothing effect on the mind, helping to promote mental clarity and emotional balance.",
+    associations: "Associated with: calmness, tranquility, mental clarity, emotional balance, peace, harmony"
   },
-  "Envy": {
-    description: "Envy is often represented by green tones, which can symbolize growth and abundance. In color therapy, green is believed to help balance emotions and promote feelings of contentment and satisfaction with what we have.",
-    associations: "Associated with: growth, abundance, contentment, balance, harmony, renewal"
+  "Lime": {
+    description: "Lime is a gentle pastel green that represents freshness and gentle growth. This color can symbolize new beginnings, gentle energy, and natural vitality. In color therapy, lime tones are believed to help balance emotions and promote feelings of gentle renewal and contentment.",
+    associations: "Associated with: freshness, gentle growth, new beginnings, vitality, balance, harmony"
   },
-  "Embarrassment": {
-    description: "Embarrassment is often associated with soft pink tones, which can represent gentleness and self-compassion. In color therapy, pink is believed to have a nurturing effect, helping to promote self-love and emotional healing.",
-    associations: "Associated with: gentleness, self-compassion, nurturing, love, emotional healing, warmth"
+  "Rose": {
+    description: "Rose is a soft pastel pink that represents gentleness and soft beauty. This color can symbolize tenderness, care, and gentle nurturing. In color therapy, pink tones are believed to have a nurturing effect, helping to promote feelings of softness and gentle emotional healing.",
+    associations: "Associated with: gentleness, tenderness, care, nurturing, softness, beauty"
   },
-  "Nostalgia": {
-    description: "Nostalgia is often linked to warm, earthy colors like orange and amber. These colors can represent warmth, comfort, and memories. In color therapy, warm colors are believed to promote feelings of security and emotional comfort.",
-    associations: "Associated with: warmth, comfort, memories, security, emotional comfort, stability"
+  "Peach": {
+    description: "Peach is a warm pastel orange that represents comfort and gentle warmth. This color can symbolize coziness, gentle energy, and welcoming comfort. In color therapy, warm orange tones are believed to promote feelings of security and gentle emotional comfort.",
+    associations: "Associated with: comfort, coziness, gentle warmth, welcoming, security, softness"
   }
 } as const;
 
@@ -188,7 +188,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
             }}
           />
           
-          <h2 className="text-3xl font-heading font-bold mb-3 bg-gradient-joy bg-clip-text text-transparent">
+          <h2 className="text-3xl font-heading font-bold mb-3 text-foreground">
             Color Breathing
           </h2>
           <p className="text-muted-foreground font-sans">Pick a color, breathe with it, and let a small calm settle in</p>
@@ -218,6 +218,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
                     aria-label={`Choose ${c.name}`}
                   >
                     <div className="w-full h-16 rounded-lg mb-3 shadow-soft" style={{ backgroundColor: c.value }} />
+                    <span className="text-sm font-medium text-foreground">{c.name}</span>
                   </button>
                 ))}
               </div>
