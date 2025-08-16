@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { IconBreath } from "@/components/doodles/Icons";
+import { readPersonalization, moodHints } from "@/lib/personalization";
 
 const COLORS = [
   { name: "Sunshine", value: "#FFE66D" },
@@ -27,17 +28,36 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
   const [phase, setPhase] = useState<Phase>("inhale");
   const [secondsLeft, setSecondsLeft] = useState<number>(4);
   const [running, setRunning] = useState<boolean>(false);
+  const [suggestedColor, setSuggestedColor] = useState<string | null>(null);
+  const [timing, setTiming] = useState<{inhale:number;hold:number;exhale:number}>({ inhale:4, hold:4, exhale:4 });
   const timerRef = useRef<number | null>(null);
+
+  // Personalization setup on mount
+  useEffect(() => {
+    const { context } = readPersonalization();
+    const hints = moodHints(context);
+
+    if (hints.isStressed || hints.isTired) {
+      setSuggestedColor("Lavender");
+      setTiming({ inhale:4, hold:4, exhale:6 }); // longer exhale to downshift
+    } else if (hints.isBlue) {
+      setSuggestedColor("Peach");
+      setTiming({ inhale:4, hold:4, exhale:4 });
+    } else if (hints.isUp) {
+      setSuggestedColor("Mint");
+      setTiming({ inhale:4, hold:4, exhale:4 });
+    }
+  }, []);
 
   // Start breathing when a color is selected
   useEffect(() => {
     if (!selected) return;
     setPhase("inhale");
-    setSecondsLeft(4);
+    setSecondsLeft(timing.inhale);
     setRunning(true);
-  }, [selected]);
+  }, [selected, timing.inhale]);
 
-  // Phase timer (4-4-4 loop)
+  // Phase timer (using personalized timing)
   useEffect(() => {
     if (!running || !selected) return;
     if (timerRef.current) window.clearInterval(timerRef.current);
@@ -45,16 +65,22 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
     timerRef.current = window.setInterval(() => {
       setSecondsLeft((t) => {
         if (t > 1) return t - 1;
-        // Switch phase and reset
-        setPhase((p) => nextPhase(p));
-        return 4;
+        // Switch phase and reset with appropriate timing
+        setPhase((p) => {
+          const next = nextPhase(p);
+          if (next === "inhale") setSecondsLeft(timing.inhale);
+          else if (next === "hold") setSecondsLeft(timing.hold);
+          else setSecondsLeft(timing.exhale);
+          return next;
+        });
+        return 0; // Will be set by the phase change above
       });
     }, 1000);
 
     return () => {
       if (timerRef.current) window.clearInterval(timerRef.current);
     };
-  }, [running, selected, phase]);
+  }, [running, selected, phase, timing]);
 
   // Soft background that "breathes" with the phase
   const bgStyle = useMemo(() => {
@@ -92,8 +118,18 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
     setRunning(false);
     setSelected(null);
     setPhase("inhale");
-    setSecondsLeft(4);
+    setSecondsLeft(timing.inhale);
   };
+
+  // Pre-select suggested color if available
+  useEffect(() => {
+    if (suggestedColor && !selected) {
+      const color = COLORS.find(c => c.name === suggestedColor);
+      if (color) {
+        setSelected(color);
+      }
+    }
+  }, [suggestedColor, selected]);
 
   return (
     <div className="max-w-3xl mx-auto p-6">
@@ -108,6 +144,11 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
           <div className="text-center mb-8">
             <h2 className="text-3xl font-heading font-bold mb-4 text-primary">What color makes you feel good right now?</h2>
             <p className="font-sans text-muted-foreground">Choose a color that speaks to your current mood</p>
+            {suggestedColor && (
+              <p className="mt-3 font-sans text-sm text-muted-foreground/80">
+                Suggested for now: <span className="font-medium text-primary">{suggestedColor}</span> (you can pick anything)
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">

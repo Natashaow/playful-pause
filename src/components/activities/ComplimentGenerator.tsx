@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { readPersonalization, moodHints } from "@/lib/personalization";
 
 const WISHES = [
   "A little cloud told me you make the sun feel shy.",
@@ -14,12 +15,12 @@ const WISHES = [
   "The moon keeps your secrets and roots for you.",
   "Your calm is contagious—in the best way.",
   "May a pocket of luck find you unexpectedly.",
-  "You’re the cozy lamp in a rainy-room afternoon.",
+  "You're the cozy lamp in a rainy-room afternoon.",
   "A daisy wishes it had your sense of ease.",
   "Even the kettle hums a softer tune for you.",
   "Clouds part politely when you need a moment.",
   "Your kindness makes small spaces feel bigger.",
-  "The day is softer because you’re in it.",
+  "The day is softer because you're in it.",
   "A gentle hush follows wherever you breathe.",
   "Your smile is a warm blanket for busy minds.",
   "You are proof that quiet can be powerful.",
@@ -28,6 +29,38 @@ const WISHES = [
   "You make ordinary minutes feel like little holidays.",
   "Somewhere, a paper plane just landed perfectly for you.",
 ];
+
+// Organize wishes by mood buckets
+const BASE_WISHES = {
+  soothe: [
+    "A gentle hush follows wherever you breathe.",
+    "Clouds part politely when you need a moment.",
+    "Your calm is contagious—in the best way.",
+    "Even the kettle hums a softer tune for you.",
+    "You are the pause button the day secretly wants.",
+    "The day is softer because you're in it.",
+    "Even your sighs teach the room to relax.",
+  ],
+  warm: [
+    "May your tea be warm and your thoughts be gentle.",
+    "Your presence makes quiet corners feel like home.",
+    "You're the cozy lamp in a rainy-room afternoon.",
+    "Your kindness makes small spaces feel bigger.",
+    "Your smile is a warm blanket for busy minds.",
+    "The sky saved a blush just for you.",
+    "A daisy wishes it had your sense of ease.",
+  ],
+  playful: [
+    "A little cloud told me you make the sun feel shy.",
+    "A friendly star said your laugh brightens constellations.",
+    "Somewhere, a cat is purring in your honor.",
+    "Tiny birds practice gratitude when you pass by.",
+    "The moon keeps your secrets and roots for you.",
+    "May a pocket of luck find you unexpectedly.",
+    "You make ordinary minutes feel like little holidays.",
+    "Somewhere, a paper plane just landed perfectly for you.",
+  ],
+};
 
 const ACCENTS = [
   "#4ECDC4", // Ocean
@@ -220,11 +253,39 @@ function doodleFor(idx: number, color: string) {
 }
 
 export const WhimsyWishes: React.FC<{ onBack: () => void }> = ({ onBack }) => {
-  const [idx, setIdx] = useState<number>(() => randomIndex(WISHES.length));
+  const [idx, setIdx] = useState<number>(0);
   const [accentIdx, setAccentIdx] = useState<number>(() => randomIndex(ACCENTS.length));
   const [animSeed, setAnimSeed] = useState<number>(0);
+  const [personalizedWish, setPersonalizedWish] = useState<string>("");
 
-  const wish = WISHES[idx];
+  // Personalized wish selection
+  const pickWish = () => {
+    const { context, lastSpark } = readPersonalization();
+    const hints = moodHints(context);
+    
+    let pool = BASE_WISHES.playful;
+    if (hints.isStressed || hints.isTired) {
+      pool = BASE_WISHES.soothe;
+    } else if (hints.isBlue) {
+      pool = BASE_WISHES.warm;
+    }
+
+    let wish = pool[Math.floor(Math.random() * pool.length)];
+    
+    // Occasionally reference the last Creative Spark response (10-15% chance)
+    if (lastSpark && Math.random() < 0.15) {
+      wish += " (and that little idea you saved still glows softly)";
+    }
+    
+    return wish;
+  };
+
+  // Initialize with personalized wish
+  useEffect(() => {
+    setPersonalizedWish(pickWish());
+  }, []);
+
+  const wish = personalizedWish || WISHES[idx];
   const accent = ACCENTS[accentIdx];
 
   const bgStyle = useMemo(() => {
@@ -237,7 +298,7 @@ export const WhimsyWishes: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   }, [accent]);
 
   const onMore = () => {
-    setIdx((i) => randomIndex(WISHES.length, i));
+    setPersonalizedWish(pickWish());
     setAccentIdx((i) => randomIndex(ACCENTS.length, i));
     setAnimSeed((s) => s + 1);
   };
@@ -299,6 +360,18 @@ export const WhimsyWishes: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             <div className="whimsy-loop-sway">
               {doodleFor(idx, accent)}
             </div>
+            {/* Mood-based tiny doodles */}
+            {(() => {
+              const { context } = readPersonalization();
+              const hints = moodHints(context);
+              if (hints.isStressed || hints.isTired) {
+                return <div className="absolute -top-2 -right-2 size-2 rounded-full bg-foreground/20 animate-whimsy-sparkle" />;
+              } else if (hints.isBlue) {
+                return <div className="absolute -top-2 -right-2 size-3 rounded-full bg-yellow-400/40 animate-whimsy-sparkle" />;
+              } else {
+                return <div className="absolute -top-2 -right-2 size-2 rounded-full bg-pink-300/40 animate-whimsy-sparkle" />;
+              }
+            })()}
           </div>
 
           <div className="mx-auto max-w-xl whimsy-letter">

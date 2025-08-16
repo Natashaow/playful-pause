@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { IconPalette } from "@/components/doodles/Icons";
+import { readPersonalization, moodHints } from "@/lib/personalization";
 
 // Palette (8 soft colors)
 const PALETTE = [
@@ -14,6 +15,28 @@ const PALETTE = [
   { name: "Rose", value: "#FFD93D" },
   { name: "Bluebell", value: "#A0C4FF" },
 ] as const;
+
+// Mood-based palette subsets
+const COOL: typeof PALETTE = [
+  { name: "Ocean", value: "#4ECDC4" },
+  { name: "Lavender", value: "#C7CEEA" },
+  { name: "Sky", value: "#A8E6CF" },
+  { name: "Bluebell", value: "#A0C4FF" },
+];
+
+const WARM: typeof PALETTE = [
+  { name: "Coral", value: "#FF6B6B" },
+  { name: "Peach", value: "#FFB4B4" },
+  { name: "Rose", value: "#FFD93D" },
+  { name: "Mint", value: "#95E1D3" },
+];
+
+const PLAY: typeof PALETTE = [
+  { name: "Coral", value: "#FF6B6B" },
+  { name: "Mint", value: "#95E1D3" },
+  { name: "Rose", value: "#FFD93D" },
+  { name: "Sky", value: "#A8E6CF" },
+];
 
 function hexToRgba(hex: string, alpha: number) {
   const clean = hex.replace('#', '');
@@ -41,6 +64,8 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
   const [stroke, setStroke] = useState<number>(5);
   const [softBackground, setSoftBackground] = useState<boolean>(true);
   const [showTwinkles, setShowTwinkles] = useState<boolean>(false);
+  const [currentPalette, setCurrentPalette] = useState<typeof PALETTE>(PALETTE);
+  const [themeHint, setThemeHint] = useState<string>("");
   const isDrawingRef = useRef<boolean>(false);
   const pointsRef = useRef<Array<{x:number;y:number;time:number}>>([]);
   const clearGlowTimeout = useRef<number | null>(null);
@@ -48,6 +73,29 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
   const canvasHeightCss = 420; // ~420px
 
   const bgClass = useMemo(() => softBackground ? "bg-gradient-calm" : "bg-white", [softBackground]);
+
+  // Personalization setup on mount
+  useEffect(() => {
+    const { context, lastSpark } = readPersonalization();
+    const hints = moodHints(context);
+
+    // Choose palette based on mood
+    if (hints.isStressed || hints.isTired) {
+      setCurrentPalette(COOL); // cooling colors
+      setSelectedColor(COOL[0].value);
+    } else if (hints.isBlue) {
+      setCurrentPalette(WARM); // warming colors
+      setSelectedColor(WARM[0].value);
+    } else {
+      setCurrentPalette(PLAY); // playful mix
+      setSelectedColor(PLAY[0].value);
+    }
+
+    // Set theme hint based on last Creative Spark response
+    if (lastSpark && Math.random() < 0.2) { // 20% chance
+      setThemeHint("Try doodling a tiny scene from your saved idea");
+    }
+  }, []);
 
   // Setup canvas size, DPR-aware, and resize observer
   useEffect(() => {
@@ -249,6 +297,11 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
             <div>
               <h2 className="text-3xl font-heading font-bold text-primary">Doodle Play</h2>
               <p className="font-sans text-muted-foreground">Create playful doodles to relax your mind and spark creativity</p>
+              {themeHint && (
+                <p className="mt-2 font-sans text-sm text-muted-foreground/80 italic">
+                  💡 {themeHint}
+                </p>
+              )}
             </div>
           </div>
 
@@ -256,7 +309,7 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
             {/* Colors */}
             <div className="flex items-center gap-2 flex-wrap" aria-label="Choose color">
-              {PALETTE.map((c) => (
+              {currentPalette.map((c) => (
                 <button
                   key={c.name}
                   aria-label={`Color ${c.name}`}
