@@ -24,7 +24,7 @@ const PHASES: Array<{
 }> = [
   { key: "inhale", label: "Breathe In", seconds: 4, anim: "breatheIn" },
   { key: "hold1", label: "Hold",       seconds: 4, anim: "holdExpanded",  isHold: true },
-  { key: "exhale", label: "Breathe Out", seconds: 6, anim: "breatheOut" },
+  { key: "exhale", label: "Breathe Out", seconds: 4, anim: "breatheOut" },
   { key: "hold2", label: "Hold",       seconds: 4, anim: "holdContracted", isHold: true },
 ];
 
