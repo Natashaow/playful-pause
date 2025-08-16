@@ -2,16 +2,17 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { IconBreath } from "@/components/doodles/Icons";
+import { recordColorUse, logActivity, loadState } from "@/lib/personalization";
 
 const COLORS = [
-  { name: "Sunshine", value: "#FFE66D" },
-  { name: "Ocean", value: "#4ECDC4" },
-  { name: "Lavender", value: "#C7CEEA" },
-  { name: "Coral", value: "#FF6B6B" },
-  { name: "Mint", value: "#95E1D3" },
-  { name: "Peach", value: "#FFB4B4" },
-  { name: "Sky", value: "#A8E6CF" },
-  { name: "Rose", value: "#FFD93D" },
+  { name: "Sunshine", value: "#FFE66D", emotion: "energized", tags: ["joy","light"] },
+  { name: "Ocean", value: "#4ECDC4", emotion: "calm", tags: ["calm","fresh"] },
+  { name: "Lavender", value: "#C7CEEA", emotion: "peaceful", tags: ["calm","dreamy"] },
+  { name: "Coral", value: "#FF6B6B", emotion: "passionate", tags: ["bright","energy"] },
+  { name: "Mint", value: "#95E1D3", emotion: "fresh", tags: ["fresh","calm"] },
+  { name: "Peach", value: "#FFB4B4", emotion: "warm", tags: ["cozy","warm"] },
+  { name: "Sky", value: "#A8E6CF", emotion: "hopeful", tags: ["hope","calm"] },
+  { name: "Rose", value: "#FFD93D", emotion: "cheerful", tags: ["joy","warm"] },
 ] as const;
 
 type Phase = "inhale" | "hold" | "exhale";
@@ -28,6 +29,24 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
   const [secondsLeft, setSecondsLeft] = useState<number>(4);
   const [running, setRunning] = useState<boolean>(false);
   const timerRef = useRef<number | null>(null);
+
+  // Suggest color from keywords on mount
+  useEffect(() => {
+    const suggested = suggestColorFromKeywords();
+    if (suggested) {
+      setSelected(suggested);
+    }
+  }, []);
+
+  function suggestColorFromKeywords() {
+    const { keywords=[] } = loadState();
+    const text = keywords.join(' ').toLowerCase();
+    if (/(stress|overwhelm|anxious|tired|busy)/.test(text)) return COLORS.find(c => c.name === "Lavender");
+    if (/(cozy|warm|tea|blanket)/.test(text)) return COLORS.find(c => c.name === "Peach");
+    if (/(joy|sun|bright|holiday)/.test(text)) return COLORS.find(c => c.name === "Sunshine");
+    if (/(ocean|sky|breeze|cloud)/.test(text)) return COLORS.find(c => c.name === "Sky");
+    return null;
+  }
 
   // Start breathing when a color is selected
   useEffect(() => {
@@ -114,8 +133,20 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
             {COLORS.map((c) => (
               <Card
                 key={c.name}
-                className="p-4 cursor-pointer transition-all duration-300 ease-out hover:scale-105 border-2 border-border hover:border-primary/50"
-                onClick={() => setSelected(c)}
+                className={`p-4 cursor-pointer transition-all duration-300 ease-out hover:scale-105 border-2 ${
+                  selected?.name === c.name 
+                    ? 'border-primary shadow-glow' 
+                    : 'border-border hover:border-primary/50'
+                }`}
+                onClick={() => {
+                  setSelected(c);
+                  recordColorUse({ 
+                    name: c.name, 
+                    hex: c.value, 
+                    tags: c.tags 
+                  });
+                  logActivity('colorBreathing');
+                }}
                 aria-label={`Choose ${c.name}`}
                 role="button"
               >

@@ -2,6 +2,97 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { IconPalette } from "@/components/doodles/Icons";
+import { popSticker, recordDrawStroke, logActivity } from "@/lib/personalization";
+
+// Sticker icon component
+const StickerIcon = ({ name, className }: { name: string; className?: string }) => {
+  const stroke = 'currentColor';
+  const fill = 'currentColor';
+  
+  switch (name) {
+    case 'cloud':
+      return (
+        <svg viewBox="0 0 40 24" className={className} aria-hidden>
+          <path d="M8 16c0-4 3-7 7-7 2-4 6-6 10-3 2-3 6-4 9-1" stroke={stroke} strokeWidth="2" fill="none" strokeLinecap="round" />
+          <path d="M6 18h20c3 0 5-2 5-5s-2-5-5-5c-1 0-2 0-3 1" fill={fill} opacity="0.2" />
+          <path d="M8 20h18c3 0 5-2 5-5s-2-5-5-5c-1 0-2 0-3 1" stroke={stroke} strokeWidth="2" fill="none" strokeLinecap="round" />
+        </svg>
+      );
+    case 'star':
+      return (
+        <svg viewBox="0 0 32 32" className={className} aria-hidden>
+          <path d="M16 4l2.9 6.2 6.9.7-5 4.6 1.4 6.5L16 18.2l-5.3 2.9 1.4-6.5-5-4.6 6.9-.7L16 4z" fill={fill} opacity="0.6" />
+        </svg>
+      );
+    case 'moon':
+      return (
+        <svg viewBox="0 0 32 32" className={className} aria-hidden>
+          <path d="M24 8c-12 2-20 14-16 26 8-2 14-8 16-26z" fill={fill} opacity="0.6" />
+        </svg>
+      );
+    case 'daisy':
+      return (
+        <svg viewBox="0 0 32 32" className={className} aria-hidden>
+          <circle cx="16" cy="16" r="3" fill={fill} opacity="0.4" />
+          <g stroke={stroke} strokeWidth="2" strokeLinecap="round">
+            <path d="M16 6v8" /><path d="M16 22v8" /><path d="M6 16h8" /><path d="M22 16h8" />
+            <path d="M10 10l6 6" /><path d="M26 26L20 20" /><path d="M10 22l6-6" /><path d="M26 6L20 12" />
+          </g>
+        </svg>
+      );
+    case 'cat':
+      return (
+        <svg viewBox="0 0 32 32" className={className} aria-hidden>
+          <path d="M12 20c0-4 3-7 7-7s7 3 7 7-3 6-7 6-7-2-7-6z" stroke={stroke} strokeWidth="2" fill="none" />
+          <path d="M16 12l-2-3M16 12l2-3" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
+          <path d="M26 24c3 1 4 2 4 4" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
+          <circle cx="14" cy="18" r="1" fill={fill} />
+          <circle cx="26" cy="18" r="1" fill={fill} />
+        </svg>
+      );
+    case 'lamp':
+      return (
+        <svg viewBox="0 0 32 32" className={className} aria-hidden>
+          <path d="M8 14h16l-3 8H11L8 14z" stroke={stroke} strokeWidth="2" fill="none" strokeLinecap="round" />
+          <path d="M16 18v10" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
+          <circle cx="16" cy="30" r="3" stroke={stroke} strokeWidth="2" />
+          <circle cx="16" cy="18" r="4" fill={fill} opacity="0.15" />
+        </svg>
+      );
+    case 'paper-plane':
+      return (
+        <svg viewBox="0 0 32 24" className={className} aria-hidden>
+          <path d="M4 16l24-8-12 8 4 8-8-6-12-2z" stroke={stroke} strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+    case 'clover':
+      return (
+        <svg viewBox="0 0 32 32" className={className} aria-hidden>
+          <circle cx="14" cy="14" r="4" fill={fill} opacity="0.35" />
+          <circle cx="18" cy="14" r="4" fill={fill} opacity="0.35" />
+          <circle cx="14" cy="18" r="4" fill={fill} opacity="0.35" />
+          <circle cx="18" cy="18" r="4" fill={fill} opacity="0.35" />
+          <path d="M16 20v6" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      );
+    case 'bird':
+      return (
+        <svg viewBox="0 0 32 24" className={className} aria-hidden>
+          <path d="M8 18c2-2 4-2 6 0M20 16c2-2 4-2 6 0M16 14c2-2 4-2 6 0" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      );
+    case 'kettle':
+      return (
+        <svg viewBox="0 0 32 24" className={className} aria-hidden>
+          <path d="M10 16h16a6 6 0 01-6 6H16A6 6 0 0110 16z" stroke={stroke} strokeWidth="2" fill="none" strokeLinecap="round" />
+          <path d="M26 16h4c2 0 2 4 0 4h-3" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
+          <path d="M16 8c0 2-3 2-3 4" stroke={stroke} strokeWidth="1" strokeLinecap="round" opacity="0.6" />
+        </svg>
+      );
+    default:
+      return <div className={className} />;
+  }
+};
 
 // Palette (8 soft colors)
 const PALETTE = [
@@ -41,6 +132,7 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
   const [stroke, setStroke] = useState<number>(5);
   const [softBackground, setSoftBackground] = useState<boolean>(true);
   const [showTwinkles, setShowTwinkles] = useState<boolean>(false);
+  const [sticker, setSticker] = useState<ReturnType<typeof popSticker> | undefined>();
   const isDrawingRef = useRef<boolean>(false);
   const pointsRef = useRef<Array<{x:number;y:number;time:number}>>([]);
   const clearGlowTimeout = useRef<number | null>(null);
@@ -48,6 +140,12 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
   const canvasHeightCss = 420; // ~420px
 
   const bgClass = useMemo(() => softBackground ? "bg-gradient-calm" : "bg-white", [softBackground]);
+
+  // Pop sticker and log activity on mount
+  useEffect(() => {
+    setSticker(popSticker());
+    logActivity('doodlePlay');
+  }, []);
 
   // Setup canvas size, DPR-aware, and resize observer
   useEffect(() => {
@@ -162,6 +260,11 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
       setShowTwinkles(true);
     }
 
+    // Hide sticker on first stroke
+    if (sticker) {
+      setSticker(undefined);
+    }
+
     // Start glow
     ctx.shadowBlur = Math.max(0, stroke * 0.9);
     ctx.shadowColor = hexToRgba(selectedColor, 0.35);
@@ -201,6 +304,9 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
       m2.y
     );
     ctx.stroke();
+
+    // Record stroke color for personalization
+    recordDrawStroke(selectedColor);
   };
 
   const moveStroke = (evt: React.PointerEvent<HTMLCanvasElement>) => {
@@ -319,6 +425,14 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
             aria-label="Doodle canvas"
             role="img"
           />
+          
+          {/* Sticker overlay */}
+          {sticker && (
+            <div className="pointer-events-none absolute left-4 top-4 opacity-80 animate-float-slow"
+                 style={{ color: sticker.color }}>
+              <StickerIcon name={sticker.name} className="h-10 w-10" />
+            </div>
+          )}
           
           {/* Twinkles on first stroke */}
           {showTwinkles && (

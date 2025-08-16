@@ -1,12 +1,39 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ActivityCard from "@/components/ActivityCard";
 import { IconRainbow, IconBreath, IconHeartStar, IconPalette } from "@/components/doodles/Icons";
+import { usePersonalization } from "@/hooks/usePersonalization";
 
 // ✅ Activities
 import ColorBreathing from "@/components/activities/ColorBreathing";
 import { ColorDoodlePlay } from "@/components/activities/ColorDoodlePlay";
 import { WhimsyWishes } from "@/components/activities/ComplimentGenerator";
 import { CreativePrompt } from "@/components/activities/CreativePrompt";
+
+const SurpriseOverlay = () => {
+  const [show, setShow] = useState(false);
+  const { activityLog } = usePersonalization();
+
+  useEffect(() => {
+    const uniq = Array.from(new Set(activityLog));
+    if (!show && uniq.length >= 3) {
+      setShow(true);
+      setTimeout(() => setShow(false), 2200);
+    }
+  }, [activityLog, show]);
+
+  if (!show) return null;
+  return (
+    <div className="pointer-events-none fixed inset-0 z-[60]">
+      <div className="absolute left-[-10%] top-[20%] h-10 w-[120%] animate-[fly_2.2s_ease-in-out_forwards]">
+        {/* your paper-plane / birds SVG path gliding across */}
+        <svg viewBox="0 0 100 20" className="h-full w-full text-foreground/30" aria-hidden>
+          <path d="M2 10 Q 20 2, 40 10 T 98 10" fill="none" stroke="currentColor" strokeWidth="0.8" />
+        </svg>
+      </div>
+      <style>{`@keyframes fly{0%{transform:translateX(0)}100%{transform:translateX(10%)}}`}</style>
+    </div>
+  );
+};
 
 type Activity = "home" | "colorBreathing" | "doodlePlay" | "compliments" | "creative";
 
@@ -121,6 +148,9 @@ const Index = () => {
           <div className="text-base">🌸</div>
         </div>
       </footer>
+
+      {/* Surprise overlay */}
+      <SurpriseOverlay />
     </div>
   );
 };
