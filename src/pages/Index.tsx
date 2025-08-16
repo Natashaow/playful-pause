@@ -4,9 +4,9 @@ import { IconRainbow, IconBreath, IconHeartStar, IconPalette } from "@/component
 
 // ✅ Activities
 import ColorBreathing from "@/components/activities/ColorBreathing";
-import { ColorDoodlePlay } from "@/components/activities/ColorDoodlePlay";
-import { WhimsyWishes } from "@/components/activities/ComplimentGenerator";
-import { CreativePrompt } from "@/components/activities/CreativePrompt";
+import ColorDoodlePlay from "@/components/activities/ColorDoodlePlay";
+import WhimsyWishes from "@/components/activities/WhimsyWishes";
+import CreativePrompt from "@/components/activities/CreativePrompt";
 
 type Activity = "home" | "colorBreathing" | "doodlePlay" | "compliments" | "creative";
 
