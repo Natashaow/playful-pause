@@ -14,24 +14,24 @@ const PALETTE = [
   { name: "Sky", value: "#A8E6CF" },
   { name: "Rose", value: "#FFD93D" },
   { name: "Bluebell", value: "#A0C4FF" },
-] as const;
+];
 
 // Mood-based palette subsets
-const COOL: typeof PALETTE = [
+const COOL = [
   { name: "Ocean", value: "#4ECDC4" },
   { name: "Lavender", value: "#C7CEEA" },
   { name: "Sky", value: "#A8E6CF" },
   { name: "Bluebell", value: "#A0C4FF" },
 ];
 
-const WARM: typeof PALETTE = [
+const WARM = [
   { name: "Coral", value: "#FF6B6B" },
   { name: "Peach", value: "#FFB4B4" },
   { name: "Rose", value: "#FFD93D" },
   { name: "Mint", value: "#95E1D3" },
 ];
 
-const PLAY: typeof PALETTE = [
+const PLAY = [
   { name: "Coral", value: "#FF6B6B" },
   { name: "Mint", value: "#95E1D3" },
   { name: "Rose", value: "#FFD93D" },
@@ -64,7 +64,7 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
   const [stroke, setStroke] = useState<number>(5);
   const [softBackground, setSoftBackground] = useState<boolean>(true);
   const [showTwinkles, setShowTwinkles] = useState<boolean>(false);
-  const [currentPalette, setCurrentPalette] = useState<typeof PALETTE>(PALETTE);
+  const [currentPalette, setCurrentPalette] = useState<Array<{name: string; value: string}>>(PALETTE);
   const [themeHint, setThemeHint] = useState<string>("");
   const isDrawingRef = useRef<boolean>(false);
   const pointsRef = useRef<Array<{x:number;y:number;time:number}>>([]);
@@ -277,11 +277,11 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
+    <div className="mx-auto max-w-5xl p-6">
       <Button onClick={onBack} variant="ghost" className="mb-6" aria-label="Back to Activities">← Back to Activities</Button>
 
-      <Card className="p-0 border-0 shadow-soft overflow-hidden">
-        <div className="relative p-6">
+      <Card className="p-0 border-0 shadow-soft overflow-hidden mb-8">
+        <div className="relative p-6 text-center">
           {/* Pastel radial glow band */}
           <div 
             aria-hidden 
@@ -291,20 +291,20 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
             }}
           />
           
-          {/* Header with doodle */}
-          <div className="flex items-center gap-3 mb-6">
-            <IconPalette className="h-6 w-6 text-foreground/80 animate-float-slow" />
-            <div>
-              <h2 className="text-3xl font-heading font-bold text-primary">Doodle Play</h2>
-              <p className="font-sans text-muted-foreground">Create playful doodles to relax your mind and spark creativity</p>
-              {themeHint && (
-                <p className="mt-2 font-sans text-sm text-muted-foreground/80 italic">
-                  💡 {themeHint}
-                </p>
-              )}
-            </div>
-          </div>
+          <h2 className="text-3xl font-heading font-bold mb-3 bg-gradient-calm bg-clip-text text-transparent">
+            Doodle Play
+          </h2>
+          <p className="font-sans text-muted-foreground">Create playful doodles to relax your mind and spark creativity</p>
+          {themeHint && (
+            <p className="mt-2 font-sans text-sm text-muted-foreground/80 italic">
+              💡 {themeHint}
+            </p>
+          )}
+        </div>
+      </Card>
 
+      <Card className="p-8 border-0 shadow-soft relative overflow-hidden">
+        <div className="relative">
           {/* Toolbar */}
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
             {/* Colors */}
@@ -352,7 +352,7 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
 
             <div className="flex items-center gap-2">
               <Button type="button" variant="outline" onClick={clearCanvas} aria-label="Clear canvas">Clear</Button>
-              <Button type="button" variant="default" onClick={savePng} aria-label="Save PNG">Save PNG</Button>
+              <Button type="button" variant="default" onClick={savePng} aria-label="Save PNG" className="bg-foreground text-white hover:bg-foreground/90">Save PNG</Button>
             </div>
           </div>
         </div>

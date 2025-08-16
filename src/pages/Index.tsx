@@ -44,17 +44,36 @@ const Index = () => {
       <header className="px-5 sm:px-6 lg:px-8 pt-6">
         <div className="mx-auto max-w-6xl flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="size-9 rounded-xl bg-white/80 ring-1 ring-white/60 flex items-center justify-center">
-              {/* simple mark: play+pause glyph if you have it; keeping a dot for now */}
-              <span className="block size-2 rounded-full bg-foreground/80" />
+            <div className="size-9 rounded-xl bg-white/80 ring-1 ring-white/60 flex items-center justify-center group">
+              {/* Minimalistic pause symbol in black */}
+              <svg 
+                width="18" 
+                height="18" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                className="text-foreground transition-all duration-300 group-hover:scale-110"
+                aria-label="Pause symbol"
+              >
+                <rect x="6" y="4" width="3" height="16" rx="0.5" fill="currentColor" />
+                <rect x="15" y="4" width="3" height="16" rx="0.5" fill="currentColor" />
+              </svg>
             </div>
             <span className="font-recoleta text-xl">Playful Pause</span>
           </div>
-          {/* Optional CTA */}
-          <a href="#"
-             className="hidden sm:inline-flex items-center rounded-full bg-foreground px-4 py-2 font-jakarta text-sm font-semibold text-white/95 shadow-sm hover:opacity-95">
-            Start a pause
-          </a>
+          {/* Random Activity CTA */}
+                      <button
+              onClick={() => {
+                const activities: Activity[] = ["colorBreathing", "doodlePlay", "compliments", "creative"];
+                const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+                setCurrentActivity(randomActivity);
+              }}
+              className="hidden sm:inline-flex items-center rounded-full bg-foreground px-4 py-2 font-jakarta text-sm font-semibold text-white shadow-sm hover:bg-foreground/90 transition-all duration-300 hover:scale-105 hover:shadow-lg group"
+              title="Click for a surprise pause activity ✧"
+              aria-label="Start a random pause activity"
+            >
+            <span className="group-hover:animate-pulse">Start a pause</span>
+            <span className="ml-1 opacity-60 group-hover:opacity-100 transition-opacity">✧</span>
+          </button>
         </div>
       </header>
 
@@ -78,7 +97,7 @@ const Index = () => {
               description="Pick a color, breathe with it, and let a small calm settle in."
               onClick={() => setCurrentActivity("colorBreathing")}
               gradient="bg-gradient-joy"
-              doodle={<IconRainbow className="h-6 w-6" />}
+              doodle={<IconRainbow className="h-6 w-6 text-foreground/80" />}
             />
           </div>
 
@@ -88,7 +107,7 @@ const Index = () => {
               description="Free-draw tiny shapes and watch them happily come alive."
               onClick={() => setCurrentActivity("doodlePlay")}
               gradient="bg-gradient-calm"
-              doodle={<IconPalette className="h-6 w-6" />}
+              doodle={<IconPalette className="h-6 w-6 text-foreground/80" />}
             />
           </div>
 
@@ -98,7 +117,7 @@ const Index = () => {
               description="Receive a small, kind wish with a gentle animated doodle."
               onClick={() => setCurrentActivity("compliments")}
               gradient="bg-gradient-sunshine"
-              doodle={<IconHeartStar className="h-6 w-6" />}
+              doodle={<IconHeartStar className="h-6 w-6 text-foreground/80" />}
             />
           </div>
 
@@ -108,7 +127,7 @@ const Index = () => {
               description="A quiet writing prompt for playful imagination."
               onClick={() => setCurrentActivity("creative")}
               gradient="bg-gradient-joy"
-              doodle={<IconBreath className="h-6 w-6" />}
+              doodle={<IconBreath className="h-6 w-6 text-foreground/80" />}
             />
           </div>
         </div>
