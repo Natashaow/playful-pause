@@ -430,42 +430,29 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
       <Button 
         onClick={onBack} 
         variant="ghost" 
-        className="mb-6 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:text-blue-700 transition-all duration-200" 
+        className="mb-6 text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-all duration-300" 
         aria-label="Back to Activities"
       >
         ← Back to Activities
       </Button>
 
-      <Card className="p-0 border-0 shadow-soft overflow-hidden mb-8">
-        <div className="relative p-6 text-center">
-          {/* Pastel radial glow band */}
-          <div 
-            aria-hidden 
-            className="absolute inset-x-0 top-0 -z-10 h-24" 
-            style={{
-              background: "radial-gradient(60% 60% at 50% 10%, rgba(255, 182, 193, 0.3) 0%, transparent 70%)",
-            }}
-          />
-          
-
-          
-          <h2 className="text-3xl font-heading font-bold mb-3 bg-gradient-calm bg-clip-text text-transparent">
-            Creative Spark
-          </h2>
-          <p className="text-muted-foreground font-sans">Let your imagination wander for a few minutes</p>
-          
-          {/* Prompt-specific doodle animation */}
-          <div className="absolute top-8 right-8 pointer-events-none">
-            <div className="animate-float-slow w-[60px] h-[50px] flex items-center justify-center">
-              {(() => {
-                const currentPromptIndex = PROMPTS.findIndex(p => p === prompt);
-                const DoodleComponent = currentPromptIndex >= 0 ? PROMPT_DOODLES[currentPromptIndex] : TeacupDoodle;
-                return <DoodleComponent color="hsl(var(--primary))" />;
-              })()}
-            </div>
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-heading font-bold mb-3 text-foreground">
+          Creative Spark
+        </h2>
+        <p className="text-muted-foreground font-sans">Let your imagination wander for a few minutes</p>
+        
+        {/* Prompt-specific doodle animation */}
+        <div className="flex justify-center mt-4">
+          <div className="animate-float-slow w-[60px] h-[50px] flex items-center justify-center">
+            {(() => {
+              const currentPromptIndex = PROMPTS.findIndex(p => p === prompt);
+              const DoodleComponent = currentPromptIndex >= 0 ? PROMPT_DOODLES[currentPromptIndex] : TeacupDoodle;
+              return <DoodleComponent color="hsl(var(--primary))" />;
+            })()}
           </div>
         </div>
-      </Card>
+      </div>
 
       <Card className="p-8 border-0 shadow-soft relative overflow-hidden">
 

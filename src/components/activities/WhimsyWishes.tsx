@@ -394,27 +394,16 @@ export default function WhimsyWishes({ onBack }: { onBack: () => void }) {
         .whimsy-loop-glow { box-shadow: 0 0 0 0 rgba(0,0,0,0), 0 6px 22px -6px rgba(0,0,0,0.12) }
       `}</style>
 
-      <Button onClick={onBack} variant="ghost" className="mb-6" aria-label="Back to Activities">
+      <Button onClick={onBack} variant="ghost" className="mb-6 text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-all duration-300" aria-label="Back to Activities">
         ← Back to Activities
       </Button>
 
-      <Card className="p-0 border-0 shadow-soft overflow-hidden mb-8">
-        <div className="relative p-6 text-center">
-          {/* Pastel radial glow band */}
-          <div 
-            aria-hidden 
-            className="absolute inset-x-0 top-0 -z-10 h-24" 
-            style={{
-              background: "radial-gradient(60% 60% at 50% 10%, rgba(255, 182, 193, 0.3) 0%, transparent 70%)",
-            }}
-          />
-          
-          <h2 className="text-3xl font-heading font-bold mb-3 bg-gradient-sunshine bg-clip-text text-transparent">
-            Whimsy Wishes
-          </h2>
-          <p className="text-muted-foreground font-sans">Tiny, magical messages to soften your day</p>
-        </div>
-      </Card>
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-heading font-bold mb-3 text-foreground">
+          Whimsy Wishes
+        </h2>
+        <p className="text-muted-foreground font-sans">Tiny, magical messages to soften your day</p>
+      </div>
 
       <Card className="p-8 border-0 shadow-soft relative overflow-hidden">
         <div aria-hidden className="absolute inset-0 -z-10" style={{

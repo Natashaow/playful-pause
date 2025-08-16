@@ -73,7 +73,7 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
   const pointsRef = useRef<Array<{x:number;y:number;time:number}>>([]);
   const clearGlowTimeout = useRef<number | null>(null);
 
-  const canvasHeightCss = 420; // ~420px
+  const canvasHeightCss = 480; // ~480px
 
   // Always use white background
 
@@ -82,17 +82,9 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
     const { context, lastSpark } = readPersonalization();
     const hints = moodHints(context);
 
-    // Choose palette based on mood
-    if (hints.isStressed || hints.isTired) {
-      setCurrentPalette(COOL); // cooling colors
-      setSelectedColor(COOL[0].value);
-    } else if (hints.isBlue) {
-      setCurrentPalette(WARM); // warming colors
-      setSelectedColor(WARM[0].value);
-    } else {
-      setCurrentPalette(PLAY); // playful mix
-      setSelectedColor(PLAY[0].value);
-    }
+    // Always show all 9 colors from the full palette
+    setCurrentPalette(PALETTE);
+    setSelectedColor(PALETTE[0].value);
 
     // Set theme hint based on last Creative Spark response
     if (lastSpark && Math.random() < 0.2) { // 20% chance
@@ -206,6 +198,11 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
       setShowTwinkles(true);
     }
 
+    // Set the stroke color at the beginning
+    console.log('Setting stroke color to:', selectedColor);
+    ctx.strokeStyle = selectedColor;
+    ctx.lineWidth = stroke;
+    
     // Start glow
     ctx.shadowBlur = Math.max(0, stroke * 0.9);
     ctx.shadowColor = hexToRgba(selectedColor, 0.35);
@@ -233,6 +230,9 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
     const jitterAmt = Math.min(1.2, 0.22 * stroke);
     const widthJitter = 1 + (Math.random() - 0.5) * 0.12; // +/-6%
 
+
+    
+    console.log('Drawing with color:', selectedColor, 'ctx.strokeStyle:', ctx.strokeStyle);
     ctx.strokeStyle = selectedColor;
     ctx.lineWidth = Math.max(1, stroke * widthJitter);
 
@@ -274,35 +274,24 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
 
   return (
     <div className="mx-auto max-w-5xl p-6">
-      <Button onClick={onBack} variant="ghost" className="mb-6" aria-label="Back to Activities">← Back to Activities</Button>
+      <Button onClick={onBack} variant="ghost" className="mb-6 text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-all duration-300" aria-label="Back to Activities">← Back to Activities</Button>
 
-      <Card className="p-0 border-0 shadow-soft overflow-hidden mb-8">
-        <div className="relative p-6 text-center">
-          {/* Pastel radial glow band */}
-          <div 
-            aria-hidden 
-            className="absolute inset-x-0 top-0 -z-10 h-24" 
-            style={{
-              background: "radial-gradient(60% 60% at 50% 10%, rgba(164, 234, 218, 0.3) 0%, transparent 70%)",
-            }}
-          />
-          
-          <h2 className="text-3xl font-heading font-bold mb-3 text-foreground">
-            Doodle Play
-          </h2>
-          <p className="font-sans text-muted-foreground">Create playful doodles to relax your mind and spark creativity</p>
-          {themeHint && (
-            <p className="mt-2 font-sans text-sm text-muted-foreground/80 italic">
-              💡 {themeHint}
-            </p>
-          )}
-        </div>
-      </Card>
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-heading font-bold mb-3 text-foreground">
+          Doodle Play
+        </h2>
+        <p className="font-sans text-muted-foreground">Create playful doodles to relax your mind and spark creativity</p>
+        {themeHint && (
+          <p className="mt-2 font-sans text-sm text-muted-foreground/80 italic">
+            💡 {themeHint}
+          </p>
+        )}
+      </div>
 
-      <Card className="p-8 border-0 shadow-soft relative overflow-hidden">
+      <Card className="px-6 py-4 border-0 shadow-md relative overflow-hidden bg-gray-50 rounded-xl">
         <div className="relative">
           {/* Toolbar */}
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-4 min-h-[60px]">
             {/* Colors */}
             <div className="flex items-center gap-2 flex-wrap" aria-label="Choose color">
               {currentPalette.map((c) => (
@@ -327,7 +316,11 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
                 max={10}
                 value={stroke}
                 onChange={(e) => setStroke(parseInt(e.target.value))}
-                className="w-40 accent-primary"
+                className="w-40"
+                style={{ 
+                  accentColor: selectedColor,
+                  '--tw-ring-color': selectedColor
+                } as React.CSSProperties}
               />
               <span className="text-sm tabular-nums w-6 text-center">{stroke}</span>
             </div>
@@ -343,7 +336,7 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
       </Card>
 
       {/* Canvas area */}
-      <Card className="border-0 shadow-soft bg-white">
+      <Card className="border-0 shadow-soft bg-white rounded-xl mb-8">
         <div ref={containerRef} className="relative w-full rounded-lg overflow-hidden">
           <canvas
             ref={canvasRef}
