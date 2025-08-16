@@ -209,7 +209,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
           <div className="relative mb-8">
             {/* Background circle - expands/contracts with bubble */}
             <div
-              className="absolute inset-0 w-32 h-32 rounded-full mx-auto opacity-15"
+              className="absolute inset-0 w-32 h-32 rounded-full mx-auto opacity-10"
               style={{
                 background: `radial-gradient(circle, ${selected.value} 0%, transparent 70%)`,
                 animation: phase === "inhale" ? "breatheIn 4s ease-in-out forwards" :
@@ -252,16 +252,16 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
             <div className="absolute bottom-2 right-4 size-1.5 rounded-full bg-foreground/20 animate-twinkle" />
           </div>
 
-            {/* Breathing prompt text - closer to bubble */}
-            <div className="relative z-10 space-y-3 mb-8">
-              <h4 className="text-2xl font-heading font-semibold text-foreground">
-                {phase === "inhale" ? "Breathe In" : 
-                 phase === "holdInhale" ? "Hold" : 
-                 phase === "exhale" ? "Breathe Out" : 
-                 "Hold"}
-              </h4>
-              <p className="text-4xl font-mono font-bold text-primary">{secondsLeft}</p>
-            </div>
+          {/* Breathing prompt text - directly under the bubble */}
+          <div className="relative z-10 space-y-3 mb-8 text-center">
+            <h4 className="text-2xl font-heading font-semibold text-foreground">
+              {phase === "inhale" ? "Breathe In" : 
+               phase === "holdInhale" ? "Hold" : 
+               phase === "exhale" ? "Breathe Out" : 
+               "Hold"}
+            </h4>
+            <p className="text-4xl font-mono font-bold text-primary">{secondsLeft}</p>
+          </div>
 
             {/* Controls */}
           <div className="relative z-10 flex items-center justify-center gap-3">
