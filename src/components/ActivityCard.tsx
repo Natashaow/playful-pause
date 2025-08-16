@@ -13,7 +13,7 @@ const ActivityCard: React.FC<Props> = ({ title, description, onClick, doodle, gr
     <button
       onClick={onClick}
       className={[
-        "group relative w-full overflow-hidden rounded-2xl text-left",
+        "group relative w-full h-32 overflow-hidden rounded-2xl text-left",
         "bg-white/70 backdrop-blur ring-1 ring-white/50 shadow-sm",
         "transition-transform duration-300 hover:-translate-y-0.5",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-0 focus-visible:ring-foreground/30",
