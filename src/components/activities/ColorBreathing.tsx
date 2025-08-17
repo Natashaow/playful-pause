@@ -4,61 +4,61 @@ import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const COLORS = [
-  { name: "Cream", value: "#FFF2D1" },      // Lighter pastel yellow - happiness and warmth
-  { name: "Sky", value: "#D4E8F0" },        // Lighter pastel blue - tranquility and peace
-  { name: "Blush", value: "#F8D0D0" },      // Lighter pastel red - tenderness and care
-  { name: "Sage", value: "#D8F0D8" },       // Lighter pastel green - balance and renewal
-  { name: "Lavender", value: "#E2D8F0" },   // Lighter pastel purple - courage and transformation
-  { name: "Teal", value: "#C8F0E0" },       // Lighter pastel teal - serenity and calm
-  { name: "Lime", value: "#E0F4A8" },       // Lighter pastel lime - new beginnings
-  { name: "Rose", value: "#FCD8E8" },       // Lighter pastel pink - softness and nurturing
-  { name: "Peach", value: "#F8E0C8" },      // Lighter pastel peach - nervous energy and tension
+  { name: "Joy", value: "#FFF2D1" },        // Lighter pastel yellow - happiness and warmth
+  { name: "Calm", value: "#D4E8F0" },       // Lighter pastel blue - tranquility and peace
+  { name: "Love", value: "#F8D0D0" },       // Lighter pastel red - tenderness and care
+  { name: "Growth", value: "#D8F0D8" },     // Lighter pastel green - balance and renewal
+  { name: "Fear", value: "#E2D8F0" },       // Lighter pastel purple - courage and transformation
+  { name: "Peace", value: "#C8F0E0" },      // Lighter pastel teal - serenity and calm
+  { name: "Hope", value: "#E0F4A8" },       // Lighter pastel lime - new beginnings
+  { name: "Gentle", value: "#FCD8E8" },     // Lighter pastel pink - softness and nurturing
+  { name: "Anxiety", value: "#F8E0C8" },    // Lighter pastel peach - nervous energy and tension
 ] as const;
 
 // Color psychology information
 const COLOR_INFO = {
-  "Cream": {
-    description: "Cream is a warm, bright yellow that radiates sunshine warmth and uplifting energy. This color represents pure happiness, optimism, and the bright energy of a new day. In color therapy, warm yellow tones are believed to stimulate joy, creativity, and mental clarity while creating feelings of cheerfulness and warmth.",
+  "Joy": {
+    description: "Joy is a warm, bright yellow that radiates sunshine warmth and uplifting energy. This color represents pure happiness, optimism, and the bright energy of a new day. In color therapy, warm yellow tones are believed to stimulate joy, creativity, and mental clarity while creating feelings of cheerfulness and warmth.",
     associations: "Breathe in sunshine warmth. Let joy fill your chest with light.",
     breathingGuidance: "Positive emotion - inviting more warmth and light into your being"
   },
-  "Sky": {
-    description: "Sky is a soft, gentle blue that evokes deep trust and relaxation. This color represents gentle clarity, peaceful reflection, and the soothing energy of water. In color therapy, soft blue tones are believed to have a profound calming effect on the mind and body, helping to reduce stress and promote inner peace.",
+  "Calm": {
+    description: "Calm is a soft, gentle blue that evokes deep trust and relaxation. This color represents gentle clarity, peaceful reflection, and the soothing energy of water. In color therapy, soft blue tones are believed to have a profound calming effect on the mind and body, helping to reduce stress and promote inner peace.",
     associations: "Breathe in steady clarity. Feel calm ripple gently through you.",
     breathingGuidance: "Positive emotion - inviting more clarity and peace into your being"
   },
-  "Blush": {
-    description: "Blush is a warm rose that represents deep tenderness, affection, and care. This color symbolizes the gentle warmth of the heart, nurturing energy, and the soft beauty of compassion. In color therapy, warm rose tones are believed to open the heart, promote emotional healing, and create feelings of safety and comfort.",
+  "Love": {
+    description: "Love is a warm rose that represents deep tenderness, affection, and care. This color symbolizes the gentle warmth of the heart, nurturing energy, and the soft beauty of compassion. In color therapy, warm rose tones are believed to open the heart, promote emotional healing, and create feelings of safety and comfort.",
     associations: "Breathe in compassion. Let love expand softly in your heart.",
     breathingGuidance: "Positive emotion - inviting more compassion and love into your being"
   },
-  "Sage": {
-    description: "Sage is a fresh, natural green that symbolizes renewal, balance, and progress. This color represents the energy of new beginnings, natural healing, and the steady progress of personal development. In color therapy, fresh green tones are believed to restore harmony, promote growth, and create feelings of safety and security.",
+  "Growth": {
+    description: "Growth is a fresh, natural green that symbolizes renewal, balance, and progress. This color represents the energy of new beginnings, natural healing, and the steady progress of personal development. In color therapy, fresh green tones are believed to restore harmony, promote growth, and create feelings of safety and security.",
     associations: "Breathe in renewal. Picture yourself stretching gently toward the light.",
     breathingGuidance: "Positive emotion - inviting more renewal and growth into your being"
   },
-  "Lavender": {
-    description: "Lavender is a muted purple that gently acknowledges uncertainty while softening its intensity. This color represents the transformation of fear into understanding, the courage to face challenges, and the gentle strength within. In color therapy, muted lavender tones are believed to help transform fear into wisdom and promote spiritual growth.",
+  "Fear": {
+    description: "Fear is a muted lavender that gently acknowledges uncertainty while softening its intensity. This color represents the transformation of fear into understanding, the courage to face challenges, and the gentle strength within. In color therapy, muted lavender tones are believed to help transform fear into wisdom and promote spiritual growth.",
     associations: "Breathe in courage. As you exhale, let fear drift away like smoke.",
     breathingGuidance: "Reframed emotion - breathing in courage, releasing fear with each exhale"
   },
-  "Teal": {
-    description: "Teal is a mint green that represents ease, safety, and perfect balance. This color symbolizes the gentle tranquility of nature, emotional equilibrium, and the peaceful energy of harmony. In color therapy, mint green tones are believed to soothe the mind, restore balance, and create feelings of safety and serenity.",
+  "Peace": {
+    description: "Peace is a mint green that represents ease, safety, and perfect balance. This color symbolizes the gentle tranquility of nature, emotional equilibrium, and the peaceful energy of harmony. In color therapy, mint green tones are believed to soothe the mind, restore balance, and create feelings of safety and serenity.",
     associations: "Breathe in stillness. Let tranquility wash over you like gentle waves.",
     breathingGuidance: "Positive emotion - inviting more stillness and tranquility into your being"
   },
-  "Lime": {
-    description: "Lime is a light lime that represents fresh, forward-looking energy without being overwhelming. This color symbolizes new beginnings, gentle optimism, and the energizing power of possibility. In color therapy, light lime tones are believed to inspire hope, promote renewal, and create feelings of gentle excitement and forward momentum.",
+  "Hope": {
+    description: "Hope is a light lime that represents fresh, forward-looking energy without being overwhelming. This color symbolizes new beginnings, gentle optimism, and the energizing power of possibility. In color therapy, light lime tones are believed to inspire hope, promote renewal, and create feelings of gentle excitement and forward momentum.",
     associations: "Breathe in fresh energy. Let hope plant new seeds within you.",
     breathingGuidance: "Positive emotion - inviting more fresh energy and possibility into your being"
   },
-  "Rose": {
-    description: "Rose is a pale pink that represents softness, compassion, and kindness. This color symbolizes the gentle nurturing of the heart, tender care, and the soft beauty of emotional healing. In color therapy, pale pink tones are believed to have a deeply nurturing effect, helping to heal emotional wounds and promote feelings of self-love.",
+  "Gentle": {
+    description: "Gentle is a pale pink that represents softness, compassion, and kindness. This color symbolizes the gentle nurturing of the heart, tender care, and the soft beauty of emotional healing. In color therapy, pale pink tones are believed to have a deeply nurturing effect, helping to heal emotional wounds and promote feelings of self-love.",
     associations: "Breathe in kindness. Soften into the moment with care.",
     breathingGuidance: "Positive emotion - inviting more kindness and care into your being"
   },
-  "Peach": {
-    description: "Peach is a muted peach that acknowledges unease while softening it with warmth. This color represents the gentle acknowledgment of nervous energy, the process of grounding, and the transformation of worry into calm awareness. In color therapy, muted peach tones are believed to help ground nervous energy and promote feelings of stability and gentle calm.",
+  "Anxiety": {
+    description: "Anxiety is a muted peach that acknowledges unease while softening it with warmth. This color represents the gentle acknowledgment of nervous energy, the process of grounding, and the transformation of worry into calm awareness. In color therapy, muted peach tones are believed to help ground nervous energy and promote feelings of stability and gentle calm.",
     associations: "Breathe in grounding. With each exhale, release the weight of worry.",
     breathingGuidance: "Reframed emotion - breathing in grounding, releasing worry with each exhale"
   }
@@ -257,7 +257,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
                   >
                     <div className="mb-4 flex justify-center items-center transition-all duration-500 relative hover:scale-110 group-hover:animate-float-slow">
                       {/* Full icon display with animations */}
-                      {c.name === "Cream" && (
+                      {c.name === "Joy" && (
                         <div className="group-hover:animate-pulse">
                           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-foreground">
                             {/* Joy - minimal starburst/sun radiating warmth */}
@@ -279,7 +279,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
                           </svg>
                         </div>
                       )}
-                      {c.name === "Sky" && (
+                      {c.name === "Calm" && (
                         <div className="group-hover:animate-pulse">
                           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-foreground">
                             {/* Calm - gentle waves */}
@@ -291,7 +291,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
                           </svg>
                         </div>
                       )}
-                      {c.name === "Blush" && (
+                      {c.name === "Love" && (
                         <div className="group-hover:animate-pulse">
                           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-foreground">
                             {/* Love - simple heart with soft sparkle */}
