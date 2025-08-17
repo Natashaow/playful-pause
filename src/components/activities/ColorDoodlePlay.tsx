@@ -277,12 +277,12 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
       <Button onClick={onBack} variant="ghost" className="mb-6 text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-all duration-300" aria-label="Back to Activities">← Back to Activities</Button>
 
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-heading font-bold mb-3 text-foreground">
+        <h1 className="font-heading text-3xl sm:text-4xl text-foreground/90 font-light mb-3">
           Doodle Play
-        </h2>
-        <p className="font-sans text-muted-foreground">Create playful doodles to relax your mind and spark creativity</p>
+        </h1>
+        <p className="text-foreground/70 font-sans">Create playful doodles to relax your mind and spark creativity</p>
         {themeHint && (
-          <p className="mt-2 font-sans text-sm text-muted-foreground/80 italic">
+          <p className="mt-2 font-sans text-sm text-foreground/60 italic">
             💡 {themeHint}
           </p>
         )}

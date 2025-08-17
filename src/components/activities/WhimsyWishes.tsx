@@ -399,10 +399,10 @@ export default function WhimsyWishes({ onBack }: { onBack: () => void }) {
       </Button>
 
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-heading font-bold mb-3 text-foreground">
+        <h1 className="font-heading text-3xl sm:text-4xl text-foreground/90 font-light mb-3">
           Whimsy Wishes
-        </h2>
-        <p className="text-muted-foreground font-sans">Tiny, magical messages to soften your day</p>
+        </h1>
+        <p className="text-foreground/70 font-sans">Tiny, magical messages to soften your day</p>
       </div>
 
       <Card className="p-8 border-0 shadow-soft relative overflow-hidden">

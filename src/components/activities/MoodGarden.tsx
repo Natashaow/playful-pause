@@ -917,10 +917,10 @@ export default function MoodGarden({ onBack }: { onBack: () => void }) {
       </Button>
 
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-heading font-bold mb-3 text-foreground">
+        <h1 className="font-heading text-3xl sm:text-4xl text-foreground/90 font-light mb-3">
           Mood Garden
-        </h2>
-        <p className="text-muted-foreground font-sans">Plant your first mood to start growing</p>
+        </h1>
+        <p className="text-foreground/70 font-sans">Plant your first mood to start growing</p>
       </div>
 
       {currentView === "entry" && <EntryScreen />}

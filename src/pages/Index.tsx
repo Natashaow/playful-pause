@@ -63,161 +63,124 @@ const Index = () => {
       />
 
       {/* Header */}
-      <header className="px-5 sm:px-6 lg:px-8 pt-6">
-        <div className="mx-auto max-w-6xl flex items-center justify-between">
+      <header className="px-6 lg:px-8 pt-8">
+        <div className="mx-auto max-w-4xl flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button 
               onClick={toggleMusic}
-              className="size-9 rounded-xl bg-white/80 ring-1 ring-white/60 flex items-center justify-center group hover:bg-white/90 transition-all duration-300"
+              className="size-8 rounded-lg bg-white/60 ring-1 ring-black/5 flex items-center justify-center hover:bg-white/80 transition-all duration-200"
               aria-label="Toggle background music"
             >
-              {/* Minimalistic play symbol in black */}
               <svg 
-                width="18" 
-                height="18" 
+                width="16" 
+                height="16" 
                 viewBox="0 0 24 24" 
                 fill="none" 
-                className={`text-foreground transition-all duration-300 group-hover:scale-110 ${isMusicPlaying ? 'animate-pulse' : ''}`}
+                className={`text-foreground transition-all duration-200 ${isMusicPlaying ? 'animate-pulse' : ''}`}
               >
                 <path d="M8 5v14l11-7z" fill="currentColor" />
               </svg>
             </button>
-            <span className="font-recoleta text-xl">Playful Pause</span>
+            <span className="font-recoleta text-lg">Playful Pause</span>
           </div>
-          {/* Random Activity CTA */}
-                      <button
-              onClick={() => {
-                const activities: Activity[] = ["colorBreathing", "doodlePlay", "compliments", "creative", "moodGarden", "soundShapes"];
-                const randomActivity = activities[Math.floor(Math.random() * activities.length)];
-                setCurrentActivity(randomActivity);
-              }}
-              className="hidden sm:inline-flex items-center rounded-full bg-foreground px-4 py-2 font-jakarta text-sm font-semibold text-white shadow-sm hover:bg-foreground/90 transition-all duration-300 hover:scale-105 hover:shadow-lg group"
-              title="Click for a surprise pause activity ✧"
-              aria-label="Start a random pause activity"
-            >
-            <span className="group-hover:animate-pulse">Surprise me</span>
+          <button
+            onClick={() => {
+              const activities: Activity[] = ["colorBreathing", "doodlePlay", "compliments", "creative", "moodGarden", "soundShapes"];
+              const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+              setCurrentActivity(randomActivity);
+            }}
+            className="hidden sm:inline-flex items-center rounded-lg bg-black px-4 py-2 font-jakarta text-sm font-medium text-white hover:bg-black/90 transition-all duration-200"
+            title="Click for a surprise pause activity"
+            aria-label="Start a random pause activity"
+          >
+            Surprise me
           </button>
         </div>
       </header>
 
       {/* Title block */}
-      <section className="px-5 sm:px-6 lg:px-8 mt-10">
-        <div className="mx-auto max-w-3xl text-center">
-          <div className="inline-block mb-3 text-foreground/70 animate-float-slow">
-            <svg width="32" height="32" viewBox="0 0 48 48" fill="none" className="text-foreground/70">
-              {/* Whimsical butterfly with brand colors */}
-              <path d="M24 12c-4-4-8-4-12 0s-8 4-12 0" fill="#FFB6C1" opacity="0.8" stroke="#FF69B4" strokeWidth="1.5"/>
-              <path d="M24 12c4-4 8-4 12 0s8 4 12 0" fill="#87CEEB" opacity="0.8" stroke="#4682B4" strokeWidth="1.5"/>
-              <path d="M24 20c-2-2-4-2-6 0s-4 2-6 0" fill="#DDA0DD" opacity="0.7" stroke="#9370DB" strokeWidth="1.5"/>
-              <path d="M24 20c2-2 4-2 6 0s4 2 6 0" fill="#F0E68C" opacity="0.7" stroke="#DAA520" strokeWidth="1.5"/>
-              {/* Body */}
-              <path d="M22 24v8" stroke="#8B4513" strokeWidth="2" strokeLinecap="round"/>
-              {/* Antennae */}
-              <path d="M22 24c-1-1-2-2-3-3" stroke="#8B4513" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-              <path d="M26 24c1-1 2-2 3-3" stroke="#8B4513" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-              {/* Sparkle effects */}
-              <circle cx="16" cy="8" r="1" fill="#FFD700" opacity="0.8"/>
-              <circle cx="32" cy="8" r="1" fill="#FFD700" opacity="0.8"/>
-              <circle cx="12" cy="16" r="0.8" fill="#FF69B4" opacity="0.7"/>
-              <circle cx="36" cy="16" r="0.8" fill="#4682B4" opacity="0.7"/>
-            </svg>
-          </div>
-          <h1 className="font-recoleta text-4xl sm:text-5xl tracking-tight">Whimsical takes flight</h1>
-          <p className="mt-3 font-jakarta text-[15.5px] text-foreground/70">
+      <section className="px-6 lg:px-8 mt-20">
+        <div className="mx-auto max-w-2xl text-center">
+          <h1 className="font-recoleta text-4xl sm:text-5xl tracking-tight mb-6 text-foreground/90">
+            Whimsical takes flight
+          </h1>
+          <p className="font-jakarta text-base text-foreground/70 leading-relaxed">
             Tiny, joyful pauses — illustration-first, no pressure, just lighthearted calm.
           </p>
         </div>
       </section>
 
       {/* Activity Grid */}
-      <section className="px-5 sm:px-6 lg:px-8 pb-16 pt-10">
-        <div className="mx-auto max-w-5xl grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <div className="animate-card-pop [animation-delay:20ms]">
-            <ActivityCard
-              title="Emotional Breathing"
-              description="Choose an emotion, breathe with its color, and find inner peace through guided breathing."
-              onClick={() => setCurrentActivity("colorBreathing")}
-              gradient="bg-gradient-joy"
-              doodle={<IconRainbow className="h-8 w-8 text-foreground/80" />}
-            />
-          </div>
+      <section className="px-6 lg:px-8 pb-20 pt-20">
+        <div className="mx-auto max-w-5xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="animate-card-pop [animation-delay:20ms]">
+              <ActivityCard
+                title="Emotional Breathing"
+                description="Choose an emotion, breathe with its color, and find inner peace through guided breathing."
+                onClick={() => setCurrentActivity("colorBreathing")}
+                gradient="bg-gradient-joy"
+                doodle={<IconRainbow className="h-12 w-12 text-foreground/80" />}
+              />
+            </div>
 
-          <div className="animate-card-pop [animation-delay:60ms]">
-            <ActivityCard
-              title="Sound Shapes"
-              description="Discover the hidden melodies within geometric forms and create your own symphony."
-              onClick={() => setCurrentActivity("soundShapes")}
-              gradient="bg-gradient-sunshine"
-              doodle={<IconSound className="h-8 w-8 text-foreground/80" />}
-            />
-          </div>
+            <div className="animate-card-pop [animation-delay:60ms]">
+              <ActivityCard
+                title="Sound Shapes"
+                description="Discover the hidden melodies within geometric forms and create your own symphony."
+                onClick={() => setCurrentActivity("soundShapes")}
+                gradient="bg-gradient-sunshine"
+                doodle={<IconSound className="h-12 w-12 text-foreground/80" />}
+              />
+            </div>
 
-          <div className="animate-card-pop [animation-delay:100ms]">
-            <ActivityCard
-              title="Whimsy Wishes"
-              description="Receive a small, kind wish with a gentle animated doodle to brighten your day."
-              onClick={() => setCurrentActivity("compliments")}
-              gradient="bg-gradient-sunshine"
-              doodle={<IconHeartStar className="h-8 w-8 text-foreground/80" />}
-            />
-          </div>
+            <div className="animate-card-pop [animation-delay:100ms]">
+              <ActivityCard
+                title="Whimsy Wishes"
+                description="Receive a small, kind wish with a gentle animated doodle to brighten your day."
+                onClick={() => setCurrentActivity("compliments")}
+                gradient="bg-gradient-sunshine"
+                doodle={<IconHeartStar className="h-12 w-12 text-foreground/80" />}
+              />
+            </div>
 
-          <div className="animate-card-pop [animation-delay:140ms]">
-            <ActivityCard
-              title="Doodle Play"
-              description="Free-draw tiny shapes and watch them happily come alive with your creativity."
-              onClick={() => setCurrentActivity("doodlePlay")}
-              gradient="bg-gradient-calm"
-              doodle={<IconPalette className="h-8 w-8 text-foreground/80" />}
-            />
-          </div>
+            <div className="animate-card-pop [animation-delay:140ms]">
+              <ActivityCard
+                title="Doodle Play"
+                description="Free-draw tiny shapes and watch them happily come alive with your creativity."
+                onClick={() => setCurrentActivity("doodlePlay")}
+                gradient="bg-gradient-calm"
+                doodle={<IconPalette className="h-12 w-12 text-foreground/80" />}
+              />
+            </div>
 
-          <div className="animate-card-pop [animation-delay:180ms]">
-            <ActivityCard
-              title="Mood Garden"
-              description="Plant seeds of positive emotions and watch your inner garden bloom with joy."
-              onClick={() => setCurrentActivity("moodGarden")}
-              gradient="bg-gradient-calm"
-              doodle={<IconGarden className="h-8 w-8 text-foreground/80" />}
-            />
-          </div>
+            <div className="animate-card-pop [animation-delay:180ms]">
+              <ActivityCard
+                title="Mood Garden"
+                description="Plant seeds of positive emotions and watch your inner garden bloom with joy."
+                onClick={() => setCurrentActivity("moodGarden")}
+                gradient="bg-gradient-calm"
+                doodle={<IconGarden className="h-12 w-12 text-foreground/80" />}
+              />
+            </div>
 
-          <div className="animate-card-pop [animation-delay:220ms]">
-            <ActivityCard
-              title="Creative Spark"
-              description="A quiet writing prompt for playful imagination and creative expression."
-              onClick={() => setCurrentActivity("creative")}
-              gradient="bg-gradient-joy"
-              doodle={<IconBreath className="h-8 w-8 text-foreground/80" />}
-            />
+            <div className="animate-card-pop [animation-delay:220ms]">
+              <ActivityCard
+                title="Creative Spark"
+                description="A quiet writing prompt for playful imagination and creative expression."
+                onClick={() => setCurrentActivity("creative")}
+                gradient="bg-gradient-joy"
+                doodle={<IconBreath className="h-12 w-12 text-foreground/80" />}
+              />
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="pb-10">
-        <div className="mx-auto max-w-6xl px-5 sm:px-6 lg:px-8 flex flex-col items-center gap-3 text-foreground/65">
+      <footer className="pb-12">
+        <div className="mx-auto max-w-4xl px-6 lg:px-8 flex flex-col items-center gap-4 text-foreground/60">
           <p className="font-jakarta text-sm">Take as many pauses as you need. You deserve moments of joy.</p>
-          <div className="text-base">
-            <svg width="24" height="24" viewBox="0 0 48 48" fill="none" className="text-foreground/65">
-              {/* Whimsical flower with brand colors */}
-              <circle cx="24" cy="24" r="8" fill="#FFB6C1" opacity="0.8"/>
-              <circle cx="24" cy="24" r="6" fill="#FF69B4" opacity="0.6"/>
-              <circle cx="24" cy="24" r="4" fill="#FF1493" opacity="0.8"/>
-              {/* Petals */}
-              <path d="M24 12c-2-2-4-2-6 0s-4 2-6 0" fill="#87CEEB" opacity="0.7" stroke="#4682B4" strokeWidth="1.5"/>
-              <path d="M24 12c2-2 4-2 6 0s4 2 6 0" fill="#DDA0DD" opacity="0.7" stroke="#9370DB" strokeWidth="1.5"/>
-              <path d="M24 36c-2 2-4 2-6 0s-4-2-6 0" fill="#98FB98" opacity="0.7" stroke="#32CD32" strokeWidth="1.5"/>
-              <path d="M24 36c2 2 4 2 6 0s4-2 6 0" fill="#F0E68C" opacity="0.7" stroke="#DAA520" strokeWidth="1.5"/>
-              <path d="M12 24c-2-2-2-4 0-6s2-4 0-6" fill="#FFB6C1" opacity="0.7" stroke="#FF69B4" strokeWidth="1.5"/>
-              <path d="M36 24c2-2 2-4 0-6s-2-4 0-6" fill="#87CEEB" opacity="0.7" stroke="#4682B4" strokeWidth="1.5"/>
-              {/* Stem */}
-              <path d="M24 32v8" stroke="#228B22" strokeWidth="2" strokeLinecap="round"/>
-              {/* Leaves */}
-              <path d="M20 36c-2-1-3-3-3-5" stroke="#32CD32" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-              <path d="M28 36c2-1 3-3 3-5" stroke="#32CD32" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-            </svg>
-          </div>
         </div>
       </footer>
     </div>
