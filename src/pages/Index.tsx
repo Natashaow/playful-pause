@@ -29,6 +29,20 @@ const Index = () => {
     }
   };
 
+  // Initialize audio and handle cleanup
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.3; // Set volume to 30%
+    }
+    
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+    };
+  }, []);
+
   if (currentActivity === "colorBreathing") {
     return <ColorBreathing onBack={() => setCurrentActivity("home")} />;
   }
@@ -221,6 +235,20 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      {/* Hidden audio element for logo easter egg */}
+      <audio
+        ref={audioRef}
+        loop
+        preload="none"
+        className="hidden"
+      >
+        <source src="/audio/calm-background.mp3" type="audio/mpeg" />
+        <source src="/audio/calm-background.ogg" type="audio/ogg" />
+        Your browser does not support the audio element.
+      </audio>
+      
+      {/* Note: Add audio files to /public/audio/ folder for the easter egg to work */}
     </div>
   );
 };
