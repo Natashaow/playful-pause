@@ -95,8 +95,7 @@ const Index = () => {
               title="Click for a surprise pause activity ✧"
               aria-label="Start a random pause activity"
             >
-            <span className="group-hover:animate-pulse">Start a pause</span>
-            <span className="ml-1 opacity-60 group-hover:opacity-100 transition-opacity">✧</span>
+            <span className="group-hover:animate-pulse">Surprise me</span>
           </button>
         </div>
       </header>
@@ -135,61 +134,61 @@ const Index = () => {
         <div className="mx-auto max-w-5xl grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div className="animate-card-pop [animation-delay:20ms]">
             <ActivityCard
-              title="Color Breathing"
-              description="Pick a color, breathe with it, and let a small calm settle in."
+              title="Emotional Breathing"
+              description="Choose an emotion, breathe with its color, and find inner peace through guided breathing."
               onClick={() => setCurrentActivity("colorBreathing")}
               gradient="bg-gradient-joy"
-              doodle={<IconRainbow className="h-6 w-6 text-foreground/80" />}
+              doodle={<IconRainbow className="h-8 w-8 text-foreground/80" />}
             />
           </div>
 
           <div className="animate-card-pop [animation-delay:60ms]">
             <ActivityCard
-              title="Doodle Play"
-              description="Free-draw tiny shapes and watch them happily come alive."
-              onClick={() => setCurrentActivity("doodlePlay")}
-              gradient="bg-gradient-calm"
-              doodle={<IconPalette className="h-6 w-6 text-foreground/80" />}
+              title="Sound Shapes"
+              description="Discover the hidden melodies within geometric forms and create your own symphony."
+              onClick={() => setCurrentActivity("soundShapes")}
+              gradient="bg-gradient-sunshine"
+              doodle={<IconSound className="h-8 w-8 text-foreground/80" />}
             />
           </div>
 
           <div className="animate-card-pop [animation-delay:100ms]">
             <ActivityCard
               title="Whimsy Wishes"
-              description="Receive a small, kind wish with a gentle animated doodle."
+              description="Receive a small, kind wish with a gentle animated doodle to brighten your day."
               onClick={() => setCurrentActivity("compliments")}
               gradient="bg-gradient-sunshine"
-              doodle={<IconHeartStar className="h-6 w-6 text-foreground/80" />}
+              doodle={<IconHeartStar className="h-8 w-8 text-foreground/80" />}
             />
           </div>
 
           <div className="animate-card-pop [animation-delay:140ms]">
             <ActivityCard
-              title="Creative Spark"
-              description="A quiet writing prompt for playful imagination."
-              onClick={() => setCurrentActivity("creative")}
-              gradient="bg-gradient-joy"
-              doodle={<IconBreath className="h-6 w-6 text-foreground/80" />}
+              title="Doodle Play"
+              description="Free-draw tiny shapes and watch them happily come alive with your creativity."
+              onClick={() => setCurrentActivity("doodlePlay")}
+              gradient="bg-gradient-calm"
+              doodle={<IconPalette className="h-8 w-8 text-foreground/80" />}
             />
           </div>
 
           <div className="animate-card-pop [animation-delay:180ms]">
             <ActivityCard
               title="Mood Garden"
-              description="Plant seeds of positive emotions and watch your inner garden bloom."
+              description="Plant seeds of positive emotions and watch your inner garden bloom with joy."
               onClick={() => setCurrentActivity("moodGarden")}
               gradient="bg-gradient-calm"
-              doodle={<IconGarden className="h-6 w-6 text-foreground/80" />}
+              doodle={<IconGarden className="h-8 w-8 text-foreground/80" />}
             />
           </div>
 
           <div className="animate-card-pop [animation-delay:220ms]">
             <ActivityCard
-              title="Sound Shapes"
-              description="Discover the hidden melodies within geometric forms."
-              onClick={() => setCurrentActivity("soundShapes")}
-              gradient="bg-gradient-sunshine"
-              doodle={<IconSound className="h-6 w-6 text-foreground/80" />}
+              title="Creative Spark"
+              description="A quiet writing prompt for playful imagination and creative expression."
+              onClick={() => setCurrentActivity("creative")}
+              gradient="bg-gradient-joy"
+              doodle={<IconBreath className="h-8 w-8 text-foreground/80" />}
             />
           </div>
         </div>
