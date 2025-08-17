@@ -21,7 +21,7 @@ const ActivityCard: React.FC<Props> = ({ title, description, onClick, doodle, gr
       ].join(" ")}
     >
       {/* soft accent blob */}
-      {gradient && <div className={`absolute -right-10 -top-10 h-40 w-40 rounded-full ${gradient} opacity-30 blur-3xl`} />}
+      {gradient && <div className={`absolute -right-10 -top-10 h-40 w-40 rounded-full ${gradient} opacity-50 blur-2xl`} />}
 
       <div className="relative z-10 flex items-center gap-4">
         <div className="text-foreground/80 size-12 rounded-xl bg-white/80 ring-1 ring-white/60 flex items-center justify-center">

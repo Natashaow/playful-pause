@@ -97,20 +97,30 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
     setSecondsLeft(phase.seconds);
     const start = Date.now();
 
-    // A small interval that updates every ~250ms for smoother countdown
-    tickRef.current = window.setInterval(() => {
+    // Use requestAnimationFrame for smoother performance
+    const tick = () => {
       const elapsedMs = Date.now() - start;
       const remaining = Math.max(0, phase.seconds - Math.floor(elapsedMs / 1000));
-      setSecondsLeft(remaining);
+      
+      if (remaining !== secondsLeft) {
+        setSecondsLeft(remaining);
+      }
 
       if (elapsedMs >= phase.seconds * 1000) {
-        window.clearInterval(tickRef.current!);
         setPhaseIndex((i) => (i + 1) % PHASES.length);
+        return;
       }
-    }, 250) as unknown as number;
+
+      tickRef.current = requestAnimationFrame(tick);
+    };
+
+    tickRef.current = requestAnimationFrame(tick);
 
     return () => {
-      if (tickRef.current) window.clearInterval(tickRef.current);
+      if (tickRef.current) {
+        cancelAnimationFrame(tickRef.current);
+        tickRef.current = null;
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phaseIndex, running]);
@@ -153,16 +163,20 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
 
   // Start breathing after reading instructions
   const startBreathing = () => {
+    // Batch state updates to reduce lag
     setShowInstructions(false);
-    setRunning(true);
     setPhaseIndex(0);
+    // Small delay to ensure smooth transition
+    requestAnimationFrame(() => {
+      setRunning(true);
+    });
   };
 
   // Stop breathing (pause at current state)
   const stopBreathing = () => {
     setRunning(false);
     if (tickRef.current) {
-      window.clearInterval(tickRef.current);
+      cancelAnimationFrame(tickRef.current);
       tickRef.current = null;
     }
   };
@@ -305,7 +319,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
                           </svg>
                         </div>
                       )}
-                      {c.name === "Sage" && (
+                      {c.name === "Growth" && (
                         <div className="group-hover:animate-pulse">
                           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-foreground">
                             {/* Growth - sprouting plant */}
@@ -321,7 +335,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
                           </svg>
                         </div>
                       )}
-                      {c.name === "Lavender" && (
+                      {c.name === "Fear" && (
                         <div className="group-hover:animate-pulse">
                           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-foreground">
                             {/* Fear - small cloud with breeze lines */}

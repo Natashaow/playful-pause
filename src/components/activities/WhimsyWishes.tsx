@@ -419,7 +419,7 @@ export default function WhimsyWishes({ onBack }: { onBack: () => void }) {
           </div>
 
           <div className="mx-auto max-w-xl whimsy-letter">
-            <div className="rounded-xl bg-white/70 backdrop-blur px-5 py-4 shadow-soft border border-border">
+            <div className="rounded-xl bg-white/70 backdrop-blur px-5 py-4">
               <p className="text-lg md:text-xl leading-relaxed text-foreground font-sans" aria-live="polite">
                 {wish?.text ?? "May a soft moment find you today."}
               </p>

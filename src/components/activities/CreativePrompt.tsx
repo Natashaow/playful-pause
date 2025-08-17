@@ -321,7 +321,7 @@ const PROMPT_DOODLES = [
 ];
 
 const LS_RESPONSE_KEY = "pp:creativeSpark:response";
-const LS_CONTEXT_KEY = "pp:personalContext";
+
 
 // Tiny doodle icon (firefly/wand)
 const SparkIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -334,10 +334,10 @@ const SparkIcon = (props: React.SVGProps<SVGSVGElement>) => (
 export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
   const [prompt, setPrompt] = useState<string>("");
   const [response, setResponse] = useState<string>("");
-  const [context, setContext] = useState<string>("");
-  const [showContext, setShowContext] = useState<boolean>(false);
+
+
   const [savedMsg, setSavedMsg] = useState<string>("");
-  const [ctxSavedMsg, setCtxSavedMsg] = useState<string>("");
+
   const [isTextareaFocused, setIsTextareaFocused] = useState<boolean>(false);
 
 
@@ -346,9 +346,7 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
   useEffect(() => {
     try {
       const r = localStorage.getItem(LS_RESPONSE_KEY) ?? "";
-      const c = localStorage.getItem(LS_CONTEXT_KEY) ?? "";
       setResponse(r);
-      setContext(c);
     } catch (_e) { void _e; }
   }, []);
 
@@ -369,14 +367,7 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
     } catch (_e) { void _e; }
   };
 
-  const saveContext = () => {
-    try {
-      localStorage.setItem(LS_CONTEXT_KEY, context.trim());
-      setCtxSavedMsg("Context saved");
-      setTimeout(() => setCtxSavedMsg(""), 1500);
-      window.dispatchEvent(new CustomEvent("pp:userContextUpdated", { detail: { context } }));
-    } catch (_e) { void _e; }
-  };
+
 
   const newPrompt = () => {
     const next = PROMPTS[Math.floor(Math.random() * PROMPTS.length)];
@@ -437,10 +428,10 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
       </Button>
 
       <div className="text-center mb-8">
-        <h1 className="font-heading text-3xl sm:text-4xl text-foreground/90 font-light mb-3">
+        <h2 className="text-3xl font-heading font-bold mb-3 text-foreground">
           Creative Spark
-        </h1>
-        <p className="text-foreground/70 font-sans">Let your imagination wander for a few minutes</p>
+        </h2>
+        <p className="text-muted-foreground font-sans">Let your imagination wander for a few minutes</p>
         
         {/* Prompt-specific doodle animation */}
         <div className="flex justify-center mt-4">
@@ -569,46 +560,11 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
                 )}
               </Button>
               
-              <button
-                onClick={() => setShowContext((v) => !v)}
-                className="font-sans text-sm text-muted-foreground underline-offset-2 hover:text-primary hover:underline transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 focus:text-primary"
-              >
-                {showContext ? "Hide personalization" : "Hint: Tell us your mood to personalize prompts"}
-              </button>
+
             </div>
           </div>
             
-          {showContext && (
-            <div className="mt-4 rounded-2xl bg-card/70 p-4 ring-1 ring-border/60 animate-rise-fade">
-              <label htmlFor="spark-context" className="sr-only">Personal context</label>
-              <Textarea
-                id="spark-context"
-                value={context}
-                onChange={(e) => setContext(e.target.value)}
-                placeholder="I'm feeling… (kept on your device to suggest better prompts)"
-                className="w-full min-h-[96px] rounded-xl bg-card/80 p-3 font-sans text-[15px] text-foreground placeholder:text-muted-foreground/45 ring-1 ring-border/60 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50"
-                style={{
-                  '--tw-ring-color': 'hsl(var(--primary))',
-                  '--tw-border-color': 'hsl(var(--primary))'
-                } as React.CSSProperties}
-              />
-              <div className="mt-3 flex items-center gap-3">
-                <Button 
-                  onClick={saveContext} 
-                  className="rounded-full px-4 py-2 font-sans text-sm font-semibold shadow-sm bg-foreground text-white hover:bg-foreground/90 focus:ring-2 focus:ring-primary/50 focus:border-primary/50"
-                >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-                  </svg>
-                  Save context
-                </Button>
-                <span role="status" aria-live="polite" className="font-sans text-sm text-muted-foreground animate-rise-fade">
-                  {ctxSavedMsg}
-                </span>
-              </div>
-              <p className="mt-4 font-sans text-xs text-muted-foreground/70 text-center">Your secret is safe on this device</p>
-            </div>
-          )}
+
         </div>
       </Card>
     </div>
