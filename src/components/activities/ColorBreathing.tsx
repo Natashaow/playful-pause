@@ -215,6 +215,28 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
           0%,100% { transform: scale(1);   opacity: 0.9; }
           50%     { transform: scale(1.02); opacity: 1;   }
         }
+
+        /* --- Dove wing flapping animations --- */
+        @keyframes gentleFlapLeft {
+          0%, 100% { transform: rotate(0deg) translateX(0); }
+          50% { transform: rotate(-8deg) translateX(-1px); }
+        }
+
+        @keyframes gentleFlapRight {
+          0%, 100% { transform: rotate(0deg) translateX(0); }
+          50% { transform: rotate(8deg) translateX(1px); }
+        }
+
+        @keyframes gentleFlapCenter {
+          0%, 100% { transform: rotate(0deg); }
+          50% { transform: rotate(-2deg); }
+        }
+
+        /* --- Fear raindrop dissolve animation --- */
+        @keyframes dropRelease {
+          0%   { transform: translateY(0) scale(1);   opacity: 0.9; }
+          100% { transform: translateY(6px) scale(0.85); opacity: 0; }
+        }
       `}</style>
 
       <Button onClick={onBack} variant="ghost" className="mb-6 text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-all duration-300" aria-label="Back to Activities">
@@ -338,33 +360,36 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
                       {c.name === "Fear" && (
                         <div className="group-hover:animate-pulse">
                           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-foreground">
-                            {/* Fear - small cloud with breeze lines */}
-                            {/* Main cloud */}
-                            <ellipse cx="12" cy="14" rx="4" ry="2.5" fill="#D4C5E8" opacity="0.9"/>
-                            <ellipse cx="12" cy="12" rx="3" ry="2" fill="#D4C5E8" opacity="0.95"/>
-                            <ellipse cx="12" cy="10" rx="2" ry="1.5" fill="#D4C5E8" opacity="1"/>
-                            {/* Breeze lines drifting away */}
-                            <path d="M16 12c1-1 2-1 3 0" stroke="#E6E6FA" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.9"/>
-                            <path d="M17 10c1-1 2-1 3 0" stroke="#E6E6FA" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.8"/>
-                            <path d="M18 8c1-1 2-1 3 0" stroke="#E6E6FA" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.7"/>
-                            {/* Gentle transformation center */}
-                            <circle cx="12" cy="14" r="1.5" fill="#E6E6FA" opacity="0.8"/>
+                            {/* Fear - simple cloud with soft sparkles */}
+                            {/* Main cloud shape - simple and clean like Love icon */}
+                            <ellipse cx="12" cy="12" rx="5" ry="3" fill="#E2E8F0" opacity="0.95"/>
+                            <ellipse cx="12" cy="10" rx="4" ry="2.5" fill="#CBD5E1" opacity="0.9"/>
+                            
+                            {/* Soft sparkles like Love icon */}
+                            <circle cx="7" cy="7" r="1" fill="#87CEEB" opacity="0.95" className="animate-ping" style={{animationDuration: '2s'}}/>
+                            <circle cx="17" cy="7" r="0.8" fill="#94A3B8" opacity="0.9" className="animate-ping" style={{animationDuration: '2s', animationDelay: '0.5s'}}/>
+
+                            {/* Three fading raindrops - dissolving as they fall */}
+                            <circle cx="11" cy="15" r="0.7" fill="#AEB8C2" style={{ animation: 'dropRelease 1.8s ease-in infinite', animationDelay: '0s', transformOrigin: 'center' }} opacity="0.85"/>
+                            <circle cx="12" cy="16.5" r="0.6" fill="#C8D1DA" style={{ animation: 'dropRelease 1.8s ease-in infinite', animationDelay: '0.2s', transformOrigin: 'center' }} opacity="0.7"/>
+                            <circle cx="13" cy="18" r="0.5" fill="#E2E8F0" style={{ animation: 'dropRelease 1.8s ease-in infinite', animationDelay: '0.4s', transformOrigin: 'center' }} opacity="0.55"/>
                           </svg>
                         </div>
                       )}
                       {c.name === "Peace" && (
                         <div className="group-hover:animate-pulse">
                           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-foreground">
-                            {/* Peace - small floating leaf */}
-                            {/* Main leaf shape */}
-                            <path d="M12 8c-2-2-4-2-6 0s-4 2-6 0c-2-2-2-4 0-6s2-4 6 0c2 2 4 2 6 0s4-2 6 0c2 2 2 4 0 6s-2 4-6 0c-2 2-4 2-6 0z" fill="#A8E6CF" opacity="0.95"/>
-                            {/* Leaf vein */}
-                            <path d="M12 8v8" stroke="#7FCDCD" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.9"/>
-                            {/* Gentle floating movement */}
-                            <path d="M8 6c2-1 4-1 6 0" stroke="#98FB98" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.8"/>
-                            <path d="M10 6c2-1 4-1 6 0" stroke="#98FB98" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.8"/>
-                            {/* Peaceful center */}
-                            <circle cx="12" cy="12" r="1.5" fill="#A8E6CF" opacity="0.9"/>
+                            {/* Peace - zen stones for tranquility */}
+                            {/* Bottom stone */}
+                            <ellipse cx="12" cy="18" rx="4" ry="2" fill="#E5E7EB" opacity="0.95"/>
+                            {/* Middle stone */}
+                            <ellipse cx="12" cy="15" rx="3" ry="1.5" fill="#D1D5DB" opacity="0.9"/>
+                            {/* Top stone */}
+                            <ellipse cx="12" cy="12" rx="2" ry="1" fill="#9CA3AF" opacity="0.85"/>
+                            {/* Peaceful grounding line */}
+                            <path d="M8 20c2-1 4-1 6 0s4 1 6 0" stroke="#6B7280" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.8"/>
+                            {/* Zen circle of peace */}
+                            <circle cx="12" cy="10" r="1.2" fill="#6B7280" opacity="0.7"/>
                           </svg>
                         </div>
                       )}
@@ -393,32 +418,48 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
                       {c.name === "Gentle" && (
                         <div className="group-hover:animate-pulse">
                           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-foreground">
-                            {/* Gentle - minimal cupped hands */}
-                            {/* Left hand */}
-                            <path d="M8 16c-1-1-2-1-3 0s-2 1-3 0c-1-1-1-2 0-3s2-1 3 0c1 1 2 1 3 0s2-1 3 0c1 1 1 2 0 3s-1 2-3 0c-1 1-2 1-3 0z" fill="#FFB6C1" opacity="0.9"/>
-                            {/* Right hand */}
-                            <path d="M16 16c1-1 2-1 3 0s2 1 3 0c1 1 1 2 0 3s-1 2-3 0c-1 1-2 1-3 0s-2 1-3 0c-1-1-1-2 0-3s1-2 3 0c1 1 2 1 3 0z" fill="#FFC0CB" opacity="0.9"/>
-                            {/* Gentle center */}
-                            <circle cx="12" cy="14" r="1.5" fill="#FFB6C1" opacity="0.8"/>
-                            {/* Soft glow */}
-                            <circle cx="12" cy="14" r="3" fill="none" stroke="#FFB6C1" strokeWidth="0.5" opacity="0.6"/>
+                            {/* Gentle - whimsical flying dove */}
+                            {/* Bird body */}
+                            <ellipse cx="12" cy="12" rx="4" ry="2.5" fill="#FFFFFF" opacity="0.95"/>
+                            {/* Bird head */}
+                            <circle cx="16" cy="8" r="2.2" fill="#FFFFFF" opacity="0.98"/>
+                            {/* Beak */}
+                            <path d="M18.5 8 Q20.5 8 21.2 8.8" stroke="#FFB6C1" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.9"/>
+                            
+                            {/* Left wing - flapping */}
+                            <path d="M6 10 Q2 6 0 8 Q2 12 6 10" fill="#FFFFFF" opacity="0.9" style={{animation: 'gentleFlapLeft 3s ease-in-out infinite'}}/>
+                            <path d="M5 9 Q1 5 0 7 Q1 11 5 9" fill="#F0F8FF" opacity="0.8" style={{animation: 'gentleFlapLeft 3s ease-in-out infinite'}}/>
+                            
+                            {/* Right wing - flapping */}
+                            <path d="M18 10 Q22 6 24 8 Q22 12 18 10" fill="#FFFFFF" opacity="0.9" style={{animation: 'gentleFlapRight 3s ease-in-out infinite'}}/>
+                            <path d="M19 9 Q23 5 24 7 Q23 11 19 9" fill="#F0F8FF" opacity="0.8" style={{animation: 'gentleFlapRight 3s ease-in-out infinite'}}/>
+                            
+                            {/* Tail feathers */}
+                            <path d="M8 12 Q4 16 2 14" stroke="#FFFFFF" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.9"/>
+                            <path d="M8 13 Q4 17 2 15" stroke="#FFFFFF" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.9"/>
+                            
+                            {/* Gentle eye */}
+                            <circle cx="16.5" cy="7.5" r="0.5" fill="#87CEEB" opacity="0.95"/>
+                            
+                            {/* Wing details */}
+                            <path d="M3 7 Q1 5 0 6" stroke="#E6F3FF" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.8" style={{animation: 'gentleFlapLeft 3s ease-in-out infinite'}}/>
+                            <path d="M21 7 Q23 5 24 6" stroke="#E6F3FF" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.8" style={{animation: 'gentleFlapRight 3s ease-in-out infinite'}}/>
+                            
+                            {/* Body outline for definition */}
+                            <ellipse cx="12" cy="12" rx="4" ry="2.5" fill="none" stroke="#E8F4FD" strokeWidth="0.8" opacity="0.7" style={{animation: 'gentleFlapCenter 3s ease-in-out infinite'}}/>
                           </svg>
                         </div>
                       )}
                       {c.name === "Anxiety" && (
                         <div className="group-hover:animate-pulse">
                           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-foreground">
-                            {/* Anxiety - minimal stacked stones for grounding */}
-                            {/* Bottom stone */}
-                            <ellipse cx="12" cy="18" rx="4" ry="2" fill="#F4D4A3" opacity="0.95"/>
-                            {/* Middle stone */}
-                            <ellipse cx="12" cy="15" rx="3" ry="1.5" fill="#F0C080" opacity="0.9"/>
-                            {/* Top stone */}
-                            <ellipse cx="12" cy="12" rx="2" ry="1" fill="#E6B800" opacity="0.85"/>
-                            {/* Grounding line */}
-                            <path d="M8 20c2-1 4-1 6 0s4 1 6 0" stroke="#8B4513" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.8"/>
-                            {/* Zen circle */}
-                            <circle cx="12" cy="10" r="1" fill="#8B4513" opacity="0.6"/>
+                            {/* Anxiety - airy spiral with loosening breeze lines */}
+                            {/* Central spiral */}
+                            <path d="M12 12 m-3 0 a3 3 0 1 1 6 0 a2 2 0 1 0 -4 0 a1 1 0 1 1 2 0" stroke="#94A3B8" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.9"/>
+                            {/* Breeze lines radiating outward */}
+                            <path d="M7 8 Q12 7 16 8" stroke="#AFC7DF" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.7" className="group-hover:animate-pulse" style={{animationDuration: '2.4s'}}/>
+                            <path d="M6 12 Q11 11 17 12" stroke="#C9D7E6" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.55" className="group-hover:animate-pulse" style={{animationDuration: '2.4s', animationDelay: '0.2s'}}/>
+                            <path d="M7 16 Q12 15 16 16" stroke="#E2E8F0" strokeWidth="0.9" fill="none" strokeLinecap="round" opacity="0.4" className="group-hover:animate-pulse" style={{animationDuration: '2.4s', animationDelay: '0.4s'}}/>
                           </svg>
                         </div>
                       )}
