@@ -551,7 +551,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
                   ← Back
                 </Button>
                 <Button 
-                  onClick={() => setRunning(true)}
+                  onClick={startBreathing}
                   size="lg" 
                   className="px-8 py-3 bg-foreground text-white hover:bg-foreground/90 shadow-md font-medium"
                 >
