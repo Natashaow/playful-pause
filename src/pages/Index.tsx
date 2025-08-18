@@ -18,14 +18,19 @@ const Index = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const toggleMusic = () => {
-    if (audioRef.current) {
-      if (isMusicPlaying) {
-        audioRef.current.pause();
-        setIsMusicPlaying(false);
-      } else {
-        audioRef.current.play();
-        setIsMusicPlaying(true);
-      }
+    const el = audioRef.current;
+    if (!el) return;
+    if (isMusicPlaying) {
+      el.pause();
+      setIsMusicPlaying(false);
+    } else {
+      el
+        .play()
+        .then(() => setIsMusicPlaying(true))
+        .catch((err) => {
+          console.error("Audio play failed:", err);
+          setIsMusicPlaying(false);
+        });
     }
   };
 
@@ -81,6 +86,8 @@ const Index = () => {
                 <path d="M8 5v14l11-7z" fill="currentColor" />
               </svg>
             </button>
+            {/* Hidden audio element. Place your file at public/audio/bg-music.mp3 */}
+            <audio ref={audioRef} src="/audio/bg-music.mp3" preload="auto" loop className="hidden" />
             <span className="font-recoleta text-lg">Playful Pause</span>
           </div>
           <button
