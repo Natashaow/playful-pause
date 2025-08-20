@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { FearIcon } from "@/components/doodles/icons/FearIcon";
 
 const COLORS = [
   { name: "Joy", value: "#FFF2D1" },        // Lighter pastel yellow - happiness and warmth
@@ -359,21 +360,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
                       )}
                       {c.name === "Fear" && (
                         <div className="group-hover:animate-pulse">
-                          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-foreground">
-                            {/* Fear - simple cloud with soft sparkles */}
-                            {/* Main cloud shape - simple and clean like Love icon */}
-                            <ellipse cx="12" cy="12" rx="5" ry="3" fill="#E2E8F0" opacity="0.95"/>
-                            <ellipse cx="12" cy="10" rx="4" ry="2.5" fill="#CBD5E1" opacity="0.9"/>
-                            
-                            {/* Soft sparkles like Love icon */}
-                            <circle cx="7" cy="7" r="1" fill="#87CEEB" opacity="0.95" className="animate-ping" style={{animationDuration: '2s'}}/>
-                            <circle cx="17" cy="7" r="0.8" fill="#94A3B8" opacity="0.9" className="animate-ping" style={{animationDuration: '2s', animationDelay: '0.5s'}}/>
-
-                            {/* Three fading raindrops - dissolving as they fall */}
-                            <circle cx="11" cy="15" r="0.7" fill="#AEB8C2" style={{ animation: 'dropRelease 1.8s ease-in infinite', animationDelay: '0s', transformOrigin: 'center' }} opacity="0.85"/>
-                            <circle cx="12" cy="16.5" r="0.6" fill="#C8D1DA" style={{ animation: 'dropRelease 1.8s ease-in infinite', animationDelay: '0.2s', transformOrigin: 'center' }} opacity="0.7"/>
-                            <circle cx="13" cy="18" r="0.5" fill="#E2E8F0" style={{ animation: 'dropRelease 1.8s ease-in infinite', animationDelay: '0.4s', transformOrigin: 'center' }} opacity="0.55"/>
-                          </svg>
+                          <FearIcon size={48} className="text-foreground/90" />
                         </div>
                       )}
                       {c.name === "Peace" && (
@@ -518,11 +505,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
                   )}
                   {selectedColor.name === "Fear" && (
                     <div className="text-foreground/80">
-                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                        <ellipse cx="12" cy="14" rx="4" ry="2.5" fill="#D4C5E8" opacity="0.9"/>
-                        <ellipse cx="12" cy="12" rx="3" ry="2" fill="#D4C5E8" opacity="0.95"/>
-                        <ellipse cx="12" cy="10" rx="2" ry="1.5" fill="#D4C5E8" opacity="1"/>
-                      </svg>
+                      <FearIcon size={48} className="text-foreground/80" />
                     </div>
                   )}
                   {selectedColor.name === "Peace" && (
