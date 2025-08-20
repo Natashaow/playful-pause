@@ -23,14 +23,14 @@ declare global {
 
 const MOOD_COLORS: { [key: string]: { color: string; emoji: string } } = {
   joy: { color: "bg-yellow-100", emoji: "★" },
-  sadness: { color: "bg-blue-100", emoji: "○" },
-  anger: { color: "bg-red-100", emoji: "▲" },
+  calm: { color: "bg-blue-100", emoji: "○" },
+  love: { color: "bg-red-100", emoji: "♥" },
+  growth: { color: "bg-green-100", emoji: "🌱" },
   fear: { color: "bg-purple-100", emoji: "⚡" },
-  disgust: { color: "bg-green-100", emoji: "◇" },
-  surprise: { color: "bg-orange-100", emoji: "◆" },
-  shy: { color: "bg-pink-100", emoji: "●" },
-  envy: { color: "bg-teal-100", emoji: "~" },
-  anxiety: { color: "bg-lavender-100", emoji: "∞" },
+  peace: { color: "bg-teal-100", emoji: "☮" },
+  hope: { color: "bg-lime-100", emoji: "✨" },
+  gentle: { color: "bg-pink-100", emoji: "🌸" },
+  anxiety: { color: "bg-orange-100", emoji: "∞" },
 };
 
 export default function MoodGarden({ onBack }: { onBack: () => void }) {
@@ -90,26 +90,26 @@ export default function MoodGarden({ onBack }: { onBack: () => void }) {
         // August 15th - Evening entry (Sprout stage)
         {
           id: "test-2",
-          mood: "sadness",
+          mood: "calm",
           color: "bg-blue-100",
           timestamp: new Date(2024, 7, 15, 20, 0).getTime(), // Aug 15, 8 PM
           emoji: "○",
           growthStage: 2,
           interactionCount: 6,
           lastInteraction: new Date(2024, 7, 16, 10, 0).getTime(),
-          journalEntry: "Had a rough evening, but it's okay."
+          journalEntry: "Feeling peaceful and calm this evening."
         },
         // August 16th - Morning entry (Bloom stage)
         {
           id: "test-3",
-          mood: "anger",
+          mood: "love",
           color: "bg-red-100",
           timestamp: new Date(2024, 7, 16, 8, 0).getTime(), // Aug 16, 8 AM
-          emoji: "▲",
+          emoji: "♥",
           growthStage: 3,
           interactionCount: 12,
           lastInteraction: new Date(2024, 7, 16, 8, 0).getTime(),
-          journalEntry: "Woke up feeling frustrated today."
+          journalEntry: "Woke up feeling grateful and loving today."
         },
         // August 16th - Evening entry (Seed stage)
         {
@@ -351,7 +351,7 @@ export default function MoodGarden({ onBack }: { onBack: () => void }) {
             value={moodInput}
             onChange={(e) => setMoodInput(e.target.value)}
             placeholder="Type your mood here..."
-            className={`w-full p-3 text-center rounded-full placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors text-base bg-gray-100 ${moodInput ? (moodInput === 'joy' ? 'text-yellow-600' : moodInput === 'sadness' ? 'text-blue-600' : moodInput === 'anger' ? 'text-red-600' : moodInput === 'fear' ? 'text-purple-600' : moodInput === 'disgust' ? 'text-green-600' : moodInput === 'surprise' ? 'text-orange-600' : moodInput === 'shy' ? 'text-pink-600' : moodInput === 'envy' ? 'text-teal-600' : moodInput === 'anxiety' ? 'text-lavender-600' : 'text-foreground') : 'text-foreground'}`}
+            className={`w-full p-3 text-center rounded-full placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors text-base bg-gray-100 ${moodInput ? (moodInput === 'joy' ? 'text-yellow-600' : moodInput === 'calm' ? 'text-blue-600' : moodInput === 'love' ? 'text-red-600' : moodInput === 'growth' ? 'text-green-600' : moodInput === 'fear' ? 'text-purple-600' : moodInput === 'peace' ? 'text-teal-600' : moodInput === 'hope' ? 'text-lime-600' : moodInput === 'gentle' ? 'text-pink-600' : moodInput === 'anxiety' ? 'text-orange-600' : 'text-foreground') : 'text-foreground'}`}
             onKeyPress={(e) => e.key === "Enter" && plantMood()}
             autoFocus
           />
@@ -363,7 +363,7 @@ export default function MoodGarden({ onBack }: { onBack: () => void }) {
                 <button
                   key={mood}
                   onClick={() => setMoodInput(mood)}
-                  className={`px-3 py-2 text-sm transition-colors capitalize border rounded-full ${moodInput === mood ? `font-medium ${mood === 'joy' ? 'text-yellow-600 border-yellow-600' : mood === 'sadness' ? 'text-blue-600 border-blue-600' : mood === 'anger' ? 'text-red-600 border-red-600' : mood === 'fear' ? 'text-purple-600 border-purple-600' : mood === 'disgust' ? 'text-green-600 border-green-600' : mood === 'surprise' ? 'text-orange-600 border-orange-600' : mood === 'shy' ? 'text-pink-600 border-pink-600' : mood === 'envy' ? 'text-teal-600 border-teal-600' : mood === 'anxiety' ? 'text-lavender-600 border-lavender-600' : 'text-foreground border-border'}` : 'text-muted-foreground hover:text-foreground border-border hover:border-foreground/20'}`}
+                  className={`px-3 py-2 text-sm transition-colors capitalize border rounded-full ${moodInput === mood ? `font-medium ${mood === 'joy' ? 'text-yellow-600 border-yellow-600' : mood === 'calm' ? 'text-blue-600 border-blue-600' : mood === 'love' ? 'text-red-600 border-red-600' : mood === 'growth' ? 'text-green-600 border-green-600' : mood === 'fear' ? 'text-purple-600 border-purple-600' : mood === 'peace' ? 'text-teal-600 border-teal-600' : mood === 'hope' ? 'text-lime-600 border-lime-600' : mood === 'gentle' ? 'text-pink-600 border-pink-600' : mood === 'anxiety' ? 'text-orange-600 border-orange-600' : 'text-foreground border-border'}` : 'text-muted-foreground hover:text-foreground border-border hover:border-foreground/20'}`}
                 >
                   {mood}
                 </button>
@@ -740,16 +740,16 @@ export default function MoodGarden({ onBack }: { onBack: () => void }) {
                         </>
                       )}
                       
-                      {/* Sadness - Bluebell */}
-                      {plant.mood === 'sadness' && (
+                      {/* Calm - Bluebell */}
+                      {plant.mood === 'calm' && (
                         <>
                           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-4 h-5 bg-blue-400 rounded-t-full"></div>
                           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-2 h-3 bg-blue-300 rounded-t-full"></div>
                         </>
                       )}
                       
-                      {/* Anger - Red Rose */}
-                      {plant.mood === 'anger' && (
+                      {/* Love - Red Rose */}
+                      {plant.mood === 'love' && (
                         <>
                           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-5 h-5 bg-red-500 rounded-full"></div>
                           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-red-400 rounded-full"></div>
@@ -765,8 +765,8 @@ export default function MoodGarden({ onBack }: { onBack: () => void }) {
                         </>
                       )}
                       
-                      {/* Disgust - Green Fern */}
-                      {plant.mood === 'disgust' && (
+                      {/* Growth - Green Fern */}
+                      {plant.mood === 'growth' && (
                         <>
                           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-6 h-3 bg-green-500 rounded-full"></div>
                           <div className="absolute bottom-7 left-1/2 transform -translate-x-1/2 w-4 h-2 bg-green-400 rounded-full"></div>
@@ -774,25 +774,8 @@ export default function MoodGarden({ onBack }: { onBack: () => void }) {
                         </>
                       )}
                       
-                      {/* Surprise - Orange Marigold */}
-                      {plant.mood === 'surprise' && (
-                        <>
-                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-6 h-6 bg-orange-400 rounded-full"></div>
-                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-orange-300 rounded-full"></div>
-                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-orange-500 rounded-full"></div>
-                        </>
-                      )}
-                      
-                      {/* Shy - Pink Cherry Blossom */}
-                      {plant.mood === 'shy' && (
-                        <>
-                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-5 h-5 bg-pink-300 rounded-full opacity-80"></div>
-                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-pink-200 rounded-full opacity-90"></div>
-                        </>
-                      )}
-                      
-                      {/* Envy - Teal Lotus */}
-                      {plant.mood === 'envy' && (
+                      {/* Peace - Teal Lotus */}
+                      {plant.mood === 'peace' && (
                         <>
                           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-6 h-4 bg-teal-400 rounded-full"></div>
                           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-4 h-3 bg-teal-300 rounded-full"></div>
@@ -800,12 +783,28 @@ export default function MoodGarden({ onBack }: { onBack: () => void }) {
                         </>
                       )}
                       
-                      {/* Anxiety - Lavender Daisy */}
+                      {/* Hope - Lime Sparkle */}
+                      {plant.mood === 'hope' && (
+                        <>
+                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-5 h-5 bg-lime-400 rounded-full opacity-80"></div>
+                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-lime-300 rounded-full opacity-90"></div>
+                        </>
+                      )}
+                      
+                      {/* Gentle - Pink Cherry Blossom */}
+                      {plant.mood === 'gentle' && (
+                        <>
+                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-5 h-5 bg-pink-300 rounded-full opacity-80"></div>
+                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-pink-200 rounded-full opacity-90"></div>
+                        </>
+                      )}
+                      
+                      {/* Anxiety - Orange Daisy */}
                       {plant.mood === 'anxiety' && (
                         <>
-                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-5 h-5 bg-lavender-400 rounded-full"></div>
-                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-lavender-300 rounded-full"></div>
-                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-lavender-500 rounded-full"></div>
+                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-5 h-5 bg-orange-400 rounded-full"></div>
+                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-orange-300 rounded-full"></div>
+                          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-orange-500 rounded-full"></div>
                         </>
                       )}
                     </div>
@@ -821,7 +820,7 @@ export default function MoodGarden({ onBack }: { onBack: () => void }) {
                 
                                 {/* Mood text */}
                 <div className="relative z-10 text-center w-full">
-                  <div className={`text-sm font-medium mb-2 capitalize ${plant.mood === 'joy' ? 'text-yellow-600' : plant.mood === 'sadness' ? 'text-blue-600' : plant.mood === 'anger' ? 'text-red-600' : plant.mood === 'fear' ? 'text-purple-600' : plant.mood === 'disgust' ? 'text-green-600' : plant.mood === 'surprise' ? 'text-orange-600' : plant.mood === 'shy' ? 'text-pink-600' : plant.mood === 'envy' ? 'text-teal-600' : plant.mood === 'anxiety' ? 'text-lavender-600' : 'text-foreground'}`}>{plant.mood}</div>
+                  <div className={`text-sm font-medium mb-2 capitalize ${plant.mood === 'joy' ? 'text-yellow-600' : plant.mood === 'calm' ? 'text-blue-600' : plant.mood === 'love' ? 'text-red-600' : plant.mood === 'growth' ? 'text-green-600' : plant.mood === 'fear' ? 'text-purple-600' : plant.mood === 'peace' ? 'text-teal-600' : plant.mood === 'hope' ? 'text-lime-600' : plant.mood === 'gentle' ? 'text-pink-600' : plant.mood === 'anxiety' ? 'text-orange-600' : 'text-foreground'}`}>{plant.mood}</div>
                   <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground w-full">
                     {/* Day/Night indicator */}
                     {(() => {
