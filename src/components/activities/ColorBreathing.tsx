@@ -2,7 +2,17 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { IconFear } from "@/components/doodles/Icons";
+import {
+  JoyIcon,
+  SadnessIcon,
+  LoveIcon,
+  GrowthIcon,
+  FearIcon,
+  PeaceIcon,
+  HopeIcon,
+  GentleIcon,
+  AnxietyIcon,
+} from "@/components/emotion-icons";
 
 const COLORS = [
   { name: "Joy", value: "#FFF2D1" },        // Lighter pastel yellow - happiness and warmth
@@ -296,158 +306,47 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
                       {/* Full icon display with animations */}
                       {c.name === "Joy" && (
                         <div className="group-hover:animate-pulse">
-                          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-foreground">
-                            {/* Joy - minimal starburst/sun radiating warmth */}
-                            {/* Central sun circle */}
-                            <circle cx="12" cy="12" r="4" fill="#FFD700" opacity="0.95"/>
-                            {/* Radiating rays */}
-                            <path d="M12 2v3" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
-                            <path d="M12 19v3" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
-                            <path d="M2 12h3" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
-                            <path d="M19 12h3" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
-                            {/* Diagonal rays */}
-                            <path d="M4 4l2 2" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round" opacity="0.8"/>
-                            <path d="M18 18l2 2" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round" opacity="0.8"/>
-                            <path d="M18 4l-2 2" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round" opacity="0.8"/>
-                            <path d="M4 18l2-2" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round" opacity="0.8"/>
-                            {/* Warm glow effect */}
-                            <circle cx="12" cy="12" r="8" fill="none" stroke="#FFD700" strokeWidth="0.5" opacity="0.5"/>
-                            <circle cx="12" cy="12" r="6" fill="none" stroke="#FFA500" strokeWidth="0.5" opacity="0.4"/>
-                          </svg>
+                          <JoyIcon size={48} className="text-foreground/90" />
                         </div>
                       )}
                       {c.name === "Calm" && (
                         <div className="group-hover:animate-pulse">
-                          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-foreground">
-                            {/* Calm - gentle waves */}
-                            <path d="M6 16c3-2 6-2 9 0s6 2 9 0" stroke="#87CEEB" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.9" className="group-hover:animate-pulse" style={{animationDuration: '4s'}}/>
-                            <path d="M6 18c3-2 6-2 9 0s6 2 9 0" stroke="#4ECDC4" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.8" className="group-hover:animate-pulse" style={{animationDuration: '4s', animationDelay: '0.5s'}}/>
-                            <path d="M6 20c3-2 6-2 9 0s6 2 9 0" stroke="#45B7D1" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.7" className="group-hover:animate-pulse" style={{animationDuration: '4s', animationDelay: '1s'}}/>
-                            {/* Calming center dot */}
-                            <circle cx="12" cy="12" r="3" fill="#98FB98" opacity="0.9" className="group-hover:scale-110 transition-transform duration-1000"/>
-                          </svg>
+                          <SadnessIcon size={48} className="text-foreground/90" />
                         </div>
                       )}
                       {c.name === "Love" && (
                         <div className="group-hover:animate-pulse">
-                          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-foreground">
-                            {/* Love - simple heart with soft sparkle */}
-                            {/* Main heart shape */}
-                            <path d="M12 21c-2.5-1.5-5-3-7-5.5-2-2.5-2-6 0-8.5 2-2.5 5-3.5 7-2.5 2 1 5 0 7 2.5 2 2.5 2 6 0 8.5-2 2.5-4.5 4-7 5.5z" fill="#FFB6C1" opacity="0.95"/>
-                            {/* Soft sparkle */}
-                            <circle cx="8" cy="8" r="1" fill="#FFD700" opacity="0.95" className="animate-ping" style={{animationDuration: '2s'}}/>
-                            <circle cx="16" cy="8" r="0.8" fill="#FF69B4" opacity="0.9" className="animate-ping" style={{animationDuration: '2s', animationDelay: '0.5s'}}/>
-                            {/* Gentle shine effect */}
-                            <path d="M12 14c-1-1-2-1-3 0s-2 1-3 0c-1-1-1-2 0-3s2-1 3 0c1 1 2 1 3 0s2-1 3 0c1 1 1 2 0 3s-1 2-3 0c-1 1-2 1-3 0z" fill="#FF69B4" opacity="0.7"/>
-                          </svg>
+                          <LoveIcon size={48} className="text-foreground/90" />
                         </div>
                       )}
                       {c.name === "Growth" && (
                         <div className="group-hover:animate-pulse">
-                          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-foreground">
-                            {/* Growth - sprouting plant */}
-                            <path d="M12 20v-8" stroke="#228B22" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
-                            <path d="M12 12c-3 0-6-2-6-6s3-6 6-6 6 2 6 6-3 6-6 6z" fill="#32CD32" opacity="0.8"/>
-                            <path d="M8 8c2-1 4-1 6 0" stroke="#90EE90" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.8"/>
-                            <path d="M16 8c-2-1 4-1 6 0" stroke="#90EE90" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.8"/>
-                            {/* Growing leaves with animation */}
-                            <path d="M8 8c2-1 4-1 6 0" stroke="#98FB98" strokeWidth="1.5" fill="none" strokeLinecap="round" className="group-hover:animate-pulse" style={{animationDuration: '2s'}} opacity="0.8"/>
-                            <path d="M16 8c-2-1 4-1 6 0" stroke="#98FB98" strokeWidth="1.5" fill="none" strokeLinecap="round" className="group-hover:animate-pulse" style={{animationDuration: '2s', animationDelay: '0.3s'}} opacity="0.8"/>
-                            {/* New sprout emerging */}
-                            <path d="M12 6c-1 0-2-0.5-2-1.5s1-1.5 2-1.5 2 0.5 2 1.5-1 1.5-2 1.5z" fill="#98FB98" opacity="0.8" className="group-hover:scale-110 transition-transform duration-700"/>
-                          </svg>
+                          <GrowthIcon size={48} className="text-foreground/90" />
                         </div>
                       )}
                       {c.name === "Fear" && (
                         <div className="group-hover:animate-pulse">
-                          <IconFear className="w-12 h-12 text-foreground/90" />
+                          <FearIcon size={48} className="text-foreground/90" />
                         </div>
                       )}
                       {c.name === "Peace" && (
                         <div className="group-hover:animate-pulse">
-                          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-foreground">
-                            {/* Peace - zen stones for tranquility */}
-                            {/* Bottom stone */}
-                            <ellipse cx="12" cy="18" rx="4" ry="2" fill="#E5E7EB" opacity="0.95"/>
-                            {/* Middle stone */}
-                            <ellipse cx="12" cy="15" rx="3" ry="1.5" fill="#D1D5DB" opacity="0.9"/>
-                            {/* Top stone */}
-                            <ellipse cx="12" cy="12" rx="2" ry="1" fill="#9CA3AF" opacity="0.85"/>
-                            {/* Peaceful grounding line */}
-                            <path d="M8 20c2-1 4-1 6 0s4 1 6 0" stroke="#6B7280" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.8"/>
-                            {/* Zen circle of peace */}
-                            <circle cx="12" cy="10" r="1.2" fill="#6B7280" opacity="0.7"/>
-                          </svg>
+                          <PeaceIcon size={48} className="text-foreground/90" />
                         </div>
                       )}
                       {c.name === "Hope" && (
                         <div className="group-hover:animate-pulse">
-                          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-foreground">
-                            {/* Hope - sunflower */}
-                            <circle cx="12" cy="12" r="6" fill="#FFD700" opacity="0.9"/>
-                            <circle cx="12" cy="12" r="4" fill="#FFA500" opacity="0.8"/>
-                            <circle cx="12" cy="12" r="2" fill="#8B4513" opacity="0.9"/>
-                            {/* Petals with gentle sway */}
-                            <path d="M12 2c0 2-1 3-2 3s-2-1-2-3 1-3 2-3 2 1 2 3z" fill="#FFD700" opacity="0.9" className="group-hover:animate-bounce" style={{animationDuration: '3s', animationDelay: '0s'}}/>
-                            <path d="M12 22c0-2-1-3-2-3s-2 1-2 3 1 3 2 3 2-1 2-3z" fill="#FFD700" opacity="0.9" className="group-hover:animate-bounce" style={{animationDuration: '3s', animationDelay: '0.5s'}}/>
-                            <path d="M2 12c2 0 3-1 3-2s-1-2-3-2-3 1-3 2 1 2 3 2z" fill="#FFD700" opacity="0.9" className="group-hover:animate-bounce" style={{animationDuration: '3s', animationDelay: '1s'}}/>
-                            <path d="M22 12c-2 0-3-1-3-2s1-2 3-2 3 1 3 2-1 2-3 2z" fill="#FFD700" opacity="0.9" className="group-hover:animate-bounce" style={{animationDuration: '3s', animationDelay: '1.5s'}}/>
-                            <path d="M4 4c1 1 2 1 3 0s1-2 0-3-2-1-3 0-1 2 0 3z" fill="#FFD700" opacity="0.9" className="group-hover:animate-bounce" style={{animationDuration: '3s', animationDelay: '2s'}}/>
-                            <path d="M20 20c-1-1-2-1-3 0s-1 2 0 3 2 1 3 0 1-2 0-3z" fill="#FFD700" opacity="0.9" className="group-hover:animate-bounce" style={{animationDuration: '3s', animationDelay: '2.5s'}}/>
-                            <path d="M4 20c1-1 2-1 3 0s1 2 0 3-2 1-3 0-1-2 0-3z" fill="#FFD700" opacity="0.9" className="group-hover:animate-bounce" style={{animationDuration: '3s', animationDelay: '3s'}}/>
-                            <path d="M20 4c-1 1-2 1-3 0s-1-2 0-3 2-1 3 0 1 2 0 3z" fill="#FFD700" opacity="0.9" className="group-hover:animate-bounce" style={{animationDuration: '3s', animationDelay: '3.5s'}}/>
-                            {/* Stem */}
-                            <path d="M12 18v4" stroke="#228B22" strokeWidth="2" strokeLinecap="round" opacity="0.8"/>
-                            <path d="M10 20c2-1 4-1 6 0" stroke="#32CD32" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.7"/>
-                          </svg>
+                          <HopeIcon size={48} className="text-foreground/90" />
                         </div>
                       )}
                       {c.name === "Gentle" && (
                         <div className="group-hover:animate-pulse">
-                          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-foreground">
-                            {/* Gentle - whimsical flying dove */}
-                            {/* Bird body */}
-                            <ellipse cx="12" cy="12" rx="4" ry="2.5" fill="#FFFFFF" opacity="0.95"/>
-                            {/* Bird head */}
-                            <circle cx="16" cy="8" r="2.2" fill="#FFFFFF" opacity="0.98"/>
-                            {/* Beak */}
-                            <path d="M18.5 8 Q20.5 8 21.2 8.8" stroke="#FFB6C1" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.9"/>
-                            
-                            {/* Left wing - flapping */}
-                            <path d="M6 10 Q2 6 0 8 Q2 12 6 10" fill="#FFFFFF" opacity="0.9" style={{animation: 'gentleFlapLeft 3s ease-in-out infinite'}}/>
-                            <path d="M5 9 Q1 5 0 7 Q1 11 5 9" fill="#F0F8FF" opacity="0.8" style={{animation: 'gentleFlapLeft 3s ease-in-out infinite'}}/>
-                            
-                            {/* Right wing - flapping */}
-                            <path d="M18 10 Q22 6 24 8 Q22 12 18 10" fill="#FFFFFF" opacity="0.9" style={{animation: 'gentleFlapRight 3s ease-in-out infinite'}}/>
-                            <path d="M19 9 Q23 5 24 7 Q23 11 19 9" fill="#F0F8FF" opacity="0.8" style={{animation: 'gentleFlapRight 3s ease-in-out infinite'}}/>
-                            
-                            {/* Tail feathers */}
-                            <path d="M8 12 Q4 16 2 14" stroke="#FFFFFF" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.9"/>
-                            <path d="M8 13 Q4 17 2 15" stroke="#FFFFFF" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.9"/>
-                            
-                            {/* Gentle eye */}
-                            <circle cx="16.5" cy="7.5" r="0.5" fill="#87CEEB" opacity="0.95"/>
-                            
-                            {/* Wing details */}
-                            <path d="M3 7 Q1 5 0 6" stroke="#E6F3FF" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.8" style={{animation: 'gentleFlapLeft 3s ease-in-out infinite'}}/>
-                            <path d="M21 7 Q23 5 24 6" stroke="#E6F3FF" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.8" style={{animation: 'gentleFlapRight 3s ease-in-out infinite'}}/>
-                            
-                            {/* Body outline for definition */}
-                            <ellipse cx="12" cy="12" rx="4" ry="2.5" fill="none" stroke="#E8F4FD" strokeWidth="0.8" opacity="0.7" style={{animation: 'gentleFlapCenter 3s ease-in-out infinite'}}/>
-                          </svg>
+                          <GentleIcon size={48} className="text-foreground/90" />
                         </div>
                       )}
                       {c.name === "Anxiety" && (
                         <div className="group-hover:animate-pulse">
-                          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-foreground">
-                            {/* Anxiety - airy spiral with loosening breeze lines */}
-                            {/* Central spiral */}
-                            <path d="M12 12 m-3 0 a3 3 0 1 1 6 0 a2 2 0 1 0 -4 0 a1 1 0 1 1 2 0" stroke="#94A3B8" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.9"/>
-                            {/* Breeze lines radiating outward */}
-                            <path d="M7 8 Q12 7 16 8" stroke="#AFC7DF" strokeWidth="1.2" fill="none" strokeLinecap="round" opacity="0.7" className="group-hover:animate-pulse" style={{animationDuration: '2.4s'}}/>
-                            <path d="M6 12 Q11 11 17 12" stroke="#C9D7E6" strokeWidth="1" fill="none" strokeLinecap="round" opacity="0.55" className="group-hover:animate-pulse" style={{animationDuration: '2.4s', animationDelay: '0.2s'}}/>
-                            <path d="M7 16 Q12 15 16 16" stroke="#E2E8F0" strokeWidth="0.9" fill="none" strokeLinecap="round" opacity="0.4" className="group-hover:animate-pulse" style={{animationDuration: '2.4s', animationDelay: '0.4s'}}/>
-                          </svg>
+                          <AnxietyIcon size={48} className="text-foreground/90" />
                         </div>
                       )}
                     </div>
@@ -505,41 +404,27 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
                   )}
                   {selectedColor.name === "Fear" && (
                     <div className="text-foreground/80">
-                      <IconFear className="w-12 h-12 text-foreground/80" />
+                      <FearIcon size={48} className="text-foreground/80" />
                     </div>
                   )}
                   {selectedColor.name === "Peace" && (
                     <div className="text-foreground/80">
-                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 8c-2-2-4-2-6 0s-4 2-6 0c-2-2-2-4 0-6s2-4 6 0c2 2 4 2 6 0s4-2 6 0c2 2 2 4 0 6s-2 4-6 0c-2 2-4 2-6 0z" fill="#A8E6CF" opacity="0.95"/>
-                        <circle cx="12" cy="12" r="1.5" fill="#A8E6CF" opacity="0.9"/>
-                      </svg>
+                      <PeaceIcon size={48} className="text-foreground/80" />
                     </div>
                   )}
                   {selectedColor.name === "Hope" && (
                     <div className="text-foreground/80">
-                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="6" fill="#FFD700" opacity="0.9"/>
-                        <circle cx="12" cy="12" r="4" fill="#FFA500" opacity="0.8"/>
-                        <circle cx="12" cy="12" r="2" fill="#8B4513" opacity="0.9"/>
-                      </svg>
+                      <HopeIcon size={48} className="text-foreground/80" />
                     </div>
                   )}
                   {selectedColor.name === "Gentle" && (
                     <div className="text-foreground/80">
-                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                        <path d="M8 16c-1-1-2-1-3 0s-2 1-3 0c-1-1-1-2 0-3s2-1 3 0c1 1 2 1 3 0s2-1 3 0c1 1 1 2 0 3s-1 2-3 0c-1 1-2 1-3 0z" fill="#FFB6C1" opacity="0.9"/>
-                        <path d="M16 16c1-1 2-1 3 0s2 1 3 0c1 1 1 2 0 3s-1 2-3 0c-1 1-2 1-3 0s-2 1-3 0c-1-1-1-2 0-3s1-2 3 0c1 1 2 1 3 0z" fill="#FFC0CB" opacity="0.9"/>
-                      </svg>
+                      <GentleIcon size={48} className="text-foreground/80" />
                     </div>
                   )}
                   {selectedColor.name === "Anxiety" && (
                     <div className="text-foreground/80">
-                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                        <ellipse cx="12" cy="18" rx="4" ry="2" fill="#F4D4A3" opacity="0.95"/>
-                        <ellipse cx="12" cy="15" rx="3" ry="1.5" fill="#F0C080" opacity="0.9"/>
-                        <ellipse cx="12" cy="12" rx="2" ry="1" fill="#E6B800" opacity="0.85"/>
-                      </svg>
+                      <AnxietyIcon size={48} className="text-foreground/80" />
                     </div>
                   )}
                 </div>

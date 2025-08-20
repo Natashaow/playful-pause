@@ -60,6 +60,40 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+## Emotion Icons
+
+This project includes a collection of 9 animated SVG emotion icons with subtle, loopable animations:
+
+- **JoyIcon**: Sun with rays and sparkles
+- **SadnessIcon**: Droplet with fall animation
+- **LoveIcon**: Heart with breathing and glow
+- **GrowthIcon**: Stem with growing leaves
+- **FearIcon**: Eye with darting pupil and shiver
+- **PeaceIcon**: Peace symbol with gentle rotation
+- **HopeIcon**: Horizon with rising sun
+- **GentleIcon**: Feather with sway and float
+- **AnxietyIcon**: Irregular pulse with scribble
+
+### Testing the Emotion Icons
+
+1. Start the development server: `npm run dev`
+2. Navigate to `/emotions` to see all icons in action
+3. The icons respect `prefers-reduced-motion` and will pause animations when users have motion sensitivity enabled
+4. Each icon can be customized with different sizes and colors via props
+
+### Building and Testing
+
+```sh
+# TypeScript compilation check
+npm run build
+
+# Development server with hot reload
+npm run dev
+
+# Visual testing
+# Visit http://localhost:5173/emotions to see all emotion icons
+```
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/d7f42e1c-e138-47b7-ada7-b50a41334c95) and click on Share -> Publish.

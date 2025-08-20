@@ -4,11 +4,11 @@ import { IconRainbow, IconBreath, IconHeartStar, IconPalette, IconGarden, IconSo
 
 // ✅ Activities
 import ColorBreathing from "@/components/activities/ColorBreathing";
+import SoundShapes from "@/components/activities/SoundShapes";
 import ColorDoodlePlay from "@/components/activities/ColorDoodlePlay";
 import WhimsyWishes from "@/components/activities/WhimsyWishes";
 import { CreativePrompt } from "@/components/activities/CreativePrompt";
 import MoodGarden from "@/components/activities/MoodGarden";
-import SoundShapes from "@/components/activities/SoundShapes";
 
 type Activity = "home" | "colorBreathing" | "doodlePlay" | "compliments" | "creative" | "moodGarden" | "soundShapes";
 

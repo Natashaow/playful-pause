@@ -59,7 +59,7 @@ function jitter(amount: number) {
   return (Math.random() - 0.5) * 2 * amount;
 }
 
-export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+export default function ColorDoodlePlay({ onBack }: { onBack: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const dprRef = useRef<number>(1);
@@ -72,6 +72,8 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
   const isDrawingRef = useRef<boolean>(false);
   const pointsRef = useRef<Array<{x:number;y:number;time:number}>>([]);
   const clearGlowTimeout = useRef<number | null>(null);
+  const [completedStrokes, setCompletedStrokes] = useState<Array<{path: Path2D; color: string; width: number}>>([]);
+  const canvasHistoryRef = useRef<ImageData[]>([]);
 
   const canvasHeightCss = 480; // ~480px
 
@@ -97,6 +99,16 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
+
+    // Keyboard shortcuts
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+        e.preventDefault();
+        undoLastStroke();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -133,6 +145,7 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
 
     return () => {
       ro.disconnect();
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
 
@@ -143,6 +156,34 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
     if (!canvas || !ctx) return;
     const rect = canvas.getBoundingClientRect();
     ctx.clearRect(0, 0, rect.width, canvasHeightCss);
+    setCompletedStrokes([]);
+    canvasHistoryRef.current = [];
+  };
+
+  // Undo last stroke
+  const undoLastStroke = () => {
+    if (completedStrokes.length === 0) return;
+    
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+
+    // Remove the last stroke from the array
+    const newStrokes = completedStrokes.slice(0, -1);
+    setCompletedStrokes(newStrokes);
+
+    // Clear canvas and redraw all remaining strokes
+    const rect = canvas.getBoundingClientRect();
+    ctx.clearRect(0, 0, rect.width, canvasHeightCss);
+    
+    // Redraw all remaining strokes with their original properties
+    newStrokes.forEach(stroke => {
+      ctx.strokeStyle = stroke.color;
+      ctx.lineWidth = stroke.width;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.stroke(stroke.path);
+    });
   };
 
   // Save PNG (nice to have)
@@ -230,7 +271,6 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
     const jitterAmt = Math.min(1.2, 0.22 * stroke);
     const widthJitter = 1 + (Math.random() - 0.5) * 0.12; // +/-6%
 
-
     
     console.log('Drawing with color:', selectedColor, 'ctx.strokeStyle:', ctx.strokeStyle);
     ctx.strokeStyle = selectedColor;
@@ -262,6 +302,24 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
 
+    // Save the completed stroke
+    if (pointsRef.current.length >= 2) {
+      const path = new Path2D();
+      const pts = pointsRef.current;
+      
+      // Create a path from the points
+      path.moveTo(pts[0].x, pts[0].y);
+      for (let i = 1; i < pts.length; i++) {
+        path.lineTo(pts[i].x, pts[i].y);
+      }
+      
+      setCompletedStrokes(prev => [...prev, {
+        path,
+        color: selectedColor,
+        width: stroke
+      }]);
+    }
+
     // Gentle glow fade
     if (clearGlowTimeout.current) window.clearTimeout(clearGlowTimeout.current);
     clearGlowTimeout.current = window.setTimeout(() => {
@@ -277,88 +335,91 @@ export const ColorDoodlePlay: React.FC<{ onBack: () => void }> = ({ onBack }) =>
       <Button onClick={onBack} variant="ghost" className="mb-6 text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-all duration-300" aria-label="Back to Activities">← Back to Activities</Button>
 
       <div className="text-center mb-8">
-        <h1 className="font-heading text-3xl sm:text-4xl text-foreground/90 font-light mb-3">
+        <h2 className="text-3xl font-heading font-bold mb-3 text-foreground">
           Doodle Play
-        </h1>
-        <p className="text-foreground/70 font-sans">Create playful doodles to relax your mind and spark creativity</p>
+        </h2>
+        <p className="font-sans text-muted-foreground">Create playful doodles to relax your mind and spark creativity. Use Ctrl+Z (or Cmd+Z) to undo strokes.</p>
         {themeHint && (
-          <p className="mt-2 font-sans text-sm text-foreground/60 italic">
+          <p className="mt-2 font-sans text-sm text-muted-foreground/80 italic">
             💡 {themeHint}
           </p>
         )}
       </div>
 
-      <Card className="px-6 py-4 border-0 shadow-md relative overflow-hidden bg-gray-50 rounded-xl">
-        <div className="relative">
-          {/* Toolbar */}
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-4 min-h-[60px]">
-            {/* Colors */}
-            <div className="flex items-center gap-2 flex-wrap" aria-label="Choose color">
-              {currentPalette.map((c) => (
-                <button
-                  key={c.name}
-                  aria-label={`Color ${c.name}`}
-                  onClick={() => setSelectedColor(c.value)}
-                  className={`w-8 h-8 rounded-full ring-offset-2 transition-transform hover:scale-110 ${selectedColor === c.value ? 'ring-2 ring-primary shadow-glow' : ''}`}
-                  style={{ backgroundColor: c.value }}
-                />
-              ))}
-            </div>
-
-            {/* Stroke slider */}
-            <div className="flex items-center gap-3">
-              <label htmlFor="stroke" className="text-sm text-muted-foreground">Stroke</label>
-              <input
-                id="stroke"
-                aria-label="Stroke width"
-                type="range"
-                min={1}
-                max={10}
-                value={stroke}
-                onChange={(e) => setStroke(parseInt(e.target.value))}
-                className="w-40"
-                style={{ 
-                  accentColor: selectedColor,
-                  '--tw-ring-color': selectedColor
-                } as React.CSSProperties}
-              />
-              <span className="text-sm tabular-nums w-6 text-center">{stroke}</span>
-            </div>
-
-
-
-            <div className="flex items-center gap-2">
-              <Button type="button" variant="outline" onClick={clearCanvas} aria-label="Clear canvas">Clear</Button>
-              <Button type="button" variant="default" onClick={savePng} aria-label="Save PNG" className="bg-foreground text-white hover:bg-foreground/90">Save PNG</Button>
-            </div>
-          </div>
+            {/* Toolbar */}
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-6 min-h-[60px] p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-white/20">
+        {/* Colors */}
+        <div className="flex items-center gap-2 flex-wrap" aria-label="Choose color">
+          {currentPalette.map((c) => (
+            <button
+              key={c.name}
+              aria-label={`Color ${c.name}`}
+              onClick={() => setSelectedColor(c.value)}
+              className={`w-8 h-8 rounded-full ring-offset-2 transition-transform hover:scale-110 ${selectedColor === c.value ? 'ring-2 ring-primary shadow-glow' : ''}`}
+              style={{ backgroundColor: c.value }}
+            />
+          ))}
         </div>
-      </Card>
+
+        {/* Stroke slider */}
+        <div className="flex items-center gap-3">
+          <label htmlFor="stroke" className="text-sm text-muted-foreground">Stroke</label>
+          <input
+            id="stroke"
+            aria-label="Stroke width"
+            type="range"
+            min={1}
+            max={10}
+            value={stroke}
+            onChange={(e) => setStroke(parseInt(e.target.value))}
+            className="w-40"
+            style={{ 
+              accentColor: selectedColor,
+              '--tw-ring-color': selectedColor
+            } as React.CSSProperties}
+          />
+          <span className="text-sm tabular-nums w-6 text-center">{stroke}</span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={undoLastStroke} 
+            disabled={completedStrokes.length === 0}
+            aria-label="Undo last stroke (Ctrl+Z)"
+            className="disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Undo last stroke (Ctrl+Z or Cmd+Z)"
+          >
+            ↩ Undo {completedStrokes.length > 0 && `(${completedStrokes.length})`}
+          </Button>
+          <Button type="button" variant="outline" onClick={clearCanvas} aria-label="Clear canvas">Clear</Button>
+          <Button type="button" variant="default" onClick={savePng} aria-label="Save PNG" className="bg-foreground text-white hover:bg-foreground/90">Save PNG</Button>
+        </div>
+      </div>
 
       {/* Canvas area */}
-      <Card className="border-0 shadow-soft bg-white rounded-xl mb-8">
-        <div ref={containerRef} className="relative w-full rounded-lg overflow-hidden">
-          <canvas
-            ref={canvasRef}
-            className="block w-full h-[420px] touch-none"
-            onPointerDown={beginStroke}
-            onPointerMove={moveStroke}
-            onPointerUp={endStroke}
-            onPointerCancel={endStroke}
-            onPointerLeave={endStroke}
-            aria-label="Doodle canvas"
-            role="img"
-          />
-          
-          {/* Twinkles on first stroke */}
-          {showTwinkles && (
-            <>
-              <div className="absolute top-8 left-8 size-2 rounded-full bg-foreground/20 animate-twinkle" />
-              <div className="absolute top-12 right-12 size-1.5 rounded-full bg-foreground/20 animate-twinkle" />
-            </>
-          )}
-        </div>
-      </Card>
+      <div ref={containerRef} className="relative w-full rounded-xl overflow-hidden bg-white/80 backdrop-blur-sm border border-white/30">
+        <canvas
+          ref={canvasRef}
+          className="block w-full h-[420px] touch-none"
+          onPointerDown={beginStroke}
+          onPointerMove={moveStroke}
+          onPointerUp={endStroke}
+          onPointerCancel={endStroke}
+          onPointerLeave={endStroke}
+          aria-label="Doodle canvas"
+          role="img"
+        />
+        
+        {/* Twinkles on first stroke */}
+        {showTwinkles && (
+          <>
+            <div className="absolute top-8 left-8 size-2 rounded-full bg-foreground/20 animate-twinkle" />
+            <div className="absolute top-12 right-12 size-1.5 rounded-full bg-foreground/20 animate-twinkle" />
+          </>
+        )}
+      </div>
     </div>
   );
-};
+}
