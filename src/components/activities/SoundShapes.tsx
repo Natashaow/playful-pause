@@ -332,15 +332,9 @@ export default function SoundShapes({ onBack }: { onBack: () => void }) {
           <p className="font-jakarta text-sm mb-6 text-foreground/70 leading-relaxed">
             {composeMode ? "Tap steps to place notes and build loops" : "Discover melodies within geometric forms"}
           </p>
-        </div>
-      </section>
-
-      {/* Main Content Section - Same structure as homepage */}
-      <section className="px-6 lg:px-8 pb-12 pt-6">
-        <div className="mx-auto max-w-5xl">
-          {/* Compose mode toggle button */}
+          {/* Compose mode toggle button - moved under the text */}
           {composeMode && (
-            <div className="flex justify-end mb-4">
+            <div className="mt-4 mb-8">
               <Button 
                 variant="outline" 
                 onClick={() => { setComposeMode(false); setIsSequencerOn(false); }}
@@ -350,6 +344,12 @@ export default function SoundShapes({ onBack }: { onBack: () => void }) {
               </Button>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Main Content Section - Same structure as homepage */}
+      <section className="px-6 lg:px-8 pb-12 pt-6">
+        <div className="mx-auto max-w-5xl">
           
           <Card className="p-6 border-0 shadow-soft relative overflow-hidden">
 

@@ -1,72 +1,85 @@
-@keyframes whimsy-twinkle {
-  0% { transform: scale(0.6) rotate(0deg); opacity: 0 }
-  25% { opacity: 1 }
-  60% { transform: scale(1.25) rotate(35deg); opacity: .9 }
-  100% { transform: scale(1.6) rotate(60deg); opacity: 0 }
+/* Crisp line helpers */
+.svg-crisp [stroke] { 
+  vector-effect: non-scaling-stroke; 
+  shape-rendering: geometricPrecision; 
+}
+.svg-crisp { 
+  transform-box: fill-box; 
+  transform-origin: center; 
 }
 
-@keyframes whimsy-float { 
+/* Motion – translate/rotate only for outline layers */
+@keyframes floatY { 
   0%,100% { transform: translateY(0) } 
-  50% { transform: translateY(-3px) } 
+  50% { transform: translateY(-2px) } 
+}
+@keyframes drift { 
+  0% { transform: rotate(-1.5deg) } 
+  50% { transform: rotate(1.5deg) } 
+  100% { transform: rotate(-1.5deg) } 
+}
+@keyframes twinkle { 
+  0% { transform: scale(.6) rotate(0); opacity: 0 } 
+  25% { opacity: 1 } 
+  60% { transform: scale(1.2) rotate(35deg); opacity: .9 } 
+  100% { transform: scale(1.5) rotate(60deg); opacity: 0 } 
+}
+@keyframes glowPulse { 
+  0%,100% { opacity: .18 } 
+  50% { opacity: .32 } 
 }
 
-@keyframes whimsy-drift { 
+/* New magical animations */
+@keyframes sparkle { 
+  0% { transform: scale(0) rotate(0deg); opacity: 0 } 
+  50% { transform: scale(1.2) rotate(180deg); opacity: 1 } 
+  100% { transform: scale(0) rotate(360deg); opacity: 0 } 
+}
+@keyframes floatSlow { 
+  0%,100% { transform: translateY(0) } 
+  50% { transform: translateY(-1px) } 
+}
+@keyframes gentleBreathe { 
+  0%,100% { transform: scale(1) } 
+  50% { transform: scale(1.05) } 
+}
+@keyframes shimmer { 
+  0% { opacity: 0.3 } 
+  50% { opacity: 0.8 } 
+  100% { opacity: 0.3 } 
+}
+@keyframes gentleRotate { 
   0% { transform: rotate(-2deg) } 
   50% { transform: rotate(2deg) } 
   100% { transform: rotate(-2deg) } 
 }
-
-@keyframes whimsy-glow { 
-  0%,100% { filter: drop-shadow(0 0 0px currentColor) } 
-  50% { filter: drop-shadow(0 0 10px currentColor) } 
+@keyframes softGlow { 
+  0%,100% { opacity: 0.15 } 
+  50% { opacity: 0.25 } 
+}
+@keyframes magicalFloat { 
+  0% { transform: translateY(0) rotate(0deg) } 
+  33% { transform: translateY(-1px) rotate(0.5deg) } 
+  66% { transform: translateY(-0.5px) rotate(-0.5deg) } 
+  100% { transform: translateY(0) rotate(0deg) } 
 }
 
-@keyframes whimsy-irregular { 
-  0% { transform: scale(1) } 
-  15% { transform: scale(1.03) } 
-  30% { transform: scale(0.98) } 
-  60% { transform: scale(1.06) } 
-  100% { transform: scale(1) } 
-}
-
-@keyframes whimsy-dawn { 
-  0% { transform: translateY(3px); opacity: .65 } 
-  60% { transform: translateY(0); opacity: 1 } 
-  100% { transform: translateY(0); opacity: 1 } 
-}
-
-.motion-safe .whimsy-loop-twinkle { 
-  animation: whimsy-twinkle 1.6s ease-out infinite; 
-}
-
-.motion-safe .whimsy-loop-glow { 
-  animation: whimsy-glow 2.4s ease-in-out infinite; 
-}
-
-.motion-safe .whimsy-float { 
-  animation: whimsy-float 3.2s ease-in-out infinite; 
-}
-
-.motion-safe .whimsy-drift { 
-  animation: whimsy-drift 5s ease-in-out infinite; 
-  transform-origin: 50% 50%; 
-}
-
-.motion-safe .whimsy-irregular { 
-  animation: whimsy-irregular 1.8s cubic-bezier(.3,.7,.4,1) infinite; 
-}
-
-.motion-safe .whimsy-dawn { 
-  animation: whimsy-dawn 2s ease-out infinite; 
-}
+/* Apply with motion-safe in components */
+.motion-safe .floatY { animation: floatY 3.2s ease-in-out infinite; }
+.motion-safe .drift { animation: drift 5s ease-in-out infinite; }
+.motion-safe .twinkle { animation: twinkle 1.6s ease-out infinite; }
+.motion-safe .glowPulse { animation: glowPulse 2.6s ease-in-out infinite; }
+.motion-safe .sparkle { animation: sparkle 2s ease-out infinite; }
+.motion-safe .floatSlow { animation: floatSlow 4s ease-in-out infinite; }
+.motion-safe .gentleBreathe { animation: gentleBreathe 3s ease-in-out infinite; }
+.motion-safe .shimmer { animation: shimmer 2.5s ease-in-out infinite; }
+.motion-safe .gentleRotate { animation: gentleRotate 6s ease-in-out infinite; }
+.motion-safe .softGlow { animation: softGlow 3.5s ease-in-out infinite; }
+.motion-safe .magicalFloat { animation: magicalFloat 5s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
-  .whimsy-loop-twinkle, 
-  .whimsy-loop-glow, 
-  .whimsy-float, 
-  .whimsy-drift, 
-  .whimsy-irregular, 
-  .whimsy-dawn { 
+  .floatY, .drift, .twinkle, .glowPulse, .sparkle, .floatSlow, 
+  .gentleBreathe, .shimmer, .gentleRotate, .softGlow, .magicalFloat { 
     animation: none !important; 
   }
 }

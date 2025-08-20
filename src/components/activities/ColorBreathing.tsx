@@ -489,7 +489,7 @@ export default function ColorBreathing({
               {/* Breathing Session - Enhanced Design */}
               <div className="flex flex-col items-center text-center">
                 {/* Enhanced breathing visualization */}
-                <div className="relative mb-8">
+                <div className="relative mt-16 mb-16">
                   {/* Main breathing circle with emotion icon */}
                   <div className="relative">
                     {/* Animated background rings */}
@@ -531,7 +531,7 @@ export default function ColorBreathing({
                 </div>
 
                 {/* Fixed breathing instructions and counter */}
-                <div className="text-center mb-4 relative z-20 flex flex-col items-center">
+                <div className="text-center mb-6 relative z-20 flex flex-col items-center">
                   {/* Phase label */}
                   <h2 className="text-lg md:text-xl font-heading text-foreground/90 font-light mb-3 tracking-wide">
                     {phase.label}
@@ -544,7 +544,7 @@ export default function ColorBreathing({
                 </div>
 
                 {/* Phase description below circle */}
-                <div className="text-center mb-6">
+                <div className="text-center mb-10">
                   <p className="text-foreground/70 text-base font-medium leading-relaxed tracking-wide">
                     {phase.key === "inhale" && "Fill your lungs with gentle awareness"}
                     {phase.key === "hold1" && "Rest in this moment of fullness"}

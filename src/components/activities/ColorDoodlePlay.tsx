@@ -382,7 +382,7 @@ export default function ColorDoodlePlay({ onBack }: { onBack: () => void }) {
           <h1 className="font-recoleta text-3xl sm:text-4xl tracking-tight mb-2 text-foreground">
             Doodle Play
           </h1>
-          <p className="font-jakarta text-sm mb-6 text-foreground/70 leading-relaxed">Create playful doodles to relax your mind and spark creativity. Use Ctrl+Z (or Cmd+Z) to undo strokes.</p>
+          <p className="font-jakarta text-sm mb-6 text-foreground/70 leading-relaxed">Create playful doodles to relax your mind and spark creativity.</p>
           {themeHint && (
             <p className="mt-2 font-jakarta text-sm text-foreground/70/80 italic">
               💡 {themeHint}
@@ -394,80 +394,83 @@ export default function ColorDoodlePlay({ onBack }: { onBack: () => void }) {
       {/* Main Content Section - Same structure as homepage */}
       <section className="px-6 lg:px-8 pb-12 pt-6">
         <div className="mx-auto max-w-5xl">
-          {/* Toolbar */}
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-6 min-h-[60px] p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-white/20">
-        {/* Colors */}
-        <div className="flex items-center gap-2 flex-wrap" aria-label="Choose color">
-          {currentPalette.map((c) => (
-            <button
-              key={c.name}
-              aria-label={`Color ${c.name}`}
-              onClick={() => setSelectedColor(c.value)}
-              className={`w-8 h-8 rounded-full ring-offset-2 transition-transform hover:scale-110 ${selectedColor === c.value ? 'ring-2 ring-primary shadow-glow' : ''}`}
-              style={{ backgroundColor: c.value }}
-            />
-          ))}
-        </div>
+          {/* Canvas area with connected toolbar */}
+          <div className="relative w-full rounded-lg overflow-hidden bg-white border border-gray-200/30">
+            {/* Toolbar - now connected to canvas */}
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between p-4 bg-gray-50/80 backdrop-blur-sm border-b border-gray-100">
+              {/* Colors */}
+              <div className="flex items-center gap-2 flex-wrap" aria-label="Choose color">
+                {currentPalette.map((c) => (
+                  <button
+                    key={c.name}
+                    aria-label={`Color ${c.name}`}
+                    onClick={() => setSelectedColor(c.value)}
+                    className={`w-7 h-7 rounded-full transition-all hover:scale-105 ${selectedColor === c.value ? 'ring-2 ring-gray-400 shadow-sm' : 'hover:shadow-sm'}`}
+                    style={{ backgroundColor: c.value }}
+                  />
+                ))}
+              </div>
 
-        {/* Stroke slider */}
-        <div className="flex items-center gap-3">
-          <label htmlFor="stroke" className="text-sm text-muted-foreground">Stroke</label>
-          <input
-            id="stroke"
-            aria-label="Stroke width"
-            type="range"
-            min={1}
-            max={10}
-            value={stroke}
-            onChange={(e) => setStroke(parseInt(e.target.value))}
-            className="w-40"
-            style={{ 
-              accentColor: selectedColor,
-              '--tw-ring-color': selectedColor
-            } as React.CSSProperties}
-          />
-          <span className="text-sm tabular-nums w-6 text-center">{stroke}</span>
-        </div>
+              {/* Stroke slider */}
+              <div className="flex items-center gap-3">
+                <label htmlFor="stroke" className="text-sm text-gray-600">Stroke</label>
+                <input
+                  id="stroke"
+                  aria-label="Stroke width"
+                  type="range"
+                  min={1}
+                  max={10}
+                  value={stroke}
+                  onChange={(e) => setStroke(parseInt(e.target.value))}
+                  className="w-32"
+                  style={{ 
+                    accentColor: selectedColor,
+                    '--tw-ring-color': selectedColor
+                  } as React.CSSProperties}
+                />
+                <span className="text-sm text-gray-600 w-6 text-center">{stroke}</span>
+              </div>
 
-        <div className="flex items-center gap-2">
-          <Button 
-            type="button" 
-            variant="outline" 
-            onClick={undoLastStroke} 
-            disabled={completedStrokes.length === 0}
-            aria-label="Undo last stroke (Ctrl+Z)"
-            className="disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Undo last stroke (Ctrl+Z or Cmd+Z)"
-          >
-            ↩ Undo {completedStrokes.length > 0 && `(${completedStrokes.length})`}
-          </Button>
-          <Button type="button" variant="outline" onClick={clearCanvas} aria-label="Clear canvas">Clear</Button>
-          <Button type="button" variant="default" onClick={savePng} aria-label="Save PNG" className="bg-foreground text-white hover:bg-foreground/90">Save PNG</Button>
-        </div>
-      </div>
+              <div className="flex items-center gap-2">
+                <Button 
+                  type="button" 
+                  variant="ghost" 
+                  onClick={undoLastStroke} 
+                  disabled={completedStrokes.length === 0}
+                  aria-label="Undo last stroke"
+                  className="disabled:opacity-40 disabled:cursor-not-allowed px-2 py-1 h-7 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+                  title="Undo last stroke"
+                >
+                  ↩
+                </Button>
+                <Button type="button" variant="ghost" onClick={clearCanvas} aria-label="Clear canvas" className="px-3 py-1 h-7 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100">Clear</Button>
+                <Button type="button" variant="default" onClick={savePng} aria-label="Save PNG" className="px-3 py-1 h-7 text-sm bg-gray-800 text-white hover:bg-gray-700">Save</Button>
+              </div>
+            </div>
 
-      {/* Canvas area */}
-      <div ref={containerRef} className="relative w-full rounded-xl overflow-hidden bg-white/80 backdrop-blur-sm border border-white/30">
-        <canvas
-          ref={canvasRef}
-          className="block w-full h-[420px] touch-none"
-          onPointerDown={beginStroke}
-          onPointerMove={moveStroke}
-          onPointerUp={endStroke}
-          onPointerCancel={endStroke}
-          onPointerLeave={endStroke}
-          aria-label="Doodle canvas"
-          role="img"
-        />
-        
-        {/* Twinkles on first stroke */}
-        {showTwinkles && (
-          <>
-            <div className="absolute top-8 left-8 size-2 rounded-full bg-foreground/20 animate-twinkle" />
-            <div className="absolute top-12 right-12 size-1.5 rounded-full bg-foreground/20 animate-twinkle" />
-          </>
-        )}
-      </div>
+            {/* Canvas */}
+            <div ref={containerRef} className="relative w-full">
+              <canvas
+                ref={canvasRef}
+                className="block w-full h-[420px] touch-none"
+                onPointerDown={beginStroke}
+                onPointerMove={moveStroke}
+                onPointerUp={endStroke}
+                onPointerCancel={endStroke}
+                onPointerLeave={endStroke}
+                aria-label="Doodle canvas"
+                role="img"
+              />
+              
+              {/* Twinkles on first stroke */}
+              {showTwinkles && (
+                <>
+                  <div className="absolute top-8 left-8 size-2 rounded-full bg-gray-400/30 animate-twinkle" />
+                  <div className="absolute top-12 right-12 size-1.5 rounded-full bg-gray-400/30 animate-twinkle" />
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </section>
     </div>
