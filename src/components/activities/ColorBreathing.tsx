@@ -628,12 +628,9 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
                   </div>
                   {/* Breathing circle */}
                   <div 
-                    className={`w-48 h-48 md:w-56 md:h-56 rounded-full transition-all duration-1000 ease-in-out shadow-soft relative overflow-hidden ${
-                      phase.anim === "breatheIn" ? "scale-110" : 
-                      phase.anim === "holdExpanded" ? "scale-110" : 
-                      phase.anim === "breatheOut" ? "scale-100" : "scale-100"
-                    }`}
+                    className="w-48 h-48 md:w-56 md:h-56 rounded-full shadow-soft relative overflow-hidden will-change-transform"
                     style={{ 
+                      ...animStyle,
                       background: `radial-gradient(circle at 45% 35%, ${selectedColor.value}DD, ${selectedColor.value} 65%)`,
                       boxShadow: `0 0 0 2px #ffffff88 inset, 0 20px 60px ${selectedColor.value}44`
                     }}
