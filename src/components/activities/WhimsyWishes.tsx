@@ -2,6 +2,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ActivityHeader } from "@/components/ActivityHeader";
 import { readPersonalization, moodHints } from "@/lib/personalization";
 
 // --- Enhanced SVG Doodles with animations ---
@@ -306,6 +307,8 @@ export default function WhimsyWishes({ onBack }: { onBack: () => void }) {
   const [recent, setRecent] = useState<number[]>([]); // prevent immediate repeats
   const [accentColor, setAccentColor] = useState<string>("#C3F5E6");
   const [animSeed, setAnimSeed] = useState<number>(0);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Emotion-based color palette from ColorBreathing
   const EMOTION_COLORS = {
@@ -364,6 +367,24 @@ export default function WhimsyWishes({ onBack }: { onBack: () => void }) {
     }
   };
 
+  // Music toggle function
+  const toggleMusic = () => {
+    const el = audioRef.current;
+    if (!el) return;
+    if (isMusicPlaying) {
+      el.pause();
+      setIsMusicPlaying(false);
+    } else {
+      el
+        .play()
+        .then(() => setIsMusicPlaying(true))
+        .catch((err) => {
+          console.error("Audio play failed:", err);
+          setIsMusicPlaying(false);
+        });
+    }
+  };
+
   const nextWish = () => {
     if (!pool.length) return;
     // maintain a small recent window (e.g., last 4)
@@ -376,7 +397,7 @@ export default function WhimsyWishes({ onBack }: { onBack: () => void }) {
   };
 
   return (
-    <div className="mx-auto max-w-5xl p-6">
+    <div className="min-h-screen text-foreground">
       {/* Local animations */}
       <style>{`
         @keyframes whimsy-letter-in { from { transform: translateY(-14px) rotate(-2deg); opacity: 0 } to { transform: translateY(0) rotate(0); opacity: 1 } }
@@ -394,18 +415,43 @@ export default function WhimsyWishes({ onBack }: { onBack: () => void }) {
         .whimsy-loop-glow { box-shadow: 0 0 0 0 rgba(0,0,0,0), 0 6px 22px -6px rgba(0,0,0,0.12) }
       `}</style>
 
-      <Button onClick={onBack} variant="ghost" className="mb-6 text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-all duration-300" aria-label="Back to Activities">
-        ← Back to Activities
-      </Button>
+      <ActivityHeader 
+        onBack={onBack}
+        isMusicPlaying={isMusicPlaying}
+        onToggleMusic={toggleMusic}
+        onRandomActivity={() => {
+          const activities = ["colorBreathing", "doodlePlay", "compliments", "creative", "moodGarden", "soundShapes"];
+          const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+          // Navigate to random activity
+          if (randomActivity === "compliments") {
+            // Stay on current page but reset state
+            setIndex(0);
+            setAnimSeed((s) => s + 1);
+          } else {
+            // Navigate to different activity
+            onBack();
+            // Note: The parent component will handle the actual navigation
+          }
+        }}
+      />
+      
+      {/* Hidden audio element */}
+      <audio ref={audioRef} src="/audio/bg-music.mp3" preload="auto" loop className="hidden" />
 
-      <div className="text-center mb-8">
-        <h1 className="font-heading text-3xl sm:text-4xl text-foreground/90 font-light mb-3">
-          Whimsy Wishes
-        </h1>
-        <p className="text-foreground/70 font-sans">Tiny, magical messages to soften your day</p>
-      </div>
+      {/* Title Section - Same structure as homepage */}
+      <section className="px-6 lg:px-8 mt-6">
+        <div className="mx-auto max-w-2xl text-center">
+          <h1 className="font-recoleta text-3xl sm:text-4xl tracking-tight mb-2 text-foreground">
+            Whimsy Wishes
+          </h1>
+          <p className="font-jakarta text-sm mb-6 text-foreground/70 leading-relaxed">Tiny, magical messages to soften your day</p>
+        </div>
+      </section>
 
-      <Card className="p-8 border-0 shadow-soft relative overflow-hidden">
+      {/* Main Content Section - Same structure as homepage */}
+      <section className="px-6 lg:px-8 pb-12 pt-6">
+        <div className="mx-auto max-w-5xl">
+          <Card className="p-8 border-0 shadow-soft relative overflow-hidden">
         <div aria-hidden className="absolute inset-0 -z-10" style={{
           background: `radial-gradient(60% 60% at 50% 30%, ${accentColor}55 0%, transparent 70%), radial-gradient(60% 50% at 50% 100%, ${accentColor}2a 0%, transparent 60%)`,
           transition: "background 500ms ease",
@@ -458,6 +504,8 @@ export default function WhimsyWishes({ onBack }: { onBack: () => void }) {
           </div>
         </div>
       </Card>
+        </div>
+      </section>
     </div>
   );
 }

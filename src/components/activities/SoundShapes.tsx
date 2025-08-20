@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ActivityHeader } from "@/components/ActivityHeader";
 
 type Pattern = Record<string, boolean[]>;
 
@@ -18,6 +19,8 @@ export default function SoundShapes({ onBack }: { onBack: () => void }) {
   const [isSequencerOn, setIsSequencerOn] = useState(false);
   const [step, setStep] = useState(0);
   const loopRef = useRef<number | null>(null);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const audioContextRef = useRef<AudioContext | null>(null);
   const oscillatorsRef = useRef<{ [key: string]: OscillatorNode }>({});
@@ -218,6 +221,24 @@ export default function SoundShapes({ onBack }: { onBack: () => void }) {
     });
   };
 
+  // Music toggle function
+  const toggleMusic = () => {
+    const el = audioRef.current;
+    if (!el) return;
+    if (isMusicPlaying) {
+      el.pause();
+      setIsMusicPlaying(false);
+    } else {
+      el
+        .play()
+        .then(() => setIsMusicPlaying(true))
+        .catch((err) => {
+          console.error("Audio play failed:", err);
+          setIsMusicPlaying(false);
+        });
+    }
+  };
+
   // Sequencer loop
   useEffect(() => {
     if (!isSequencerOn) return;
@@ -277,32 +298,60 @@ export default function SoundShapes({ onBack }: { onBack: () => void }) {
   };
 
   return (
-    <div className="mx-auto max-w-5xl p-6 pb-16">
-      <div className="flex items-center justify-between mb-6">
-        <Button onClick={onBack} variant="ghost" className="text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-all duration-300" aria-label="Back to Activities">
-          ← Back to Activities
-        </Button>
-        {composeMode && (
-          <Button 
-            variant="outline" 
-            onClick={() => { setComposeMode(false); setIsSequencerOn(false); }}
-            className="px-4 bg-black text-white border-black hover:bg-black/90 hover:text-white"
-          >
-            Done composing
-          </Button>
-        )}
-      </div>
+    <div className="min-h-screen text-foreground">
+      <ActivityHeader 
+        onBack={onBack}
+        isMusicPlaying={isMusicPlaying}
+        onToggleMusic={toggleMusic}
+        onRandomActivity={() => {
+          const activities = ["colorBreathing", "doodlePlay", "compliments", "creative", "moodGarden", "soundShapes"];
+          const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+          // Navigate to random activity
+          if (randomActivity === "soundShapes") {
+            // Stay on current page but reset state
+            setComposeMode(false);
+            setIsSequencerOn(false);
+            setPattern({});
+          } else {
+            // Navigate to different activity
+            onBack();
+            // Note: The parent component will handle the actual navigation
+          }
+        }}
+      />
+      
+      {/* Hidden audio element */}
+      <audio ref={audioRef} src="/audio/bg-music.mp3" preload="auto" loop className="hidden" />
 
-      <div className="text-center mb-8">
-        <h1 className="font-heading text-3xl sm:text-4xl text-foreground/90 font-light mb-2">
-          Sound Shapes
-        </h1>
-                  <p className="text-foreground/70 font-sans text-sm">
+      {/* Title Section - Same structure as homepage */}
+      <section className="px-6 lg:px-8 mt-6">
+        <div className="mx-auto max-w-2xl text-center">
+          <h1 className="font-recoleta text-3xl sm:text-4xl tracking-tight mb-2 text-foreground">
+            Sound Shapes
+          </h1>
+          <p className="font-jakarta text-sm mb-6 text-foreground/70 leading-relaxed">
             {composeMode ? "Tap steps to place notes and build loops" : "Discover melodies within geometric forms"}
           </p>
-      </div>
+        </div>
+      </section>
 
-      <Card className="p-6 border-0 shadow-soft relative overflow-hidden">
+      {/* Main Content Section - Same structure as homepage */}
+      <section className="px-6 lg:px-8 pb-12 pt-6">
+        <div className="mx-auto max-w-5xl">
+          {/* Compose mode toggle button */}
+          {composeMode && (
+            <div className="flex justify-end mb-4">
+              <Button 
+                variant="outline" 
+                onClick={() => { setComposeMode(false); setIsSequencerOn(false); }}
+                className="px-4 bg-black text-white border-black hover:bg-black/90 hover:text-white"
+              >
+                Done composing
+              </Button>
+            </div>
+          )}
+          
+          <Card className="p-6 border-0 shadow-soft relative overflow-hidden">
 
         {!composeMode && (
           <div className="text-center">
@@ -429,6 +478,8 @@ export default function SoundShapes({ onBack }: { onBack: () => void }) {
           </div>
         )}
       </Card>
+        </div>
+      </section>
     </div>
   );
 }

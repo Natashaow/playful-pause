@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { ActivityHeader } from "@/components/ActivityHeader";
 import {
   JoyIcon,
   SadnessIcon,
@@ -90,7 +91,17 @@ const PHASES: Array<{
   { key: "hold2", label: "Hold",       seconds: 4, anim: "holdContracted", isHold: true },
 ];
 
-export default function ColorBreathing({ onBack }: { onBack: () => void }) {
+export default function ColorBreathing({ 
+  onBack, 
+  isMusicPlaying = false, 
+  onToggleMusic,
+  onRandomActivity 
+}: { 
+  onBack: () => void;
+  isMusicPlaying?: boolean;
+  onToggleMusic?: () => void;
+  onRandomActivity?: () => void;
+}) {
   const [selectedColor, setSelectedColor] = useState<typeof COLORS[number]>(COLORS[0]);
   const [phaseIndex, setPhaseIndex] = useState(0);
   const [secondsLeft, setSecondsLeft] = useState(PHASES[0].seconds);
@@ -198,363 +209,368 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
   };
 
   return (
-          <div className="mx-auto max-w-5xl p-6 pb-16">
-      {/* Custom breathing animations */}
-      <style>{`
-        /* --- Color Breathing keyframes --- */
+    <div className="min-h-screen text-foreground">
+      <ActivityHeader 
+        onBack={onBack}
+        isMusicPlaying={isMusicPlaying}
+        onToggleMusic={onToggleMusic}
+        onRandomActivity={onRandomActivity}
+      />
+      
+      <div className="mx-auto max-w-5xl p-6 pb-16">
+        {/* Custom breathing animations */}
+        <style>{`
+          /* --- Color Breathing keyframes --- */
 
-        /* Breathe In (expand over 4s) */
-        @keyframes breatheIn {
-          0%   { transform: scale(1);   opacity: 0.9; }
-          100% { transform: scale(1.3); opacity: 1;   }
-        }
+          /* Breathe In (expand over 4s) */
+          @keyframes breatheIn {
+            0%   { transform: scale(1);   opacity: 0.9; }
+            100% { transform: scale(1.3); opacity: 1;   }
+          }
 
-        /* Hold after inhale (gentle pulse at expanded size) */
-        @keyframes holdExpanded {
-          0%,100% { transform: scale(1.3); opacity: 1;   }
-          50%     { transform: scale(1.32); opacity: 0.95; }
-        }
+          /* Hold after inhale (gentle pulse at expanded size) */
+          @keyframes holdExpanded {
+            0%,100% { transform: scale(1.3); opacity: 1;   }
+            50%     { transform: scale(1.32); opacity: 0.95; }
+          }
 
-        /* Breathe Out (contract over 6s) */
-        @keyframes breatheOut {
-          0%   { transform: scale(1.3); opacity: 1;   }
-          100% { transform: scale(1);   opacity: 0.9; }
-        }
+          /* Breathe Out (contract over 6s) */
+          @keyframes breatheOut {
+            0%   { transform: scale(1.3); opacity: 1;   }
+            100% { transform: scale(1);   opacity: 0.9; }
+          }
 
-        /* Hold after exhale (gentle pulse at contracted size) */
-        @keyframes holdContracted {
-          0%,100% { transform: scale(1);   opacity: 0.9; }
-          50%     { transform: scale(1.02); opacity: 1;   }
-        }
+          /* Hold after exhale (gentle pulse at contracted size) */
+          @keyframes holdContracted {
+            0%,100% { transform: scale(1);   opacity: 0.9; }
+            50%     { transform: scale(1.02); opacity: 1;   }
+          }
 
-        /* --- Dove wing flapping animations --- */
-        @keyframes gentleFlapLeft {
-          0%, 100% { transform: rotate(0deg) translateX(0); }
-          50% { transform: rotate(-8deg) translateX(-1px); }
-        }
+          /* --- Dove wing flapping animations --- */
+          @keyframes gentleFlapLeft {
+            0%, 100% { transform: rotate(0deg) translateX(0); }
+            50% { transform: rotate(-8deg) translateX(-1px); }
+          }
 
-        @keyframes gentleFlapRight {
-          0%, 100% { transform: rotate(0deg) translateX(0); }
-          50% { transform: rotate(8deg) translateX(1px); }
-        }
+          @keyframes gentleFlapRight {
+            0%, 100% { transform: rotate(0deg) translateX(0); }
+            50% { transform: rotate(8deg) translateX(1px); }
+          }
 
-        @keyframes gentleFlapCenter {
-          0%, 100% { transform: rotate(0deg); }
-          50% { transform: rotate(-2deg); }
-        }
+          @keyframes gentleFlapCenter {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(-2deg); }
+          }
 
-        /* --- Fear raindrop dissolve animation --- */
-        @keyframes dropRelease {
-          0%   { transform: translateY(0) scale(1);   opacity: 0.9; }
-          100% { transform: translateY(6px) scale(0.85); opacity: 0; }
-        }
-      `}</style>
+          /* --- Fear raindrop dissolve animation --- */
+          @keyframes dropRelease {
+            0%   { transform: translateY(0) scale(1);   opacity: 0.9; }
+            100% { transform: translateY(6px) scale(0.85); opacity: 0; }
+          }
+        `}</style>
 
-      <Button onClick={onBack} variant="ghost" className="mb-6 text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-all duration-300" aria-label="Back to Activities">
-        ← Back to Activities
-      </Button>
+        <div className="text-center mb-8">
+          {!running && !showInstructions ? (
+            <>
+              <h1 className="font-heading text-3xl sm:text-4xl text-foreground/90 font-light mb-2">
+                Choose Your Emotion
+              </h1>
+              <p className="text-foreground/70 font-sans text-sm">Pick an emotion and breathe with its energy</p>
+            </>
+          ) : showInstructions ? (
+            <>
+              <h1 className="font-heading text-3xl sm:text-4xl text-foreground/90 font-light mb-2">
+                Get Ready to Breathe
+              </h1>
+              <p className="text-foreground/70 font-sans text-sm">Review the breathing pattern and prepare for your session</p>
+            </>
+          ) : (
+            <>
+              <h1 className="font-heading text-3xl sm:text-4xl text-foreground/90 font-light mb-2">
+                Breathing Session
+              </h1>
+              <p className="text-foreground/70 font-sans text-sm">Focus on your breath and let the emotion guide you</p>
+            </>
+          )}
+        </div>
 
-      <div className="text-center mb-8">
-        {!running && !showInstructions ? (
-          <>
-            <h1 className="font-heading text-3xl sm:text-4xl text-foreground/90 font-light mb-2">
-              Choose Your Emotion
-            </h1>
-            <p className="text-foreground/70 font-sans text-sm">Pick an emotion and breathe with its energy</p>
-          </>
-        ) : showInstructions ? (
-          <>
-            <h1 className="font-heading text-3xl sm:text-4xl text-foreground/90 font-light mb-2">
-              Get Ready to Breathe
-            </h1>
-            <p className="text-foreground/70 font-sans text-sm">Review the breathing pattern and prepare for your session</p>
-          </>
-        ) : (
-          <>
-            <h1 className="font-heading text-3xl sm:text-4xl text-foreground/90 font-light mb-2">
-              Breathing Session
-            </h1>
-            <p className="text-foreground/70 font-sans text-sm">Focus on your breath and let the emotion guide you</p>
-          </>
-        )}
-      </div>
+        <Card className="p-6 border-0 shadow-soft relative overflow-hidden">
+          <div aria-hidden className="absolute inset-0 -z-10" style={{
+            background: `radial-gradient(60% 60% at 50% 30%, ${selectedColor.value}15 0%, transparent 70%)`,
+            transition: "background 500ms ease",
+          }} />
 
-      <Card className="p-6 border-0 shadow-soft relative overflow-hidden">
-        <div aria-hidden className="absolute inset-0 -z-10" style={{
-          background: `radial-gradient(60% 60% at 50% 30%, ${selectedColor.value}15 0%, transparent 70%)`,
-          transition: "background 500ms ease",
-        }} />
-
-        {!running && !showInstructions ? (
-          <>
-            {/* Color selection */}
-            <div className="text-center">
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-12">
-                {COLORS.map((c) => (
-                  <button
-                    key={c.name}
-                    onClick={() => setSelectedColor(c)}
-                    className={`p-8 rounded-2xl transition-all duration-300 hover:scale-105 border-2 relative ${
-                      selectedColor.value === c.value 
-                        ? 'border-primary shadow-lg scale-105' 
-                        : 'border-border hover:border-primary/50'
-                    }`}
-                    style={{ backgroundColor: c.value }}
-                    aria-label={`Choose ${c.name}`}
-                  >
-                    <div className="mb-4 flex justify-center items-center transition-all duration-500 relative hover:scale-110 group-hover:animate-float-slow">
-                      {/* Full icon display with animations */}
-                      {c.name === "Joy" && (
-                        <div className="group-hover:animate-pulse">
-                          <JoyIcon size={48} className="text-foreground/90" />
-                        </div>
-                      )}
-                      {c.name === "Calm" && (
-                        <div className="group-hover:animate-pulse">
-                          <SadnessIcon size={48} className="text-foreground/90" />
-                        </div>
-                      )}
-                      {c.name === "Love" && (
-                        <div className="group-hover:animate-pulse">
-                          <LoveIcon size={48} className="text-foreground/90" />
-                        </div>
-                      )}
-                      {c.name === "Growth" && (
-                        <div className="group-hover:animate-pulse">
-                          <GrowthIcon size={48} className="text-foreground/90" />
-                        </div>
-                      )}
-                      {c.name === "Fear" && (
-                        <div className="group-hover:animate-pulse">
-                          <FearIcon size={48} className="text-foreground/90" />
-                        </div>
-                      )}
-                      {c.name === "Peace" && (
-                        <div className="group-hover:animate-pulse">
-                          <PeaceIcon size={48} className="text-foreground/90" />
-                        </div>
-                      )}
-                      {c.name === "Hope" && (
-                        <div className="group-hover:animate-pulse">
-                          <HopeIcon size={48} className="text-foreground/90" />
-                        </div>
-                      )}
-                      {c.name === "Gentle" && (
-                        <div className="group-hover:animate-pulse">
-                          <GentleIcon size={48} className="text-foreground/90" />
-                        </div>
-                      )}
-                      {c.name === "Anxiety" && (
-                        <div className="group-hover:animate-pulse">
-                          <AnxietyIcon size={48} className="text-foreground/90" />
-                        </div>
-                      )}
-                    </div>
-                    
-                    <span className="text-sm font-medium text-foreground/90">{c.name}</span>
-                  </button>
-                ))}
-              </div>
-
-              <Button onClick={showColorInstructions} size="lg" className="px-10 py-3 bg-foreground text-white hover:bg-foreground/90 shadow-md">
-                Continue
-              </Button>
-            </div>
-          </>
-        ) : showInstructions ? (
-          <>
-            {/* Instructional page */}
-            <div className="text-center max-w-lg mx-auto">
-              {/* Emotion icon preview */}
-              <div className="mb-8">
-                <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                  {selectedColor.name === "Joy" && (
-                    <div className="text-foreground/80">
-                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="4" fill="#FFD700" opacity="0.95"/>
-                        <path d="M12 2v3" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
-                        <path d="M12 19v3" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
-                        <path d="M2 12h3" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
-                        <path d="M19 12h3" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
-                      </svg>
-                    </div>
-                  )}
-                  {selectedColor.name === "Calm" && (
-                    <div className="text-foreground/80">
-                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                        <path d="M6 16c3-2 6-2 9 0s6 2 9 0" stroke="#87CEEB" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.9"/>
-                        <circle cx="12" cy="12" r="3" fill="#98FB98" opacity="0.9"/>
-                      </svg>
-                    </div>
-                  )}
-                  {selectedColor.name === "Love" && (
-                    <div className="text-foreground/80">
-                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 21c-2.5-1.5-5-3-7-5.5-2-2.5-2-6 0-8.5 2-2.5 5-3.5 7-2.5 2 1 5 0 7 2.5 2 2.5 2 6 0 8.5-2 2.5-4.5 4-7 5.5z" fill="#FFB6C1" opacity="0.95"/>
-                      </svg>
-                    </div>
-                  )}
-                  {selectedColor.name === "Growth" && (
-                    <div className="text-foreground/80">
-                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 20v-8" stroke="#228B22" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
-                        <path d="M12 12c-3 0-6-2-6-6s3-6 6-6 6 2 6 6-3 6-6 6z" fill="#32CD32" opacity="0.8"/>
-                      </svg>
-                    </div>
-                  )}
-                  {selectedColor.name === "Fear" && (
-                    <div className="text-foreground/80">
-                      <FearIcon size={48} className="text-foreground/80" />
-                    </div>
-                  )}
-                  {selectedColor.name === "Peace" && (
-                    <div className="text-foreground/80">
-                      <PeaceIcon size={48} className="text-foreground/80" />
-                    </div>
-                  )}
-                  {selectedColor.name === "Hope" && (
-                    <div className="text-foreground/80">
-                      <HopeIcon size={48} className="text-foreground/80" />
-                    </div>
-                  )}
-                  {selectedColor.name === "Gentle" && (
-                    <div className="text-foreground/80">
-                      <GentleIcon size={48} className="text-foreground/80" />
-                    </div>
-                  )}
-                  {selectedColor.name === "Anxiety" && (
-                    <div className="text-foreground/80">
-                      <AnxietyIcon size={48} className="text-foreground/80" />
-                    </div>
-                  )}
+          {!running && !showInstructions ? (
+            <>
+              {/* Color selection */}
+              <div className="text-center">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-12">
+                  {COLORS.map((c) => (
+                    <button
+                      key={c.name}
+                      onClick={() => setSelectedColor(c)}
+                      className={`p-8 rounded-2xl transition-all duration-300 hover:scale-105 border-2 relative ${
+                        selectedColor.value === c.value 
+                          ? 'border-primary shadow-lg scale-105' 
+                          : 'border-border hover:border-primary/50'
+                      }`}
+                      style={{ backgroundColor: c.value }}
+                      aria-label={`Choose ${c.name}`}
+                    >
+                      <div className="mb-4 flex justify-center items-center transition-all duration-500 relative hover:scale-110 group-hover:animate-float-slow">
+                        {/* Full icon display with animations */}
+                        {c.name === "Joy" && (
+                          <div className="group-hover:animate-pulse">
+                            <JoyIcon size={48} className="text-foreground/90" />
+                          </div>
+                        )}
+                        {c.name === "Calm" && (
+                          <div className="group-hover:animate-pulse">
+                            <SadnessIcon size={48} className="text-foreground/90" />
+                          </div>
+                        )}
+                        {c.name === "Love" && (
+                          <div className="group-hover:animate-pulse">
+                            <LoveIcon size={48} className="text-foreground/90" />
+                          </div>
+                        )}
+                        {c.name === "Growth" && (
+                          <div className="group-hover:animate-pulse">
+                            <GrowthIcon size={48} className="text-foreground/90" />
+                          </div>
+                        )}
+                        {c.name === "Fear" && (
+                          <div className="group-hover:animate-pulse">
+                            <FearIcon size={48} className="text-foreground/90" />
+                          </div>
+                        )}
+                        {c.name === "Peace" && (
+                          <div className="group-hover:animate-pulse">
+                            <PeaceIcon size={48} className="text-foreground/90" />
+                          </div>
+                        )}
+                        {c.name === "Hope" && (
+                          <div className="group-hover:animate-pulse">
+                            <HopeIcon size={48} className="text-foreground/90" />
+                          </div>
+                        )}
+                        {c.name === "Gentle" && (
+                          <div className="group-hover:animate-pulse">
+                            <GentleIcon size={48} className="text-foreground/90" />
+                          </div>
+                        )}
+                        {c.name === "Anxiety" && (
+                          <div className="group-hover:animate-pulse">
+                            <AnxietyIcon size={48} className="text-foreground/90" />
+                          </div>
+                        )}
+                      </div>
+                      
+                      <span className="text-sm font-medium text-foreground/90">{c.name}</span>
+                    </button>
+                  ))}
                 </div>
-                <h3 className="font-heading text-2xl text-foreground/90 font-light mb-3">
-                  {selectedColor.name === "Fear" || selectedColor.name === "Anxiety" 
-                    ? "Let go of fear" 
-                    : `Breathe with ${selectedColor.name}`
-                  }
-                </h3>
-              </div>
 
-              {/* Simplified breathing pattern */}
-              <div className="mb-8">
-                <p className="text-foreground/60 text-sm mb-3 tracking-wide font-medium">Breathing pattern</p>
-                <div className="flex items-center justify-center gap-4 text-foreground/80 font-medium">
-                  <span className="px-3 py-2 bg-foreground/5 rounded-lg text-sm">Inhale</span>
-                  <span className="text-foreground/40">•</span>
-                  <span className="px-3 py-2 bg-foreground/5 rounded-lg text-sm">Hold</span>
-                  <span className="text-foreground/40">•</span>
-                  <span className="px-3 py-2 bg-foreground/5 rounded-lg text-sm">Exhale</span>
-                  <span className="text-foreground/40">•</span>
-                  <span className="px-3 py-2 bg-foreground/5 rounded-lg text-sm">Hold</span>
-                </div>
-              </div>
-
-              {/* Action buttons */}
-              <div className="flex gap-4 justify-center">
-                <Button 
-                  variant="ghost" 
-                  onClick={() => setShowInstructions(false)}
-                  className="text-foreground/60 hover:text-foreground/80 hover:bg-foreground/5 px-6 py-2"
-                >
-                  ← Back
-                </Button>
-                <Button 
-                  onClick={startBreathing}
-                  size="lg" 
-                  className="px-8 py-3 bg-foreground text-white hover:bg-foreground/90 shadow-md font-medium"
-                >
-                  Start Breathing
+                <Button onClick={showColorInstructions} size="lg" className="px-10 py-3 bg-foreground text-white hover:bg-foreground/90 shadow-md">
+                  Continue
                 </Button>
               </div>
-            </div>
-          </>
-        ) : (
-          <>
-            {/* Breathing Session - Enhanced Design */}
-            <div className="flex flex-col items-center text-center">
-              {/* Enhanced breathing visualization */}
-              <div className="relative mb-8">
-                {/* Main breathing circle with emotion icon */}
-                <div className="relative">
-                  {/* Animated background rings */}
-                  <div className="absolute inset-0 -z-10">
-                    <div 
-                      className="absolute inset-0 rounded-full opacity-20 transition-all duration-1000 ease-in-out"
-                      style={{ 
-                        background: `radial-gradient(circle, ${selectedColor.value}40 0%, transparent 70%)`,
-                        transform: `scale(${phase.anim === "breatheIn" ? 1.4 : phase.anim === "holdExpanded" ? 1.4 : 1})`
-                      }}
-                    />
-                    <div 
-                      className="absolute inset-8 rounded-full opacity-15 transition-all duration-1000 ease-in-out"
-                      style={{ 
-                        background: `radial-gradient(circle, ${selectedColor.value}30 0%, transparent 70%)`,
-                        transform: `scale(${phase.anim === "breatheIn" ? 1.3 : phase.anim === "holdExpanded" ? 1.3 : 1})`
-                      }}
-                    />
+            </>
+          ) : showInstructions ? (
+            <>
+              {/* Instructional page */}
+              <div className="text-center max-w-lg mx-auto">
+                {/* Emotion icon preview */}
+                <div className="mb-8">
+                  <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                    {selectedColor.name === "Joy" && (
+                      <div className="text-foreground/80">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                          <circle cx="12" cy="12" r="4" fill="#FFD700" opacity="0.95"/>
+                          <path d="M12 2v3" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
+                          <path d="M12 19v3" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
+                          <path d="M2 12h3" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
+                          <path d="M19 12h3" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
+                        </svg>
+                      </div>
+                    )}
+                    {selectedColor.name === "Calm" && (
+                      <div className="text-foreground/80">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                          <path d="M6 16c3-2 6-2 9 0s6 2 9 0" stroke="#87CEEB" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.9"/>
+                          <circle cx="12" cy="12" r="3" fill="#98FB98" opacity="0.9"/>
+                        </svg>
+                      </div>
+                    )}
+                    {selectedColor.name === "Love" && (
+                      <div className="text-foreground/80">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                          <path d="M12 21c-2.5-1.5-5-3-7-5.5-2-2.5-2-6 0-8.5 2-2.5 5-3.5 7-2.5 2 1 5 0 7 2.5 2 2.5 2 6 0 8.5-2 2.5-4.5 4-7 5.5z" fill="#FFB6C1" opacity="0.95"/>
+                        </svg>
+                      </div>
+                    )}
+                    {selectedColor.name === "Growth" && (
+                      <div className="text-foreground/80">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                          <path d="M12 20v-8" stroke="#228B22" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
+                          <path d="M12 12c-3 0-6-2-6-6s3-6 6-6 6 2 6 6-3 6-6 6z" fill="#32CD32" opacity="0.8"/>
+                        </svg>
+                      </div>
+                    )}
+                    {selectedColor.name === "Fear" && (
+                      <div className="text-foreground/80">
+                        <FearIcon size={48} className="text-foreground/80" />
+                      </div>
+                    )}
+                    {selectedColor.name === "Peace" && (
+                      <div className="text-foreground/80">
+                        <PeaceIcon size={48} className="text-foreground/80" />
+                      </div>
+                    )}
+                    {selectedColor.name === "Hope" && (
+                      <div className="text-foreground/80">
+                        <HopeIcon size={48} className="text-foreground/80" />
+                      </div>
+                    )}
+                    {selectedColor.name === "Gentle" && (
+                      <div className="text-foreground/80">
+                        <GentleIcon size={48} className="text-foreground/80" />
+                      </div>
+                    )}
+                    {selectedColor.name === "Anxiety" && (
+                      <div className="text-foreground/80">
+                        <AnxietyIcon size={48} className="text-foreground/80" />
+                      </div>
+                    )}
                   </div>
-                  {/* Breathing circle */}
-                  <div 
-                    className="w-48 h-48 md:w-56 md:h-56 rounded-full shadow-soft relative overflow-hidden will-change-transform"
-                    style={{ 
-                      ...animStyle,
-                      background: `radial-gradient(circle at 45% 35%, ${selectedColor.value}DD, ${selectedColor.value} 65%)`,
-                      boxShadow: `0 0 0 2px #ffffff88 inset, 0 20px 60px ${selectedColor.value}44`
+                  <h3 className="font-heading text-2xl text-foreground/90 font-light mb-3">
+                    {selectedColor.name === "Fear" || selectedColor.name === "Anxiety" 
+                      ? "Let go of fear" 
+                      : `Breathe with ${selectedColor.name}`
+                    }
+                  </h3>
+                </div>
+
+                {/* Simplified breathing pattern */}
+                <div className="mb-8">
+                  <p className="text-foreground/60 text-sm mb-3 tracking-wide font-medium">Breathing pattern</p>
+                  <div className="flex items-center justify-center gap-4 text-foreground/80 font-medium">
+                    <span className="px-3 py-2 bg-foreground/5 rounded-lg text-sm">Inhale</span>
+                    <span className="text-foreground/40">•</span>
+                    <span className="px-3 py-2 bg-foreground/5 rounded-lg text-sm">Hold</span>
+                    <span className="text-foreground/40">•</span>
+                    <span className="px-3 py-2 bg-foreground/5 rounded-lg text-sm">Exhale</span>
+                    <span className="text-foreground/40">•</span>
+                    <span className="px-3 py-2 bg-foreground/5 rounded-lg text-sm">Hold</span>
+                  </div>
+                </div>
+
+                {/* Action buttons */}
+                <div className="flex gap-4 justify-center">
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => setShowInstructions(false)}
+                    className="text-foreground/60 hover:text-foreground/80 hover:bg-foreground/5 px-6 py-2"
+                  >
+                    ← Back
+                  </Button>
+                  <Button 
+                    onClick={startBreathing}
+                    size="lg" 
+                    className="px-8 py-3 bg-foreground text-white hover:bg-foreground/90 shadow-md font-medium"
+                  >
+                    Start Breathing
+                  </Button>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Breathing Session - Enhanced Design */}
+              <div className="flex flex-col items-center text-center">
+                {/* Enhanced breathing visualization */}
+                <div className="relative mb-8">
+                  {/* Main breathing circle with emotion icon */}
+                  <div className="relative">
+                    {/* Animated background rings */}
+                    <div className="absolute inset-0 -z-10">
+                      <div 
+                        className="absolute inset-0 rounded-full opacity-20 transition-all duration-1000 ease-in-out"
+                        style={{ 
+                          background: `radial-gradient(circle, ${selectedColor.value}40 0%, transparent 70%)`,
+                          transform: `scale(${phase.anim === "breatheIn" ? 1.4 : phase.anim === "holdExpanded" ? 1.4 : 1})`
+                        }}
+                      />
+                      <div 
+                        className="absolute inset-8 rounded-full opacity-15 transition-all duration-1000 ease-in-out"
+                        style={{ 
+                          background: `radial-gradient(circle, ${selectedColor.value}30 0%, transparent 70%)`,
+                          transform: `scale(${phase.anim === "breatheIn" ? 1.3 : phase.anim === "holdExpanded" ? 1.3 : 1})`
+                        }}
+                      />
+                    </div>
+                    {/* Breathing circle */}
+                    <div 
+                      className="w-48 h-48 md:w-56 md:h-56 rounded-full shadow-soft relative overflow-hidden will-change-transform"
+                      style={{ 
+                        ...animStyle,
+                        background: `radial-gradient(circle at 45% 35%, ${selectedColor.value}DD, ${selectedColor.value} 65%)`,
+                        boxShadow: `0 0 0 2px #ffffff88 inset, 0 20px 60px ${selectedColor.value}44`
+                      }}
+                    >
+                      {/* Subtle inner glow */}
+                      <div 
+                        className="absolute inset-8 rounded-full opacity-20"
+                        style={{ 
+                          background: `radial-gradient(circle, ${selectedColor.value}80 0%, transparent 70%)`,
+                          filter: 'blur(12px)'
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Fixed breathing instructions and counter */}
+                <div className="text-center mb-4 relative z-20 flex flex-col items-center">
+                  {/* Phase label */}
+                  <h2 className="text-lg md:text-xl font-heading text-foreground/90 font-light mb-3 tracking-wide">
+                    {phase.label}
+                  </h2>
+                  
+                  {/* Large countdown timer */}
+                  <div className="text-3xl md:text-4xl font-mono text-foreground/80 font-light tracking-widest mb-2 text-center">
+                    {secondsLeft}
+                  </div>
+                </div>
+
+                {/* Phase description below circle */}
+                <div className="text-center mb-6">
+                  <p className="text-foreground/70 text-base font-medium leading-relaxed tracking-wide">
+                    {phase.key === "inhale" && "Fill your lungs with gentle awareness"}
+                    {phase.key === "hold1" && "Rest in this moment of fullness"}
+                    {phase.key === "exhale" && "Release with ease and grace"}
+                    {phase.key === "hold2" && "Rest in this moment of emptiness"}
+                  </p>
+                </div>
+
+                {/* Simple controls */}
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      setRunning(false);
+                      setShowInstructions(false);
                     }}
-                  >
-                    {/* Subtle inner glow */}
-                    <div 
-                      className="absolute inset-8 rounded-full opacity-20"
-                      style={{ 
-                        background: `radial-gradient(circle, ${selectedColor.value}80 0%, transparent 70%)`,
-                        filter: 'blur(12px)'
-                      }}
-                    />
-                  </div>
+                    className="text-foreground/60 hover:text-foreground/80 hover:bg-foreground/5 px-6 py-2"
+                    >
+                    Choose Different Emotion
+                  </Button>
                 </div>
               </div>
-
-              {/* Fixed breathing instructions and counter */}
-              <div className="text-center mb-4 relative z-20 flex flex-col items-center">
-                {/* Phase label */}
-                <h2 className="text-lg md:text-xl font-heading text-foreground/90 font-light mb-3 tracking-wide">
-                  {phase.label}
-                </h2>
-                
-                {/* Large countdown timer */}
-                <div className="text-3xl md:text-4xl font-mono text-foreground/80 font-light tracking-widest mb-2 text-center">
-                  {secondsLeft}
-                </div>
-              </div>
-
-              {/* Phase description below circle */}
-              <div className="text-center mb-6">
-                <p className="text-foreground/70 text-base font-medium leading-relaxed tracking-wide">
-                  {phase.key === "inhale" && "Fill your lungs with gentle awareness"}
-                  {phase.key === "hold1" && "Rest in this moment of fullness"}
-                  {phase.key === "exhale" && "Release with ease and grace"}
-                  {phase.key === "hold2" && "Rest in this moment of emptiness"}
-                </p>
-              </div>
-
-              {/* Simple controls */}
-              <div className="flex flex-col sm:flex-row items-center gap-4">
-                <Button
-                  variant="ghost"
-                  onClick={() => {
-                    setRunning(false);
-                    setShowInstructions(false);
-                  }}
-                  className="text-foreground/60 hover:text-foreground/80 hover:bg-foreground/5 px-6 py-2"
-                  >
-                  Choose Different Emotion
-                </Button>
-              </div>
-            </div>
-          </>
-        )}
-      </Card>
+            </>
+          )}
+        </Card>
+      </div>
     </div>
   );
 }

@@ -1,3 +1,6 @@
+/* Import whimsy styles for emotion icons */
+@import './styles/whimsy.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

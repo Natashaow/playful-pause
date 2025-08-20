@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { ActivityHeader } from "@/components/ActivityHeader";
 
 const PROMPTS = [
   "Describe a tiny, imaginary place you'd visit if you could shrink to the size of a teacup.",
@@ -334,11 +335,10 @@ const SparkIcon = (props: React.SVGProps<SVGSVGElement>) => (
 export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
   const [prompt, setPrompt] = useState<string>("");
   const [response, setResponse] = useState<string>("");
-
-
   const [savedMsg, setSavedMsg] = useState<string>("");
-
   const [isTextareaFocused, setIsTextareaFocused] = useState<boolean>(false);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
 
 
 
@@ -375,8 +375,26 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
     setResponse('');
   };
 
+  // Music toggle function
+  const toggleMusic = () => {
+    const el = audioRef.current;
+    if (!el) return;
+    if (isMusicPlaying) {
+      el.pause();
+      setIsMusicPlaying(false);
+    } else {
+      el
+        .play()
+        .then(() => setIsMusicPlaying(true))
+        .catch((err) => {
+          console.error("Audio play failed:", err);
+          setIsMusicPlaying(false);
+        });
+    }
+  };
+
   return (
-    <div className="mx-auto max-w-5xl p-6">
+    <div className="min-h-screen text-foreground">
       {/* CSS Animations */}
       <style>{`
         @keyframes float-slow {
@@ -418,20 +436,35 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
         .animate-fly-in-top { animation: fly-in-top 1.2s ease-out forwards; }
         .animate-fly-in-bottom { animation: fly-in-bottom 1.2s ease-out forwards; }
       `}</style>
-      <Button 
-        onClick={onBack} 
-        variant="ghost" 
-        className="mb-6 text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-all duration-300" 
-        aria-label="Back to Activities"
-      >
-        ← Back to Activities
-      </Button>
+      <ActivityHeader 
+        onBack={onBack}
+        isMusicPlaying={isMusicPlaying}
+        onToggleMusic={toggleMusic}
+        onRandomActivity={() => {
+          const activities = ["colorBreathing", "doodlePlay", "compliments", "creative", "moodGarden", "soundShapes"];
+          const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+          // Navigate to random activity
+          if (randomActivity === "creative") {
+            // Stay on current page but reset state
+            newPrompt();
+          } else {
+            // Navigate to different activity
+            onBack();
+            // Note: The parent component will handle the actual navigation
+          }
+        }}
+      />
+      
+      {/* Hidden audio element */}
+      <audio ref={audioRef} src="/audio/bg-music.mp3" preload="auto" loop className="hidden" />
 
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-heading font-bold mb-3 text-foreground">
-          Creative Spark
-        </h2>
-        <p className="text-muted-foreground font-sans">Let your imagination wander for a few minutes</p>
+      {/* Title Section - Same structure as homepage */}
+      <section className="px-6 lg:px-8 mt-6">
+        <div className="mx-auto max-w-2xl text-center">
+          <h1 className="font-recoleta text-3xl sm:text-4xl tracking-tight mb-2 text-foreground">
+            Creative Spark
+          </h1>
+          <p className="font-jakarta text-sm mb-6 text-foreground/70 leading-relaxed">Let your imagination wander for a few minutes</p>
         
         {/* Prompt-specific doodle animation */}
         <div className="flex justify-center mt-4">
@@ -443,9 +476,13 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
             })()}
           </div>
         </div>
-      </div>
+        </div>
+      </section>
 
-      <Card className="p-8 border-0 shadow-soft relative overflow-hidden">
+      {/* Main Content Section - Same structure as homepage */}
+      <section className="px-6 lg:px-8 pb-12 pt-6">
+        <div className="mx-auto max-w-5xl">
+          <Card className="p-8 border-0 shadow-soft relative overflow-hidden">
 
         
 
@@ -567,6 +604,8 @@ export const CreativePrompt = ({ onBack }: { onBack: () => void }) => {
 
         </div>
       </Card>
+        </div>
+      </section>
     </div>
   );
 };

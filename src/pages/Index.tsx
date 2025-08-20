@@ -35,7 +35,16 @@ const Index = () => {
   };
 
   if (currentActivity === "colorBreathing") {
-    return <ColorBreathing onBack={() => setCurrentActivity("home")} />;
+    return <ColorBreathing 
+      onBack={() => setCurrentActivity("home")} 
+      isMusicPlaying={isMusicPlaying}
+      onToggleMusic={toggleMusic}
+      onRandomActivity={() => {
+        const activities: Activity[] = ["colorBreathing", "doodlePlay", "compliments", "creative", "moodGarden", "soundShapes"];
+        const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+        setCurrentActivity(randomActivity);
+      }}
+    />;
   }
   if (currentActivity === "doodlePlay") {
     return <ColorDoodlePlay onBack={() => setCurrentActivity("home")} />;

@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { IconPalette } from "@/components/doodles/Icons";
 import { readPersonalization, moodHints } from "@/lib/personalization";
+import { ActivityHeader } from "@/components/ActivityHeader";
 
 // Palette (9 colors from Color Breathing)
 const PALETTE = [
@@ -74,6 +75,8 @@ export default function ColorDoodlePlay({ onBack }: { onBack: () => void }) {
   const clearGlowTimeout = useRef<number | null>(null);
   const [completedStrokes, setCompletedStrokes] = useState<Array<{path: Path2D; color: string; width: number}>>([]);
   const canvasHistoryRef = useRef<ImageData[]>([]);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const canvasHeightCss = 480; // ~480px
 
@@ -224,6 +227,24 @@ export default function ColorDoodlePlay({ onBack }: { onBack: () => void }) {
     return { x, y };
   };
 
+  // Music toggle function
+  const toggleMusic = () => {
+    const el = audioRef.current;
+    if (!el) return;
+    if (isMusicPlaying) {
+      el.pause();
+      setIsMusicPlaying(false);
+    } else {
+      el
+        .play()
+        .then(() => setIsMusicPlaying(true))
+        .catch((err) => {
+          console.error("Audio play failed:", err);
+          setIsMusicPlaying(false);
+        });
+    }
+  };
+
   const beginStroke = (evt: React.PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
@@ -331,23 +352,50 @@ export default function ColorDoodlePlay({ onBack }: { onBack: () => void }) {
   };
 
   return (
-    <div className="mx-auto max-w-5xl p-6">
-      <Button onClick={onBack} variant="ghost" className="mb-6 text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-all duration-300" aria-label="Back to Activities">← Back to Activities</Button>
+    <div className="min-h-screen text-foreground">
+      <ActivityHeader 
+        onBack={onBack}
+        isMusicPlaying={isMusicPlaying}
+        onToggleMusic={toggleMusic}
+        onRandomActivity={() => {
+          const activities = ["colorBreathing", "doodlePlay", "compliments", "creative", "moodGarden", "soundShapes"];
+          const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+          // Navigate to random activity
+          if (randomActivity === "doodlePlay") {
+            // Stay on current page but reset state
+            clearCanvas();
+            setShowTwinkles(false);
+          } else {
+            // Navigate to different activity
+            onBack();
+            // Note: The parent component will handle the actual navigation
+          }
+        }}
+      />
+      
+      {/* Hidden audio element */}
+      <audio ref={audioRef} src="/audio/bg-music.mp3" preload="auto" loop className="hidden" />
 
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-heading font-bold mb-3 text-foreground">
-          Doodle Play
-        </h2>
-        <p className="font-sans text-muted-foreground">Create playful doodles to relax your mind and spark creativity. Use Ctrl+Z (or Cmd+Z) to undo strokes.</p>
-        {themeHint && (
-          <p className="mt-2 font-sans text-sm text-muted-foreground/80 italic">
-            💡 {themeHint}
-          </p>
-        )}
-      </div>
+      {/* Title Section - Same structure as homepage */}
+      <section className="px-6 lg:px-8 mt-6">
+        <div className="mx-auto max-w-2xl text-center">
+          <h1 className="font-recoleta text-3xl sm:text-4xl tracking-tight mb-2 text-foreground">
+            Doodle Play
+          </h1>
+          <p className="font-jakarta text-sm mb-6 text-foreground/70 leading-relaxed">Create playful doodles to relax your mind and spark creativity. Use Ctrl+Z (or Cmd+Z) to undo strokes.</p>
+          {themeHint && (
+            <p className="mt-2 font-jakarta text-sm text-foreground/70/80 italic">
+              💡 {themeHint}
+            </p>
+          )}
+        </div>
+      </section>
 
-            {/* Toolbar */}
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-6 min-h-[60px] p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-white/20">
+      {/* Main Content Section - Same structure as homepage */}
+      <section className="px-6 lg:px-8 pb-12 pt-6">
+        <div className="mx-auto max-w-5xl">
+          {/* Toolbar */}
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-6 min-h-[60px] p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-white/20">
         {/* Colors */}
         <div className="flex items-center gap-2 flex-wrap" aria-label="Choose color">
           {currentPalette.map((c) => (
@@ -420,6 +468,8 @@ export default function ColorDoodlePlay({ onBack }: { onBack: () => void }) {
           </>
         )}
       </div>
+        </div>
+      </section>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ActivityHeader } from "@/components/ActivityHeader";
 
 interface Plant {
   id: string;
@@ -48,6 +49,8 @@ export default function MoodGarden({ onBack }: { onBack: () => void }) {
   const [showJournal, setShowJournal] = useState(false);
   const [selectedPlant, setSelectedPlant] = useState<Plant | null>(null);
   const [journalEntry, setJournalEntry] = useState("");
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
 
   // Load plants from localStorage on mount
   useEffect(() => {
@@ -228,6 +231,24 @@ export default function MoodGarden({ onBack }: { onBack: () => void }) {
       
       return { ...plant, growthStage: newGrowthStage };
     }));
+  };
+
+  // Music toggle function
+  const toggleMusic = () => {
+    const el = audioRef.current;
+    if (!el) return;
+    if (isMusicPlaying) {
+      el.pause();
+      setIsMusicPlaying(false);
+    } else {
+      el
+        .play()
+        .then(() => setIsMusicPlaying(true))
+        .catch((err) => {
+          console.error("Audio play failed:", err);
+          setIsMusicPlaying(false);
+        });
+    }
   };
 
   // Auto-update plant growth every hour
@@ -921,21 +942,48 @@ export default function MoodGarden({ onBack }: { onBack: () => void }) {
   );
 
   return (
-    <div className="mx-auto max-w-5xl p-6 pb-16">
-      <Button onClick={onBack} variant="ghost" className="mb-6 text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-all duration-300" aria-label="Back to Activities">
-        ← Back to Activities
-      </Button>
+    <div className="min-h-screen text-foreground">
+      <ActivityHeader 
+        onBack={onBack}
+        isMusicPlaying={isMusicPlaying}
+        onToggleMusic={toggleMusic}
+        onRandomActivity={() => {
+          const activities = ["colorBreathing", "doodlePlay", "compliments", "creative", "moodGarden", "soundShapes"];
+          const randomActivity = activities[Math.floor(Math.random() * activities.length)];
+          // Navigate to random activity
+          if (randomActivity === "moodGarden") {
+            // Stay on current page but reset state
+            setCurrentView("entry");
+            setMoodInput("");
+          } else {
+            // Navigate to different activity
+            onBack();
+            // Note: The parent component will handle the actual navigation
+          }
+        }}
+      />
+      
+      {/* Hidden audio element */}
+      <audio ref={audioRef} src="/audio/bg-music.mp3" preload="auto" loop className="hidden" />
 
-      <div className="text-center mb-8">
-        <h1 className="font-heading text-3xl sm:text-4xl text-foreground/90 font-light mb-3">
-          Mood Garden
-        </h1>
-        <p className="text-foreground/70 font-sans">Plant your first mood to start growing</p>
-      </div>
+      {/* Title Section - Same structure as homepage */}
+      <section className="px-6 lg:px-8 mt-6">
+        <div className="mx-auto max-w-2xl text-center">
+          <h1 className="font-recoleta text-3xl sm:text-4xl tracking-tight mb-2 text-foreground">
+            Mood Garden
+          </h1>
+          <p className="font-jakarta text-sm mb-6 text-foreground/70 leading-relaxed">Plant your first mood to start growing</p>
+        </div>
+      </section>
 
-      {currentView === "entry" && <EntryScreen />}
-      {currentView === "planting" && <PlantingAnimation />}
-      {currentView === "garden" && <GardenView />}
+      {/* Main Content Section - Same structure as homepage */}
+      <section className="px-6 lg:px-8 pb-12 pt-6">
+        <div className="mx-auto max-w-5xl">
+          {currentView === "entry" && <EntryScreen />}
+          {currentView === "planting" && <PlantingAnimation />}
+          {currentView === "garden" && <GardenView />}
+        </div>
+      </section>
 
       {/* Journal Modal */}
       {showJournal && selectedPlant && (
