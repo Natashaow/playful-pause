@@ -14,6 +14,12 @@ interface Plant {
   journalEntry?: string;
 }
 
+declare global {
+  interface Window {
+    recordMoodInteraction?: (mood: string) => void;
+  }
+}
+
 const MOOD_COLORS: { [key: string]: { color: string; emoji: string } } = {
   joy: { color: "bg-yellow-100", emoji: "★" },
   sadness: { color: "bg-blue-100", emoji: "○" },
@@ -29,9 +35,9 @@ const MOOD_COLORS: { [key: string]: { color: string; emoji: string } } = {
 export default function MoodGarden({ onBack }: { onBack: () => void }) {
   // Expose recordMoodInteraction function globally for other activities to use
   React.useEffect(() => {
-    (window as any).recordMoodInteraction = recordMoodInteraction;
+    window.recordMoodInteraction = recordMoodInteraction;
     return () => {
-      delete (window as any).recordMoodInteraction;
+      delete window.recordMoodInteraction;
     };
   }, []);
   const [currentView, setCurrentView] = useState<"entry" | "planting" | "garden">("entry");
@@ -47,14 +53,18 @@ export default function MoodGarden({ onBack }: { onBack: () => void }) {
   useEffect(() => {
     const savedPlants = localStorage.getItem("moodGarden");
     if (savedPlants) {
-      const parsedPlants = JSON.parse(savedPlants);
+      const parsedPlants = JSON.parse(savedPlants) as Partial<Plant>[];
       // Add missing properties to existing plants
-      const plantsWithGrowth = parsedPlants.map((plant: any) => ({
-        ...plant,
-        growthStage: plant.growthStage || 1,
-        interactionCount: plant.interactionCount || 0,
+      const plantsWithGrowth: Plant[] = parsedPlants.map((plant) => ({
+        id: plant.id || String(Date.now()),
+        mood: plant.mood || "",
+        color: plant.color || "bg-gray-100",
+        timestamp: plant.timestamp || Date.now(),
+        emoji: plant.emoji || "🌱",
+        growthStage: plant.growthStage ?? 1,
+        interactionCount: plant.interactionCount ?? 0,
         lastInteraction: plant.lastInteraction || plant.timestamp || Date.now(),
-        journalEntry: plant.journalEntry || ""
+        journalEntry: plant.journalEntry || "",
       }));
       setPlants(plantsWithGrowth);
       // Always start with entry view first, then show garden if plants exist

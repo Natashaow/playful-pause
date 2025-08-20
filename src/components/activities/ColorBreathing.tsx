@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { FearIcon } from "@/components/doodles/icons/FearIcon";
+import { IconFear } from "@/components/doodles/Icons";
 
 const COLORS = [
   { name: "Joy", value: "#FFF2D1" },        // Lighter pastel yellow - happiness and warmth
@@ -360,7 +360,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
                       )}
                       {c.name === "Fear" && (
                         <div className="group-hover:animate-pulse">
-                          <FearIcon size={48} className="text-foreground/90" />
+                          <IconFear className="w-12 h-12 text-foreground/90" />
                         </div>
                       )}
                       {c.name === "Peace" && (
@@ -505,7 +505,7 @@ export default function ColorBreathing({ onBack }: { onBack: () => void }) {
                   )}
                   {selectedColor.name === "Fear" && (
                     <div className="text-foreground/80">
-                      <FearIcon size={48} className="text-foreground/80" />
+                      <IconFear className="w-12 h-12 text-foreground/80" />
                     </div>
                   )}
                   {selectedColor.name === "Peace" && (

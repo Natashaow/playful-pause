@@ -1,10 +1,10 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import ActivityCard from "@/components/ActivityCard";
 import { IconRainbow, IconBreath, IconHeartStar, IconPalette, IconGarden, IconSound } from "@/components/doodles/Icons";
 
 // ✅ Activities
 import ColorBreathing from "@/components/activities/ColorBreathing";
-import { ColorDoodlePlay } from "@/components/activities/ColorDoodlePlay";
+import ColorDoodlePlay from "@/components/activities/ColorDoodlePlay";
 import WhimsyWishes from "@/components/activities/WhimsyWishes";
 import { CreativePrompt } from "@/components/activities/CreativePrompt";
 import MoodGarden from "@/components/activities/MoodGarden";

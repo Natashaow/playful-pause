@@ -113,3 +113,35 @@ export const IconSound: React.FC<{ className?: string }> = ({ className }) => (
     <path d="M12 36l1 1-1 1-1-1 1-1z" fill="#FFD700" opacity="0.7"/>
   </svg>
 );
+
+export const IconFear: React.FC<{ className?: string }> = ({ className }) => (
+  <svg viewBox="0 0 48 48" className={className} aria-hidden>
+    {/* Soft crescent moon + tiny cloud with whimsical spark dots */}
+
+    {/* Release/sway lines (optional whimsy) */}
+    <g className="animate-float-slow">
+      <path d="M12 10 Q18 6 24 10" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.25" strokeLinecap="round"/>
+      <path d="M15 14 Q21 10 27 14" stroke="currentColor" strokeWidth="1.8" fill="none" opacity="0.2" strokeLinecap="round"/>
+    </g>
+
+    {/* Crescent moon */}
+    <g>
+      <path d="M18 16 A 10 10 0 1 0 34 16" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.9" strokeLinecap="round"/>
+      <path d="M20 16 A 7.5 7.5 0 1 0 31.5 16" stroke="currentColor" strokeWidth="3" fill="none" opacity="0.6" strokeLinecap="round"/>
+    </g>
+
+    {/* Tiny cloud in front of moon */}
+    <g transform="translate(0,2)" className="animate-float-slow">
+      <path d="M12 28c0-3 2.6-5.5 5.6-5.5 1.3-3.2 4.7-4.7 7.5-3.5 1.8-2.9 5.4-3.7 8.1-1.8" stroke="currentColor" strokeWidth="2.2" fill="none" opacity="0.9" strokeLinecap="round"/>
+      <path d="M12 31h22c3.1 0 5.5-2.4 5.5-5.5S37.1 20 34 20c-.9 0-1.7.2-2.4.4" fill="currentColor" opacity="0.22"/>
+      <path d="M14 32h18c2.5 0 4.5-2 4.5-4.5S34.5 23 32 23c-.8 0-1.4.1-2 .3" stroke="currentColor" strokeWidth="1.8" fill="none" opacity="0.18"/>
+    </g>
+
+    {/* Spark dots (twinkle) */}
+    <g>
+      <circle cx="10" cy="20" r="1.2" fill="currentColor" className="animate-twinkle" opacity="0.45"/>
+      <circle cx="28" cy="8" r="1" fill="currentColor" className="animate-twinkle" opacity="0.45"/>
+      <circle cx="38" cy="14" r="0.9" fill="currentColor" className="animate-twinkle" opacity="0.45"/>
+    </g>
+  </svg>
+);
