@@ -3,17 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ActivityHeader } from "@/components/ActivityHeader";
-import {
-  JoyIcon,
-  SadnessIcon,
-  LoveIcon,
-  GrowthIcon,
-  FearIcon,
-  PeaceIcon,
-  HopeIcon,
-  GentleIcon,
-  AnxietyIcon,
-} from "@/components/emotion-icons";
+
 
 const COLORS = [
   { name: "Joy", value: "#FFF2D1" },        // Lighter pastel yellow - happiness and warmth
@@ -246,27 +236,7 @@ export default function ColorBreathing({
             50%     { transform: scale(1.02); opacity: 1;   }
           }
 
-          /* --- Dove wing flapping animations --- */
-          @keyframes gentleFlapLeft {
-            0%, 100% { transform: rotate(0deg) translateX(0); }
-            50% { transform: rotate(-8deg) translateX(-1px); }
-          }
 
-          @keyframes gentleFlapRight {
-            0%, 100% { transform: rotate(0deg) translateX(0); }
-            50% { transform: rotate(8deg) translateX(1px); }
-          }
-
-          @keyframes gentleFlapCenter {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(-2deg); }
-          }
-
-          /* --- Fear raindrop dissolve animation --- */
-          @keyframes dropRelease {
-            0%   { transform: translateY(0) scale(1);   opacity: 0.9; }
-            100% { transform: translateY(6px) scale(0.85); opacity: 0; }
-          }
         `}</style>
 
         <div className="text-center mb-8">
@@ -318,208 +288,79 @@ export default function ColorBreathing({
                       aria-label={`Choose ${c.name}`}
                     >
                       <div className="mb-4 flex justify-center items-center transition-all duration-500 relative hover:scale-110 group-hover:animate-float-slow">
-                        {/* Full icon display with animations */}
+                        {/* Simple whimsical icons */}
                         {c.name === "Joy" && (
                           <div className="group-hover:animate-pulse">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                              {/* Magical sun with sparkles */}
-                              <circle cx="12" cy="12" r="5" fill="#FFE5A3" opacity="0.8"/>
-                              <circle cx="12" cy="12" r="3" fill="#F4D4A3" opacity="0.6"/>
-                              <circle cx="12" cy="12" r="1.5" fill="#FFD700" opacity="0.9"/>
-                              {/* Sparkling rays */}
-                              <path d="M12 2v3" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round" opacity="0.8"/>
-                              <path d="M12 19v3" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round" opacity="0.8"/>
-                              <path d="M2 12h3" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round" opacity="0.8"/>
-                              <path d="M19 12h3" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round" opacity="0.8"/>
-                              {/* Diagonal sparkles */}
-                              <path d="M4 4l2 2" stroke="#FFE5A3" strokeWidth="1.5" strokeLinecap="round" opacity="0.7"/>
-                              <path d="M18 18l2 2" stroke="#FFE5A3" strokeWidth="1.5" strokeLinecap="round" opacity="0.7"/>
-                              <path d="M4 20l2-2" stroke="#FFE5A3" strokeWidth="1.5" strokeLinecap="round" opacity="0.7"/>
-                              <path d="M18 6l2-2" stroke="#FFE5A3" strokeWidth="1.5" strokeLinecap="round" opacity="0.7"/>
-                              {/* Floating sparkles */}
-                              <circle cx="8" cy="8" r="0.8" fill="#FFD700" opacity="0.6"/>
-                              <circle cx="16" cy="8" r="0.6" fill="#FFE5A3" opacity="0.7"/>
-                              <circle cx="8" cy="16" r="0.7" fill="#F4D4A3" opacity="0.6"/>
-                              <circle cx="16" cy="16" r="0.9" fill="#FFD700" opacity="0.5"/>
+                              <circle cx="12" cy="12" r="4" fill="#FFD700" stroke="#FFB347" strokeWidth="2"/>
+                              <path d="M12 2v2M12 20v2M2 12h2M20 12h2M6 6l1 1M17 17l1 1M6 18l1-1M17 7l1-1" stroke="#FFD700" strokeWidth="2" strokeLinecap="round"/>
                             </svg>
                           </div>
                         )}
                         {c.name === "Sadness" && (
                           <div className="group-hover:animate-pulse">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                              {/* Whimsical rain cloud with magical raindrops */}
-                              <path d="M12 4c-3 0-6 2-6 4.5s3 4.5 6 4.5 6-2 6-4.5S15 4 12 4z" fill="#87CEEB" opacity="0.7"/>
-                              <path d="M12 4c-2 0-4 1.5-4 3.5s2 3.5 4 3.5 4-1.5 4-3.5S14 4 12 4z" fill="#B8D4E3" opacity="0.5"/>
-                              {/* Magical raindrops with sparkles */}
-                              <path d="M10 8l1 6" stroke="#4ECDC4" strokeWidth="1.5" strokeLinecap="round" className="animate-bounce" style={{animationDelay: '0s'}} opacity="0.8"/>
-                              <path d="M14 8l1 6" stroke="#4ECDC4" strokeWidth="1.5" strokeLinecap="round" className="animate-bounce" style={{animationDelay: '0.2s'}} opacity="0.8"/>
-                              <path d="M12 8l1 6" stroke="#4ECDC4" strokeWidth="1.5" strokeLinecap="round" className="animate-bounce" style={{animationDelay: '0.1s'}} opacity="0.8"/>
-                              {/* Floating water droplets */}
-                              <circle cx="9" cy="6" r="0.8" fill="#4ECDC4" opacity="0.6"/>
-                              <circle cx="15" cy="6" r="0.6" fill="#87CEEB" opacity="0.7"/>
-                              <circle cx="11" cy="5" r="0.5" fill="#B8D4E3" opacity="0.5"/>
-                              {/* Gentle mist around cloud */}
-                              <circle cx="8" cy="8" r="1.5" fill="#E0F4F1" opacity="0.3"/>
-                              <circle cx="16" cy="8" r="1.2" fill="#E0F4F1" opacity="0.3"/>
+                              <path d="M6 10c0-3 2-5 6-5s6 2 6 5-1 3-3 3H9c-2 0-3 0-3-3z" fill="#A7FFEB" stroke="#4ECDC4" strokeWidth="2"/>
+                              <circle cx="10" cy="16" r="1" fill="#4ECDC4"/>
+                              <circle cx="14" cy="18" r="1" fill="#4ECDC4"/>
+                              <circle cx="12" cy="15" r="1" fill="#4ECDC4"/>
                             </svg>
                           </div>
                         )}
                         {c.name === "Love" && (
                           <div className="group-hover:animate-pulse">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                              {/* Magical heart with sparkles */}
-                              <path d="M12 21c-2.5-1.5-5-3-7-5.5-2-2.5-2-6 0-8.5 2-2.5 5-3.5 7-2.5 2 1 5 0 7 2.5 2 2.5 2 6 0 8.5-2 2.5-4.5 4-7 5.5z" fill="#F8C8D8" opacity="0.8"/>
-                              <path d="M12 21c-2-1-4-2.5-6-4.5-1.5-2-1.5-4.5 0-6.5 1.5-2 3.5-2.5 6-1.5 2.5 1 4.5 1.5 6 1.5 1.5 0 3.5-0.5 5-2.5 1.5-2 1.5-4.5 0-6.5-1.5-2-3.5-2.5-6-1.5-2.5 1-4.5 1.5-6 1.5z" fill="#FFB6C1" opacity="0.6"/>
-                              {/* Inner glow */}
-                              <path d="M12 21c-1.5-0.8-3-1.8-4.5-3.2-1-1-1-2.8 0-4.2 1-1.4 2.5-1.8 4.5-1.2 2 0.6 3.5 0.2 4.5 1.2 1 1.4 1 3.2 0 4.2-1.5 1.4-3 2.4-4.5 3.2z" fill="#FFE4E1" opacity="0.4"/>
-                              {/* Floating love sparkles */}
-                              <circle cx="8" cy="8" r="0.6" fill="#FFB6C1" opacity="0.7"/>
-                              <circle cx="16" cy="8" r="0.8" fill="#F8C8D8" opacity="0.6"/>
-                              <circle cx="6" cy="12" r="0.5" fill="#FFE4E1" opacity="0.8"/>
-                              <circle cx="18" cy="12" r="0.7" fill="#FFB6C1" opacity="0.5"/>
+                              <path d="M12 21c-1-1-4-3-6-6s-1-6 2-6 4 0 4 3c0-3 1-3 4-3s4 3 2 6-5 5-6 6z" fill="#FFB6C1" stroke="#FF69B4" strokeWidth="2"/>
                             </svg>
                           </div>
                         )}
                         {c.name === "Growth" && (
                           <div className="group-hover:animate-pulse">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                              {/* Magical growing plant with sparkles */}
-                              <circle cx="12" cy="8" r="3" fill="#A8E6CF" opacity="0.8"/>
-                              <circle cx="12" cy="8" r="1.5" fill="#4ECDC4" opacity="0.6"/>
-                              <path d="M12 11v9" stroke="#C8E6C9" strokeWidth="2" strokeLinecap="round" opacity="0.8"/>
-                              <path d="M12 11v9" stroke="#4ECDC4" strokeWidth="1" strokeLinecap="round" opacity="0.5"/>
-                              {/* Growing leaves */}
-                              <path d="M8 15l4-4 4 4" stroke="#4ECDC4" strokeWidth="1.5" strokeLinecap="round" opacity="0.8"/>
-                              <path d="M8 15l4-4 4 4" stroke="#32CD32" strokeWidth="0.8" strokeLinecap="round" opacity="0.6"/>
-                              {/* Magical growth sparkles */}
-                              <circle cx="10" cy="13" r="0.6" fill="#4ECDC4" opacity="0.7"/>
-                              <circle cx="14" cy="13" r="0.8" fill="#32CD32" opacity="0.6"/>
-                              <circle cx="12" cy="16" r="0.5" fill="#A8E6CF" opacity="0.8"/>
-                              {/* Floating energy particles */}
-                              <circle cx="6" cy="10" r="0.4" fill="#4ECDC4" opacity="0.5"/>
-                              <circle cx="18" cy="10" r="0.6" fill="#32CD32" opacity="0.6"/>
-                              <circle cx="9" cy="6" r="0.3" fill="#A8E6CF" opacity="0.7"/>
-                              <circle cx="15" cy="6" r="0.5" fill="#4ECDC4" opacity="0.5"/>
+                              <path d="M12 20v-8" stroke="#32CD32" strokeWidth="3" strokeLinecap="round"/>
+                              <path d="M8 8c2-2 4-2 4 2s2-4 4-2" stroke="#32CD32" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                              <circle cx="12" cy="6" r="2" fill="#FFD700"/>
                             </svg>
                           </div>
                         )}
                         {c.name === "Fear" && (
                           <div className="group-hover:animate-pulse">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                              {/* Magical crescent moon with mystical cloud */}
-                              <path d="M12 2c-5 0-9 4-9 9s4 9 9 9c1.5 0 3-0.5 4-1.2C14.5 20.5 12 21 9 21c-4 0-7-3-7-7s3-7 7-7c3 0 5.5 2 6.5 4.8C16.5 10.5 17 9 17 7.5c0-3-2.5-5.5-5-5.5z" fill="#E2D8F0" opacity="0.8"/>
-                              <path d="M12 2c-3 0-5.5 2.5-5.5 5.5S9 13 12 13s5.5-2.5 5.5-5.5S15 2 12 2z" fill="#F0F0F0" opacity="0.6"/>
-                              <path d="M12 2c-2 0-4 1.5-4 3.5s2 3.5 4 3.5 4-1.5 4-3.5S14 2 12 2z" fill="#E2D8F0" opacity="0.4"/>
-                              {/* Mystical cloud */}
-                              <circle cx="18" cy="6" r="2" fill="#E2D8F0" opacity="0.7"/>
-                              <circle cx="19" cy="5" r="1" fill="#E2D8F0" opacity="0.5"/>
-                              <circle cx="17" cy="7" r="1.5" fill="#E2D8F0" opacity="0.6"/>
-                              {/* Moon glow and sparkles */}
-                              <circle cx="12" cy="12" r="8" fill="#E2D8F0" opacity="0.1"/>
-                              <circle cx="8" cy="8" r="0.6" fill="#F0F0F0" opacity="0.7"/>
-                              <circle cx="16" cy="8" r="0.8" fill="#E2D8F0" opacity="0.6"/>
-                              <circle cx="6" cy="14" r="0.5" fill="#F0F0F0" opacity="0.8"/>
-                              <circle cx="18" cy="14" r="0.7" fill="#E2D8F0" opacity="0.5"/>
+                              <path d="M12 2c4 0 8 4 8 8s-4 8-8 8c-1 0-2 0-3-1 3-1 5-4 5-7s-2-6-5-7c1-1 2-1 3-1z" fill="#E2D8F0" stroke="#D1C4E9" strokeWidth="2"/>
                             </svg>
                           </div>
                         )}
                         {c.name === "Peace" && (
                           <div className="group-hover:animate-pulse">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                              {/* Magical lotus flower with mystical glow */}
-                              <path d="M12 20c-2 0-4-1-5-2.5s-1-3.5 0-5 3-3.5 5-3.5 4 1 5 2.5 1 3.5 0 5-3 3.5-5 3.5z" fill="#C8F0E0" opacity="0.8"/>
-                              <path d="M12 16c-1.5 0-3-0.5-4-1.5s-1-2.5 0-3.5 2.5-2.5 4-2.5 3 0.5 4 1.5 1 2.5 0 3.5-2.5 2.5-4 2.5z" fill="#A8E6CF" opacity="0.7"/>
-                              <path d="M12 12c-1 0-2-0.5-2.5-1.5s0-2.5 1-3 2.5-1 3.5-1 2.5 0.5 3 1 1 2 0 3-1.5 1.5-3.5 1.5z" fill="#4ECDC4" opacity="0.6"/>
-                              <circle cx="12" cy="8" r="1" fill="#4ECDC4" opacity="0.8"/>
-                              {/* Inner mystical glow */}
-                              <circle cx="12" cy="12" r="6" fill="#C8F0E0" opacity="0.1"/>
-                              <circle cx="12" cy="12" r="4" fill="#A8E6CF" opacity="0.08"/>
-                              {/* Floating peace sparkles */}
-                              <circle cx="8" cy="10" r="0.6" fill="#4ECDC4" opacity="0.7"/>
-                              <circle cx="16" cy="10" r="0.8" fill="#A8E6CF" opacity="0.6"/>
-                              <circle cx="10" cy="6" r="0.5" fill="#C8F0E0" opacity="0.8"/>
-                              <circle cx="14" cy="6" r="0.7" fill="#4ECDC4" opacity="0.5"/>
-                              <circle cx="6" cy="14" r="0.4" fill="#A8E6CF" opacity="0.6"/>
-                              <circle cx="18" cy="14" r="0.6" fill="#C8F0E0" opacity="0.7"/>
+                              <ellipse cx="12" cy="18" rx="6" ry="2" fill="#C8F0E0" stroke="#4ECDC4" strokeWidth="2"/>
+                              <ellipse cx="12" cy="14" rx="4" ry="2" fill="#A7FFEB" stroke="#4ECDC4" strokeWidth="2"/>
+                              <ellipse cx="12" cy="10" rx="3" ry="1.5" fill="#E0F4F1" stroke="#4ECDC4" strokeWidth="2"/>
                             </svg>
                           </div>
                         )}
                         {c.name === "Hope" && (
                           <div className="group-hover:animate-pulse">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                              {/* Magical sunflower with sparkles */}
-                              <circle cx="12" cy="12" r="3" fill="#8B4513" opacity="0.9"/>
-                              <circle cx="12" cy="12" r="1.5" fill="#DAA520" opacity="0.7"/>
-                              {/* Petals with magical glow */}
-                              <path d="M12 4c0-2 2-4 4-2s2 4 0 6-4 2-6 0-2-4 0-6z" fill="#FFD700" opacity="0.8"/>
-                              <path d="M12 4c0-2-2-4-4-2s-2 4 0 6 4 2 6 0 2-4 0-6z" fill="#FFD700" opacity="0.8"/>
-                              <path d="M4 12c2 0 4-2 4-4s-2-4-4-2-4 2-4 4 2 4 4 4z" fill="#FFD700" opacity="0.8"/>
-                              <path d="M20 12c-2 0-4-2-4-4s2-4 4-2 4 2 4 4-2 4-4 4z" fill="#FFD700" opacity="0.8"/>
-                              {/* Stem with magical energy */}
-                              <path d="M12 20v-2" stroke="#228B22" strokeWidth="1.5" strokeLinecap="round" opacity="0.8"/>
-                              <path d="M12 20v-2" stroke="#32CD32" strokeWidth="0.8" strokeLinecap="round" opacity="0.6"/>
-                              {/* Floating hope sparkles */}
-                              <circle cx="8" cy="6" r="0.6" fill="#FFD700" opacity="0.7"/>
-                              <circle cx="16" cy="6" r="0.8" fill="#FFE5A3" opacity="0.6"/>
-                              <circle cx="6" cy="10" r="0.5" fill="#FFD700" opacity="0.8"/>
-                              <circle cx="18" cy="10" r="0.7" fill="#FFE5A3" opacity="0.7"/>
-                              <circle cx="6" cy="14" r="0.4" fill="#FFD700" opacity="0.6"/>
-                              <circle cx="18" cy="14" r="0.6" fill="#FFE5A3" opacity="0.8"/>
-                              {/* Inner glow */}
-                              <circle cx="12" cy="12" r="5" fill="#FFD700" opacity="0.1"/>
+                              <path d="M12 2l2 6h6l-4 4 2 6-6-4-6 4 2-6-4-4h6l2-6z" fill="#FFD700" stroke="#FFB347" strokeWidth="2"/>
                             </svg>
                           </div>
                         )}
                         {c.name === "Gentle" && (
                           <div className="group-hover:animate-pulse">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                              {/* Magical dove with mystical wings */}
-                              <circle cx="12" cy="8" r="2" fill="#F8C8D8" opacity="0.9"/>
-                              <circle cx="12" cy="8" r="1" fill="#FFE4E1" opacity="0.7"/>
-                              {/* Wings with magical glow */}
-                              <path d="M12 10c-3 0-6-1-6-3s3-3 6-3 6 1 6 3-3 3-6 3z" fill="#A8E6CF" opacity="0.8"/>
-                              <path d="M12 10c3 0 6-1 6-3s-3-3-6-3-6 1-6 3 3 3 6 3z" fill="#A8E6CF" opacity="0.8"/>
-                              <path d="M12 10c-2.5 0-5-0.8-5-2.5s2.5-2.5 5-2.5 5 0.8 5 2.5-2.5 2.5-5 2.5z" fill="#C8E6C9" opacity="0.6"/>
-                              <path d="M12 10c2.5 0 5-0.8 5-2.5s-2.5-2.5-5-2.5-5 0.8-5 2.5 2.5 2.5 5 2.5z" fill="#C8E6C9" opacity="0.6"/>
-                              {/* Body with gentle glow */}
-                              <path d="M12 12v4" stroke="#F8C8D8" strokeWidth="1.5" strokeLinecap="round" opacity="0.8"/>
-                              <path d="M12 12v4" stroke="#FFE4E1" strokeWidth="0.8" strokeLinecap="round" opacity="0.6"/>
-                              {/* Tail feathers */}
-                              <path d="M12 16l-1 2" stroke="#F8C8D8" strokeWidth="1.5" strokeLinecap="round" opacity="0.8"/>
-                              <path d="M12 16l1 2" stroke="#F8C8D8" strokeWidth="1.5" strokeLinecap="round" opacity="0.8"/>
-                              {/* Beak */}
-                              <path d="M12 6l-0.5-1" stroke="#F8C8D8" strokeWidth="1" strokeLinecap="round" opacity="0.9"/>
-                              <path d="M12 6l0.5-1" stroke="#F8C8D8" strokeWidth="1" strokeLinecap="round" opacity="0.9"/>
-                              {/* Floating peace sparkles */}
-                              <circle cx="8" cy="6" r="0.5" fill="#A8E6CF" opacity="0.7"/>
-                              <circle cx="16" cy="6" r="0.7" fill="#C8E6C9" opacity="0.6"/>
-                              <circle cx="6" cy="12" r="0.4" fill="#F8C8D8" opacity="0.8"/>
-                              <circle cx="18" cy="12" r="0.6" fill="#A8E6CF" opacity="0.5"/>
-                              {/* Wing glow */}
-                              <circle cx="12" cy="10" r="4" fill="#A8E6CF" opacity="0.1"/>
+                              <circle cx="12" cy="8" r="3" fill="#F8C8D8" stroke="#FFB6C1" strokeWidth="2"/>
+                              <path d="M6 8c2-1 4-1 6 0s4 1 6 0" stroke="#F8C8D8" strokeWidth="2" fill="none"/>
+                              <path d="M12 11v5" stroke="#F8C8D8" strokeWidth="2" strokeLinecap="round"/>
                             </svg>
                           </div>
                         )}
                         {c.name === "Anxiety" && (
                           <div className="group-hover:animate-pulse">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                              {/* Shaky cloud with zigzag lines - whimsical anxiety */}
-                              <path d="M12 4c-3 0-6 2-6 4.5s3 4.5 6 4.5 6-2 6-4.5S15 4 12 4z" fill="#F8E0C8" opacity="0.8"/>
-                              <path d="M12 4c-2 0-4 1.5-4 3.5s2 3.5 4 3.5 4-1.5 4-3.5S14 4 12 4z" fill="#F4D4A3" opacity="0.6"/>
-                              {/* Zigzag anxiety lines */}
-                              <path d="M8 8l1-1 1 1 1-1" stroke="#FFB366" strokeWidth="1.5" strokeLinecap="round" opacity="0.8"/>
-                              <path d="M16 8l1-1 1 1 1-1" stroke="#FFB366" strokeWidth="1.5" strokeLinecap="round" opacity="0.8"/>
-                              <path d="M12 10l1-1 1 1" stroke="#FFB366" strokeWidth="1.5" strokeLinecap="round" opacity="0.7"/>
-                              {/* Floating worry particles */}
-                              <circle cx="9" cy="6" r="0.6" fill="#FFB366" opacity="0.6"/>
-                              <circle cx="15" cy="6" r="0.8" fill="#F4D4A3" opacity="0.7"/>
-                              <circle cx="7" cy="10" r="0.5" fill="#FFB366" opacity="0.8"/>
-                              <circle cx="17" cy="10" r="0.7" fill="#F4D4A3" opacity="0.6"/>
-                              {/* Gentle mist around cloud */}
-                              <circle cx="6" cy="8" r="1.2" fill="#F8E0C8" opacity="0.3"/>
-                              <circle cx="18" cy="8" r="1" fill="#F8E0C8" opacity="0.3"/>
-                              {/* Inner glow */}
-                              <circle cx="12" cy="8" r="3" fill="#F8E0C8" opacity="0.1"/>
+                              <path d="M4 8l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2" stroke="#FFB347" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                              <path d="M4 12l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2" stroke="#FFB347" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                              <path d="M4 16l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2" stroke="#FFB347" strokeWidth="2" fill="none" strokeLinecap="round"/>
                             </svg>
                           </div>
                         )}
@@ -545,60 +386,76 @@ export default function ColorBreathing({
                     {selectedColor.name === "Joy" && (
                       <div className="text-foreground/80">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                          <circle cx="12" cy="12" r="4" fill="#FFD700" opacity="0.95"/>
-                          <path d="M12 2v3" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
-                          <path d="M12 19v3" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
-                          <path d="M2 12h3" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
-                          <path d="M19 12h3" stroke="#FFD700" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
+                          <circle cx="12" cy="12" r="4" fill="#FFD700" stroke="#FFB347" strokeWidth="2"/>
+                          <path d="M12 2v2M12 20v2M2 12h2M20 12h2M6 6l1 1M17 17l1 1M6 18l1-1M17 7l1-1" stroke="#FFD700" strokeWidth="2" strokeLinecap="round"/>
                         </svg>
                       </div>
                     )}
                     {selectedColor.name === "Sadness" && (
                       <div className="text-foreground/80">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                          <path d="M6 16c3-2 6-2 9 0s6 2 9 0" stroke="#87CEEB" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.9"/>
-                          <circle cx="12" cy="12" r="3" fill="#98FB98" opacity="0.9"/>
+                          <path d="M6 10c0-3 2-5 6-5s6 2 6 5-1 3-3 3H9c-2 0-3 0-3-3z" fill="#A7FFEB" stroke="#4ECDC4" strokeWidth="2"/>
+                          <circle cx="10" cy="16" r="1" fill="#4ECDC4"/>
+                          <circle cx="14" cy="18" r="1" fill="#4ECDC4"/>
+                          <circle cx="12" cy="15" r="1" fill="#4ECDC4"/>
                         </svg>
                       </div>
                     )}
                     {selectedColor.name === "Love" && (
                       <div className="text-foreground/80">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                          <path d="M12 21c-2.5-1.5-5-3-7-5.5-2-2.5-2-6 0-8.5 2-2.5 5-3.5 7-2.5 2 1 5 0 7 2.5 2 2.5 2 6 0 8.5-2 2.5-4.5 4-7 5.5z" fill="#FFB6C1" opacity="0.95"/>
+                          <path d="M12 21c-1-1-4-3-6-6s-1-6 2-6 4 0 4 3c0-3 1-3 4-3s4 3 2 6-5 5-6 6z" fill="#FFB6C1" stroke="#FF69B4" strokeWidth="2"/>
                         </svg>
                       </div>
                     )}
                     {selectedColor.name === "Growth" && (
                       <div className="text-foreground/80">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                          <path d="M12 20v-8" stroke="#228B22" strokeWidth="2" strokeLinecap="round" opacity="0.9"/>
-                          <path d="M12 12c-3 0-6-2-6-6s3-6 6-6 6 2 6 6-3 6-6 6z" fill="#32CD32" opacity="0.8"/>
+                          <path d="M12 20v-8" stroke="#32CD32" strokeWidth="3" strokeLinecap="round"/>
+                          <path d="M8 8c2-2 4-2 4 2s2-4 4-2" stroke="#32CD32" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                          <circle cx="12" cy="6" r="2" fill="#FFD700"/>
                         </svg>
                       </div>
                     )}
                     {selectedColor.name === "Fear" && (
                       <div className="text-foreground/80">
-                        <FearIcon size={48} className="text-foreground/80" />
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                          <path d="M12 2c4 0 8 4 8 8s-4 8-8 8c-1 0-2 0-3-1 3-1 5-4 5-7s-2-6-5-7c1-1 2-1 3-1z" fill="#E2D8F0" stroke="#D1C4E9" strokeWidth="2"/>
+                        </svg>
                       </div>
                     )}
                     {selectedColor.name === "Peace" && (
                       <div className="text-foreground/80">
-                        <PeaceIcon size={48} className="text-foreground/80" />
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                          <ellipse cx="12" cy="18" rx="6" ry="2" fill="#C8F0E0" stroke="#4ECDC4" strokeWidth="2"/>
+                          <ellipse cx="12" cy="14" rx="4" ry="2" fill="#A7FFEB" stroke="#4ECDC4" strokeWidth="2"/>
+                          <ellipse cx="12" cy="10" rx="3" ry="1.5" fill="#E0F4F1" stroke="#4ECDC4" strokeWidth="2"/>
+                        </svg>
                       </div>
                     )}
                     {selectedColor.name === "Hope" && (
                       <div className="text-foreground/80">
-                        <HopeIcon size={48} className="text-foreground/80" />
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                          <path d="M12 2l2 6h6l-4 4 2 6-6-4-6 4 2-6-4-4h6l2-6z" fill="#FFD700" stroke="#FFB347" strokeWidth="2"/>
+                        </svg>
                       </div>
                     )}
                     {selectedColor.name === "Gentle" && (
                       <div className="text-foreground/80">
-                        <GentleIcon size={48} className="text-foreground/80" />
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                          <circle cx="12" cy="8" r="3" fill="#F8C8D8" stroke="#FFB6C1" strokeWidth="2"/>
+                          <path d="M6 8c2-1 4-1 6 0s4 1 6 0" stroke="#F8C8D8" strokeWidth="2" fill="none"/>
+                          <path d="M12 11v5" stroke="#F8C8D8" strokeWidth="2" strokeLinecap="round"/>
+                        </svg>
                       </div>
                     )}
                     {selectedColor.name === "Anxiety" && (
                       <div className="text-foreground/80">
-                        <AnxietyIcon size={48} className="text-foreground/80" />
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                          <path d="M4 8l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2" stroke="#FFB347" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                          <path d="M4 12l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2" stroke="#FFB347" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                          <path d="M4 16l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2" stroke="#FFB347" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                        </svg>
                       </div>
                     )}
                   </div>
