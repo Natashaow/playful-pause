@@ -26,7 +26,7 @@ const COLOR_INFO = {
   },
   "Sadness": {
     description: "Sadness is a soft, gentle blue that evokes deep reflection and emotional release. This color represents gentle clarity, peaceful acceptance, and the soothing energy of water. In color therapy, soft blue tones are believed to have a profound calming effect on the mind and body, helping to process emotions and promote inner peace.",
-    associations: "Breathe in steady clarity. As you exhale, let sadness drift away like gentle rain.",
+    associations: "Breathe in gentle clarity. As you exhale, let sadness drift away like gentle rain.",
     breathingGuidance: "Reframed emotion - breathing in clarity, releasing sadness with each exhale"
   },
   "Love": {
@@ -864,6 +864,8 @@ export default function ColorBreathing({
                   <h3 className="font-heading text-2xl text-foreground/90 font-light mb-3">
                     {selectedColor.name === "Fear" || selectedColor.name === "Anxiety" 
                       ? "Let go of fear" 
+                      : selectedColor.name === "Sadness"
+                      ? "Letting go"
                       : `Breathe with ${selectedColor.name}`
                     }
                   </h3>
