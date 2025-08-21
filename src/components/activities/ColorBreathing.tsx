@@ -119,17 +119,27 @@ const EmotionIcon = ({ emotion, size = 48, className = "" }: { emotion: string; 
       return (
         <svg {...iconProps}>
           <defs>
-            <linearGradient id="cloudGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <linearGradient id="cloudGradient" cx="50%" cy="30%" r="70%">
               <stop offset="0%" stopColor="#E3F2FD" />
               <stop offset="100%" stopColor="#BBDEFB" />
             </linearGradient>
           </defs>
+          {/* Soft blue cloud */}
           <path d="M12 20c0-6 4-10 12-10s12 4 12 10c0 2-1 4-3 4H15c-2 0-3-2-3-4z" 
                 fill="url(#cloudGradient)" stroke="#90CAF9" strokeWidth="2"/>
-          <g fill="#81C784" opacity="0.8">
-            <ellipse cx="18" cy="28" rx="1.5" ry="6" />
-            <ellipse cx="24" cy="30" rx="1.5" ry="4" />
-            <ellipse cx="30" cy="29" rx="1.5" ry="5" />
+          
+          {/* Blue raindrops falling */}
+          <g className="animate-float-slow" style={{ animationDelay: "0.2s" }}>
+            <ellipse cx="18" cy="28" rx="1.5" ry="6" fill="#64B5F6" opacity="0.8" />
+            <ellipse cx="24" cy="30" rx="1.5" ry="4" fill="#81C7F7" opacity="0.8" />
+            <ellipse cx="30" cy="29" rx="1.5" ry="5" fill="#90CAF9" opacity="0.8" />
+          </g>
+          
+          {/* Gentle shimmer on raindrops */}
+          <g fill="#B3E5FC" opacity="0.6">
+            <circle cx="18" cy="26" r="0.5" className="animate-twinkle" style={{ animationDelay: "1s" }} />
+            <circle cx="24" cy="28" r="0.5" className="animate-twinkle" style={{ animationDelay: "1.5s" }} />
+            <circle cx="30" cy="27" r="0.5" className="animate-twinkle" style={{ animationDelay: "0.5s" }} />
           </g>
         </svg>
       );
@@ -138,17 +148,38 @@ const EmotionIcon = ({ emotion, size = 48, className = "" }: { emotion: string; 
       return (
         <svg {...iconProps}>
           <defs>
-            <radialGradient id="heartGradient" cx="50%" cy="40%" r="60%">
+            <radialGradient id="roseGradient" cx="50%" cy="40%" r="60%">
               <stop offset="0%" stopColor="#FFB6C1" />
               <stop offset="100%" stopColor="#FF69B4" />
             </radialGradient>
           </defs>
-          <path d="M24 40c-2-2-8-6-12-12s-2-12 4-12 8 0 8 6c0-6 2-6 8-6s6 6 4 12-10 10-12 12z" 
-                fill="url(#heartGradient)" stroke="#FF69B4" strokeWidth="2"/>
-          <g stroke="#FFE4E1" strokeWidth="1.5" strokeLinecap="round" opacity="0.7">
-            <circle cx="18" cy="20" r="1" />
-            <circle cx="30" cy="20" r="1" />
-            <circle cx="24" cy="24" r="0.5" />
+          
+          {/* Rose flower center */}
+          <circle cx="24" cy="20" r="6" fill="url(#roseGradient)" className="gentleBreathe"/>
+          
+          {/* Rose petals - layered circles for depth */}
+          <g className="floatSlow" style={{ animationDelay: "0.2s" }}>
+            <circle cx="18" cy="18" r="3" fill="url(#roseGradient)" opacity="0.8"/>
+            <circle cx="30" cy="18" r="3" fill="url(#roseGradient)" opacity="0.8"/>
+            <circle cx="21" cy="26" r="2.5" fill="url(#roseGradient)" opacity="0.7"/>
+            <circle cx="27" cy="26" r="2.5" fill="url(#roseGradient)" opacity="0.7"/>
+          </g>
+          
+          {/* Rose stem */}
+          <line x1="24" y1="26" x2="24" y2="38" stroke="#4CAF50" strokeWidth="2" strokeLinecap="round"/>
+          
+          {/* Rose leaves */}
+          <g stroke="#4CAF50" strokeWidth="1.5" fill="#81C784" opacity="0.8" className="gentleRotate" style={{ animationDuration: "8s" }}>
+            <path d="M20 32c-2-1-3-3-1-4s3 0 3 2c0 2-1 2-2 2z"/>
+            <path d="M28 32c2-1 3-3 1-4s-3 0-3 2c0 2 1 2 2 2z"/>
+          </g>
+          
+          {/* Gentle sparkles */}
+          <g fill="#FFE4E1" opacity="0.8">
+            <circle cx="16" cy="14" r="0.6" className="animate-twinkle" style={{ animationDelay: "0.5s" }} />
+            <circle cx="32" cy="16" r="0.5" className="animate-twinkle" style={{ animationDelay: "1.2s" }} />
+            <circle cx="12" cy="24" r="0.4" className="animate-twinkle" style={{ animationDelay: "1.8s" }} />
+            <circle cx="36" cy="26" r="0.6" className="animate-twinkle" style={{ animationDelay: "0.8s" }} />
           </g>
         </svg>
       );
@@ -157,18 +188,41 @@ const EmotionIcon = ({ emotion, size = 48, className = "" }: { emotion: string; 
       return (
         <svg {...iconProps}>
           <defs>
-            <linearGradient id="stemGradient" x1="0%" y1="100%" x2="0%" y2="0%">
-              <stop offset="0%" stopColor="#4CAF50" />
-              <stop offset="100%" stopColor="#8BC34A" />
+            <linearGradient id="trunkGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="#6D4C41" />
+              <stop offset="100%" stopColor="#8D6E63" />
             </linearGradient>
+            <radialGradient id="foliageGradient" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stopColor="#81C784" />
+              <stop offset="100%" stopColor="#4CAF50" />
+            </radialGradient>
           </defs>
-          <line x1="24" y1="40" x2="24" y2="20" stroke="url(#stemGradient)" strokeWidth="4" strokeLinecap="round"/>
-          <path d="M16 16c4-4 8-4 8 4s4-8 8-4" stroke="#66BB6A" strokeWidth="3" 
-                fill="none" strokeLinecap="round"/>
-          <circle cx="24" cy="12" r="3" fill="#FFD54F" stroke="#FFC107" strokeWidth="2"/>
-          <g stroke="#A5D6A7" strokeWidth="2" strokeLinecap="round" opacity="0.6">
-            <line x1="20" y1="32" x2="18" y2="30" />
-            <line x1="28" y1="28" x2="30" y2="26" />
+          
+          {/* Tree trunk */}
+          <rect x="21" y="28" width="6" height="14" rx="2" fill="url(#trunkGradient)" className="gentleRotate" style={{ animationDuration: "8s" }} />
+          
+          {/* Tree foliage clusters */}
+          <g className="floatSlow" style={{ animationDelay: "0.2s" }}>
+            <circle cx="16" cy="20" r="6" fill="url(#foliageGradient)" opacity="0.9" />
+            <circle cx="32" cy="20" r="6" fill="url(#foliageGradient)" opacity="0.9" />
+            <circle cx="24" cy="16" r="7" fill="url(#foliageGradient)" opacity="0.9" />
+            <circle cx="20" cy="26" r="4" fill="url(#foliageGradient)" opacity="0.8" />
+            <circle cx="28" cy="26" r="4" fill="url(#foliageGradient)" opacity="0.8" />
+          </g>
+          
+          {/* Small branches */}
+          <g stroke="#8D6E63" strokeWidth="2" strokeLinecap="round" opacity="0.7" className="gentleRotate" style={{ animationDelay: "0.5s", animationDuration: "10s" }}>
+            <path d="M21 32l-3-2" />
+            <path d="M27 32l3-2" />
+            <path d="M21 36l-2-1" />
+            <path d="M27 36l2-1" />
+          </g>
+          
+          {/* Growing leaves - subtle sparkles */}
+          <g fill="#A5D6A7" opacity="0.8">
+            <circle cx="14" cy="18" r="1" className="animate-twinkle" style={{ animationDelay: "1s" }} />
+            <circle cx="34" cy="22" r="0.8" className="animate-twinkle" style={{ animationDelay: "2s" }} />
+            <circle cx="26" cy="12" r="0.6" className="animate-twinkle" style={{ animationDelay: "1.5s" }} />
           </g>
         </svg>
       );
@@ -177,18 +231,45 @@ const EmotionIcon = ({ emotion, size = 48, className = "" }: { emotion: string; 
       return (
         <svg {...iconProps}>
           <defs>
-            <linearGradient id="mistGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#E1BEE7" />
-              <stop offset="100%" stopColor="#CE93D8" />
-            </linearGradient>
+            <radialGradient id="candleGradient" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stopColor="#FFF8E1" />
+              <stop offset="100%" stopColor="#FFE082" />
+            </radialGradient>
+            <radialGradient id="flameGradient" cx="50%" cy="30%" r="70%">
+              <stop offset="0%" stopColor="#FFD54F" />
+              <stop offset="100%" stopColor="#FF8A65" />
+            </radialGradient>
           </defs>
-          <ellipse cx="24" cy="30" rx="14" ry="8" fill="url(#mistGradient)" opacity="0.7"/>
-          <ellipse cx="24" cy="25" rx="10" ry="6" fill="url(#mistGradient)" opacity="0.5"/>
-          <ellipse cx="24" cy="20" rx="7" ry="4" fill="url(#mistGradient)" opacity="0.4"/>
-          <g stroke="#BA68C8" strokeWidth="1.5" strokeLinecap="round" opacity="0.6">
-            <path d="M18 35c2-1 4-1 6 0s4 1 6 0" />
-            <path d="M16 25c3-1 5-1 8 0s5 1 8 0" />
+          
+          {/* Candle body */}
+          <rect x="20" y="24" width="8" height="16" rx="2" fill="url(#candleGradient)" stroke="#FFB74D" strokeWidth="1.5"/>
+          
+          {/* Candle flame */}
+          <ellipse cx="24" cy="20" rx="3" ry="5" fill="url(#flameGradient)" className="gentleBreathe"/>
+          
+          {/* Inner flame glow */}
+          <ellipse cx="24" cy="21" rx="1.5" ry="3" fill="#FFF9C4" opacity="0.8" className="softGlow"/>
+          
+          {/* Gentle light rays */}
+          <g stroke="#FFF8E1" strokeWidth="1" strokeLinecap="round" opacity="0.6" className="animate-twinkle" style={{ animationDelay: "0.3s" }}>
+            <line x1="24" y1="12" x2="24" y2="16" />
+            <line x1="16" y1="20" x2="20" y2="20" />
+            <line x1="28" y1="20" x2="32" y2="20" />
+            <line x1="18" y1="14" x2="20" y2="16" />
+            <line x1="30" y1="14" x2="28" y2="16" />
           </g>
+          
+          {/* Warm light sparkles */}
+          <g fill="#FFF8E1" opacity="0.7">
+            <circle cx="14" cy="18" r="0.5" className="animate-twinkle" style={{ animationDelay: "1s" }} />
+            <circle cx="34" cy="22" r="0.6" className="animate-twinkle" style={{ animationDelay: "1.7s" }} />
+            <circle cx="18" cy="30" r="0.4" className="animate-twinkle" style={{ animationDelay: "0.4s" }} />
+            <circle cx="30" cy="32" r="0.5" className="animate-twinkle" style={{ animationDelay: "2.1s" }} />
+          </g>
+          
+          {/* Melted wax detail */}
+          <ellipse cx="22" cy="24" rx="1" ry="0.5" fill="#FFE082" opacity="0.6"/>
+          <ellipse cx="26" cy="25" rx="0.8" ry="0.4" fill="#FFE082" opacity="0.6"/>
         </svg>
       );
 
@@ -196,21 +277,39 @@ const EmotionIcon = ({ emotion, size = 48, className = "" }: { emotion: string; 
       return (
         <svg {...iconProps}>
           <defs>
-            <radialGradient id="rippleGradient" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#B2DFDB" />
-              <stop offset="100%" stopColor="#80CBC4" />
-            </radialGradient>
+            <linearGradient id="stoneGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#B0BEC5" />
+              <stop offset="100%" stopColor="#78909C" />
+            </linearGradient>
           </defs>
-          <g opacity="0.3">
-            <ellipse cx="24" cy="36" rx="18" ry="6" fill="url(#rippleGradient)"/>
+          
+          {/* Zen stones stacked - bottom to top */}
+          <g className="floatSlow" style={{ animationDelay: "0.1s" }}>
+            {/* Bottom stone - largest */}
+            <ellipse cx="24" cy="36" rx="14" ry="5" fill="url(#stoneGradient)" opacity="0.9" />
+            <ellipse cx="24" cy="35" rx="12" ry="4" fill="#CFD8DC" opacity="0.7" />
+            
+            {/* Middle stone */}
+            <ellipse cx="24" cy="28" rx="10" ry="4" fill="url(#stoneGradient)" opacity="0.9" />
+            <ellipse cx="24" cy="27" rx="8" ry="3" fill="#CFD8DC" opacity="0.7" />
+            
+            {/* Top stone - smallest */}
+            <ellipse cx="24" cy="20" rx="7" ry="3" fill="url(#stoneGradient)" opacity="0.9" />
+            <ellipse cx="24" cy="19" rx="5" ry="2.5" fill="#CFD8DC" opacity="0.7" />
           </g>
-          <g opacity="0.5">
-            <ellipse cx="24" cy="28" rx="12" ry="4" fill="url(#rippleGradient)"/>
+          
+          {/* Subtle zen ripples */}
+          <g stroke="#90A4AE" strokeWidth="1" fill="none" opacity="0.3" className="gentleRotate" style={{ animationDuration: "12s" }}>
+            <circle cx="24" cy="24" r="20" />
+            <circle cx="24" cy="24" r="24" />
           </g>
-          <g opacity="0.7">
-            <ellipse cx="24" cy="20" rx="8" ry="3" fill="url(#rippleGradient)"/>
+          
+          {/* Peaceful sparkles */}
+          <g fill="#B0BEC5" opacity="0.6">
+            <circle cx="12" cy="16" r="0.8" className="animate-twinkle" style={{ animationDelay: "2s" }} />
+            <circle cx="36" cy="20" r="0.6" className="animate-twinkle" style={{ animationDelay: "3s" }} />
+            <circle cx="18" cy="32" r="0.5" className="animate-twinkle" style={{ animationDelay: "1s" }} />
           </g>
-          <circle cx="24" cy="16" r="2" fill="#4DB6AC"/>
         </svg>
       );
 
@@ -223,14 +322,33 @@ const EmotionIcon = ({ emotion, size = 48, className = "" }: { emotion: string; 
               <stop offset="100%" stopColor="#FFC107" />
             </radialGradient>
           </defs>
-          <path d="M24 8l3 9h9l-7 5 3 9-8-6-8 6 3-9-7-5h9l3-9z" 
-                fill="url(#starGradient)" stroke="#FFB300" strokeWidth="2"/>
-          <g stroke="#FFF9C4" strokeWidth="1" strokeLinecap="round" opacity="0.8">
-            <line x1="24" y1="12" x2="24" y2="14" />
-            <line x1="28" y1="16" x2="26" y2="16" />
-            <line x1="20" y1="16" x2="22" y2="16" />
-            <line x1="27" y1="24" x2="25" y2="22" />
-            <line x1="21" y1="24" x2="23" y2="22" />
+          
+          {/* Five-pointed star */}
+          <path d="M24 8l4.8 9.8 10.8 1.6-7.8 7.6 1.8 10.8L24 32.4l-9.6 5.4 1.8-10.8-7.8-7.6 10.8-1.6L24 8z" 
+                fill="url(#starGradient)" stroke="#FFB300" strokeWidth="2" className="gentleBreathe"/>
+          
+          {/* Inner star glow */}
+          <path d="M24 12l3.2 6.5 7.2 1.1-5.2 5 1.2 7.2L24 28.2l-6.4 3.6 1.2-7.2-5.2-5 7.2-1.1L24 12z" 
+                fill="#FFF9C4" opacity="0.8" className="softGlow"/>
+          
+          {/* Sparkling rays */}
+          <g stroke="#FFF9C4" strokeWidth="1.5" strokeLinecap="round" opacity="0.8" className="animate-twinkle" style={{ animationDelay: "0.5s" }}>
+            <line x1="24" y1="4" x2="24" y2="8" />
+            <line x1="24" y1="40" x2="24" y2="44" />
+            <line x1="4" y1="24" x2="8" y2="24" />
+            <line x1="40" y1="24" x2="44" y2="24" />
+            <line x1="10.3" y1="10.3" x2="12.7" y2="12.7" />
+            <line x1="35.3" y1="35.3" x2="37.7" y2="37.7" />
+            <line x1="10.3" y1="37.7" x2="12.7" y2="35.3" />
+            <line x1="35.3" y1="12.7" x2="37.7" y2="10.3" />
+          </g>
+          
+          {/* Twinkling points */}
+          <g fill="#FFEB3B" opacity="0.9">
+            <circle cx="16" cy="16" r="1" className="animate-twinkle" style={{ animationDelay: "1s" }} />
+            <circle cx="32" cy="16" r="1" className="animate-twinkle" style={{ animationDelay: "1.8s" }} />
+            <circle cx="16" cy="32" r="1" className="animate-twinkle" style={{ animationDelay: "0.3s" }} />
+            <circle cx="32" cy="32" r="1" className="animate-twinkle" style={{ animationDelay: "2.3s" }} />
           </g>
         </svg>
       );
@@ -239,18 +357,39 @@ const EmotionIcon = ({ emotion, size = 48, className = "" }: { emotion: string; 
       return (
         <svg {...iconProps}>
           <defs>
-            <radialGradient id="gentleGradient" cx="50%" cy="40%" r="60%">
-              <stop offset="0%" stopColor="#F8BBD9" />
-              <stop offset="100%" stopColor="#F48FB1" />
+            <radialGradient id="featherGradient" cx="50%" cy="40%" r="70%">
+              <stop offset="0%" stopColor="#F8F8FF" />
+              <stop offset="100%" stopColor="#E6E6FA" />
             </radialGradient>
           </defs>
-          <circle cx="24" cy="16" r="8" fill="url(#gentleGradient)" stroke="#F06292" strokeWidth="2"/>
-          <path d="M12 16c4-2 8-2 12 0s8 2 12 0" stroke="#FCE4EC" strokeWidth="3" 
-                fill="none" strokeLinecap="round"/>
-          <line x1="24" y1="24" x2="24" y2="34" stroke="#F8BBD9" strokeWidth="3" strokeLinecap="round"/>
-          <g fill="#FFE0E6" opacity="0.8">
-            <circle cx="20" cy="14" r="1.5" />
-            <circle cx="28" cy="14" r="1.5" />
+          
+          {/* Feather stem */}
+          <line x1="24" y1="12" x2="24" y2="36" stroke="#DDA0DD" strokeWidth="2" strokeLinecap="round" className="gentleRotate" style={{ animationDuration: "6s" }}/>
+          
+          {/* Feather vanes - left side */}
+          <g className="floatSlow" style={{ animationDelay: "0.2s" }}>
+            <path d="M24 16c-4-2-6-1-6 1s2 3 6 1z" fill="url(#featherGradient)" stroke="#DDA0DD" strokeWidth="1" opacity="0.9"/>
+            <path d="M24 20c-5-2-7-1-7 1s2 4 7 1z" fill="url(#featherGradient)" stroke="#DDA0DD" strokeWidth="1" opacity="0.8"/>
+            <path d="M24 24c-6-2-8-1-8 1s3 4 8 1z" fill="url(#featherGradient)" stroke="#DDA0DD" strokeWidth="1" opacity="0.7"/>
+            <path d="M24 28c-5-2-7-1-7 1s2 4 7 1z" fill="url(#featherGradient)" stroke="#DDA0DD" strokeWidth="1" opacity="0.6"/>
+            <path d="M24 32c-4-2-6-1-6 1s2 3 6 1z" fill="url(#featherGradient)" stroke="#DDA0DD" strokeWidth="1" opacity="0.5"/>
+          </g>
+          
+          {/* Feather vanes - right side */}
+          <g className="floatSlow" style={{ animationDelay: "0.4s" }}>
+            <path d="M24 16c4-2 6-1 6 1s-2 3-6 1z" fill="url(#featherGradient)" stroke="#DDA0DD" strokeWidth="1" opacity="0.9"/>
+            <path d="M24 20c5-2 7-1 7 1s-2 4-7 1z" fill="url(#featherGradient)" stroke="#DDA0DD" strokeWidth="1" opacity="0.8"/>
+            <path d="M24 24c6-2 8-1 8 1s-3 4-8 1z" fill="url(#featherGradient)" stroke="#DDA0DD" strokeWidth="1" opacity="0.7"/>
+            <path d="M24 28c5-2 7-1 7 1s-2 4-7 1z" fill="url(#featherGradient)" stroke="#DDA0DD" strokeWidth="1" opacity="0.6"/>
+            <path d="M24 32c4-2 6-1 6 1s-2 3-6 1z" fill="url(#featherGradient)" stroke="#DDA0DD" strokeWidth="1" opacity="0.5"/>
+          </g>
+          
+          {/* Gentle floating sparkles */}
+          <g fill="#E6E6FA" opacity="0.7">
+            <circle cx="16" cy="14" r="0.4" className="animate-twinkle" style={{ animationDelay: "1s" }} />
+            <circle cx="32" cy="18" r="0.5" className="animate-twinkle" style={{ animationDelay: "2s" }} />
+            <circle cx="14" cy="26" r="0.3" className="animate-twinkle" style={{ animationDelay: "1.5s" }} />
+            <circle cx="34" cy="30" r="0.4" className="animate-twinkle" style={{ animationDelay: "0.7s" }} />
           </g>
         </svg>
       );
@@ -259,21 +398,35 @@ const EmotionIcon = ({ emotion, size = 48, className = "" }: { emotion: string; 
       return (
         <svg {...iconProps}>
           <defs>
-            <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#FFCC80" />
-              <stop offset="50%" stopColor="#FFB74D" />
-              <stop offset="100%" stopColor="#FF9800" />
-            </linearGradient>
+            <radialGradient id="spiralGradient" cx="50%" cy="50%" r="60%">
+              <stop offset="0%" stopColor="#FFECB3" />
+              <stop offset="100%" stopColor="#FFE082" />
+            </radialGradient>
           </defs>
-          <g stroke="url(#waveGradient)" strokeWidth="3" fill="none" strokeLinecap="round">
-            <path d="M8 16l3-3 3 3 3-3 3 3 3-3 3 3 3-3 3 3" />
-            <path d="M8 24l3-3 3 3 3-3 3 3 3-3 3 3 3-3 3 3" />
-            <path d="M8 32l3-3 3 3 3-3 3 3 3-3 3 3 3-3 3 3" />
+          
+          {/* Calming spiral pattern */}
+          <g stroke="url(#spiralGradient)" strokeWidth="2.5" fill="none" strokeLinecap="round" className="gentleRotate" style={{ animationDuration: "12s" }}>
+            <path d="M24 24c0-2 2-4 4-4s6 2 6 6-4 8-8 8-10-4-10-10 6-12 12-12" opacity="0.8"/>
+            <path d="M24 24c0-1 1-2 2-2s3 1 3 3-2 4-4 4-5-2-5-5 3-6 6-6" opacity="0.6"/>
           </g>
-          <g fill="#FFF3E0" opacity="0.6">
-            <circle cx="15" cy="13" r="1" />
-            <circle cx="27" cy="21" r="1" />
-            <circle cx="33" cy="29" r="1" />
+          
+          {/* Center calming dot */}
+          <circle cx="24" cy="24" r="2" fill="url(#spiralGradient)" className="gentleBreathe"/>
+          
+          {/* Floating calm elements */}
+          <g className="floatSlow" style={{ animationDelay: "0.5s" }}>
+            <circle cx="16" cy="16" r="1.5" fill="#FFECB3" opacity="0.7"/>
+            <circle cx="32" cy="16" r="1.2" fill="#FFECB3" opacity="0.6"/>
+            <circle cx="16" cy="32" r="1.3" fill="#FFECB3" opacity="0.6"/>
+            <circle cx="32" cy="32" r="1.4" fill="#FFECB3" opacity="0.7"/>
+          </g>
+          
+          {/* Gentle breathing sparkles */}
+          <g fill="#FFF9C4" opacity="0.8">
+            <circle cx="12" cy="20" r="0.4" className="animate-twinkle" style={{ animationDelay: "0.8s" }} />
+            <circle cx="36" cy="20" r="0.5" className="animate-twinkle" style={{ animationDelay: "1.6s" }} />
+            <circle cx="20" cy="12" r="0.3" className="animate-twinkle" style={{ animationDelay: "1.2s" }} />
+            <circle cx="28" cy="36" r="0.4" className="animate-twinkle" style={{ animationDelay: "2s" }} />
           </g>
         </svg>
       );
