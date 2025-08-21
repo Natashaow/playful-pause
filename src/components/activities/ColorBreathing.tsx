@@ -81,6 +81,208 @@ const PHASES: Array<{
   { key: "hold2", label: "Hold",       seconds: 4, anim: "holdContracted", isHold: true },
 ];
 
+// Refined whimsical icons with better consistency
+const EmotionIcon = ({ emotion, size = 48, className = "" }: { emotion: string; size?: number; className?: string }) => {
+  const iconProps = {
+    width: size,
+    height: size,
+    viewBox: "0 0 48 48",
+    className: `transition-transform duration-300 ${className}`,
+    fill: "none",
+  };
+
+  switch (emotion) {
+    case "Joy":
+      return (
+        <svg {...iconProps}>
+          <defs>
+            <radialGradient id="sunGradient" cx="50%" cy="30%" r="60%">
+              <stop offset="0%" stopColor="#FFD700" />
+              <stop offset="100%" stopColor="#FFA500" />
+            </radialGradient>
+          </defs>
+          <circle cx="24" cy="24" r="10" fill="url(#sunGradient)" stroke="#FFB347" strokeWidth="2"/>
+          <g stroke="#FFD700" strokeWidth="2.5" strokeLinecap="round">
+            <line x1="24" y1="6" x2="24" y2="10" />
+            <line x1="24" y1="38" x2="24" y2="42" />
+            <line x1="6" y1="24" x2="10" y2="24" />
+            <line x1="38" y1="24" x2="42" y2="24" />
+            <line x1="12.2" y1="12.2" x2="14.8" y2="14.8" />
+            <line x1="33.2" y1="33.2" x2="35.8" y2="35.8" />
+            <line x1="12.2" y1="35.8" x2="14.8" y2="33.2" />
+            <line x1="33.2" y1="14.8" x2="35.8" y2="12.2" />
+          </g>
+        </svg>
+      );
+
+    case "Sadness":
+      return (
+        <svg {...iconProps}>
+          <defs>
+            <linearGradient id="cloudGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#E3F2FD" />
+              <stop offset="100%" stopColor="#BBDEFB" />
+            </linearGradient>
+          </defs>
+          <path d="M12 20c0-6 4-10 12-10s12 4 12 10c0 2-1 4-3 4H15c-2 0-3-2-3-4z" 
+                fill="url(#cloudGradient)" stroke="#90CAF9" strokeWidth="2"/>
+          <g fill="#81C784" opacity="0.8">
+            <ellipse cx="18" cy="28" rx="1.5" ry="6" />
+            <ellipse cx="24" cy="30" rx="1.5" ry="4" />
+            <ellipse cx="30" cy="29" rx="1.5" ry="5" />
+          </g>
+        </svg>
+      );
+
+    case "Love":
+      return (
+        <svg {...iconProps}>
+          <defs>
+            <radialGradient id="heartGradient" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stopColor="#FFB6C1" />
+              <stop offset="100%" stopColor="#FF69B4" />
+            </radialGradient>
+          </defs>
+          <path d="M24 40c-2-2-8-6-12-12s-2-12 4-12 8 0 8 6c0-6 2-6 8-6s6 6 4 12-10 10-12 12z" 
+                fill="url(#heartGradient)" stroke="#FF69B4" strokeWidth="2"/>
+          <g stroke="#FFE4E1" strokeWidth="1.5" strokeLinecap="round" opacity="0.7">
+            <circle cx="18" cy="20" r="1" />
+            <circle cx="30" cy="20" r="1" />
+            <circle cx="24" cy="24" r="0.5" />
+          </g>
+        </svg>
+      );
+
+    case "Growth":
+      return (
+        <svg {...iconProps}>
+          <defs>
+            <linearGradient id="stemGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="#4CAF50" />
+              <stop offset="100%" stopColor="#8BC34A" />
+            </linearGradient>
+          </defs>
+          <line x1="24" y1="40" x2="24" y2="20" stroke="url(#stemGradient)" strokeWidth="4" strokeLinecap="round"/>
+          <path d="M16 16c4-4 8-4 8 4s4-8 8-4" stroke="#66BB6A" strokeWidth="3" 
+                fill="none" strokeLinecap="round"/>
+          <circle cx="24" cy="12" r="3" fill="#FFD54F" stroke="#FFC107" strokeWidth="2"/>
+          <g stroke="#A5D6A7" strokeWidth="2" strokeLinecap="round" opacity="0.6">
+            <line x1="20" y1="32" x2="18" y2="30" />
+            <line x1="28" y1="28" x2="30" y2="26" />
+          </g>
+        </svg>
+      );
+
+    case "Fear":
+      return (
+        <svg {...iconProps}>
+          <defs>
+            <linearGradient id="mistGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#E1BEE7" />
+              <stop offset="100%" stopColor="#CE93D8" />
+            </linearGradient>
+          </defs>
+          <ellipse cx="24" cy="30" rx="14" ry="8" fill="url(#mistGradient)" opacity="0.7"/>
+          <ellipse cx="24" cy="25" rx="10" ry="6" fill="url(#mistGradient)" opacity="0.5"/>
+          <ellipse cx="24" cy="20" rx="7" ry="4" fill="url(#mistGradient)" opacity="0.4"/>
+          <g stroke="#BA68C8" strokeWidth="1.5" strokeLinecap="round" opacity="0.6">
+            <path d="M18 35c2-1 4-1 6 0s4 1 6 0" />
+            <path d="M16 25c3-1 5-1 8 0s5 1 8 0" />
+          </g>
+        </svg>
+      );
+
+    case "Peace":
+      return (
+        <svg {...iconProps}>
+          <defs>
+            <radialGradient id="rippleGradient" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#B2DFDB" />
+              <stop offset="100%" stopColor="#80CBC4" />
+            </radialGradient>
+          </defs>
+          <g opacity="0.3">
+            <ellipse cx="24" cy="36" rx="18" ry="6" fill="url(#rippleGradient)"/>
+          </g>
+          <g opacity="0.5">
+            <ellipse cx="24" cy="28" rx="12" ry="4" fill="url(#rippleGradient)"/>
+          </g>
+          <g opacity="0.7">
+            <ellipse cx="24" cy="20" rx="8" ry="3" fill="url(#rippleGradient)"/>
+          </g>
+          <circle cx="24" cy="16" r="2" fill="#4DB6AC"/>
+        </svg>
+      );
+
+    case "Hope":
+      return (
+        <svg {...iconProps}>
+          <defs>
+            <radialGradient id="starGradient" cx="50%" cy="30%" r="70%">
+              <stop offset="0%" stopColor="#FFEB3B" />
+              <stop offset="100%" stopColor="#FFC107" />
+            </radialGradient>
+          </defs>
+          <path d="M24 8l3 9h9l-7 5 3 9-8-6-8 6 3-9-7-5h9l3-9z" 
+                fill="url(#starGradient)" stroke="#FFB300" strokeWidth="2"/>
+          <g stroke="#FFF9C4" strokeWidth="1" strokeLinecap="round" opacity="0.8">
+            <line x1="24" y1="12" x2="24" y2="14" />
+            <line x1="28" y1="16" x2="26" y2="16" />
+            <line x1="20" y1="16" x2="22" y2="16" />
+            <line x1="27" y1="24" x2="25" y2="22" />
+            <line x1="21" y1="24" x2="23" y2="22" />
+          </g>
+        </svg>
+      );
+
+    case "Gentle":
+      return (
+        <svg {...iconProps}>
+          <defs>
+            <radialGradient id="gentleGradient" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stopColor="#F8BBD9" />
+              <stop offset="100%" stopColor="#F48FB1" />
+            </radialGradient>
+          </defs>
+          <circle cx="24" cy="16" r="8" fill="url(#gentleGradient)" stroke="#F06292" strokeWidth="2"/>
+          <path d="M12 16c4-2 8-2 12 0s8 2 12 0" stroke="#FCE4EC" strokeWidth="3" 
+                fill="none" strokeLinecap="round"/>
+          <line x1="24" y1="24" x2="24" y2="34" stroke="#F8BBD9" strokeWidth="3" strokeLinecap="round"/>
+          <g fill="#FFE0E6" opacity="0.8">
+            <circle cx="20" cy="14" r="1.5" />
+            <circle cx="28" cy="14" r="1.5" />
+          </g>
+        </svg>
+      );
+
+    case "Anxiety":
+      return (
+        <svg {...iconProps}>
+          <defs>
+            <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#FFCC80" />
+              <stop offset="50%" stopColor="#FFB74D" />
+              <stop offset="100%" stopColor="#FF9800" />
+            </linearGradient>
+          </defs>
+          <g stroke="url(#waveGradient)" strokeWidth="3" fill="none" strokeLinecap="round">
+            <path d="M8 16l3-3 3 3 3-3 3 3 3-3 3 3 3-3 3 3" />
+            <path d="M8 24l3-3 3 3 3-3 3 3 3-3 3 3 3-3 3 3" />
+            <path d="M8 32l3-3 3 3 3-3 3 3 3-3 3 3 3-3 3 3" />
+          </g>
+          <g fill="#FFF3E0" opacity="0.6">
+            <circle cx="15" cy="13" r="1" />
+            <circle cx="27" cy="21" r="1" />
+            <circle cx="33" cy="29" r="1" />
+          </g>
+        </svg>
+      );
+
+    default:
+      return null;
+  }
+};
+
 export default function ColorBreathing({ 
   onBack, 
   isMusicPlaying = false, 
@@ -98,13 +300,17 @@ export default function ColorBreathing({
   const [running, setRunning] = useState(false);
   const [showInstructions, setShowInstructions] = useState(false);
   const [showAccordion, setShowAccordion] = useState(false);
+  const [currentRound, setCurrentRound] = useState(1);
+  const [sessionComplete, setSessionComplete] = useState(false);
   const tickRef = useRef<number | null>(null);
+
+  const TOTAL_ROUNDS = 4;
 
   const phase = PHASES[phaseIndex];
 
   // Set up 1s countdown + switch to next phase
   useEffect(() => {
-    if (!running) return;
+    if (!running || sessionComplete) return;
 
     setSecondsLeft(phase.seconds);
     const start = Date.now();
@@ -119,7 +325,22 @@ export default function ColorBreathing({
       }
 
       if (elapsedMs >= phase.seconds * 1000) {
-        setPhaseIndex((i) => (i + 1) % PHASES.length);
+        const nextPhaseIndex = (phaseIndex + 1) % PHASES.length;
+        
+        // Check if we completed a full round (back to inhale)
+        if (nextPhaseIndex === 0) {
+          const nextRound = currentRound + 1;
+          if (nextRound > TOTAL_ROUNDS) {
+            // Session complete!
+            setSessionComplete(true);
+            setRunning(false);
+            return;
+          } else {
+            setCurrentRound(nextRound);
+          }
+        }
+        
+        setPhaseIndex(nextPhaseIndex);
         return;
       }
 
@@ -135,13 +356,13 @@ export default function ColorBreathing({
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phaseIndex, running]);
+  }, [phaseIndex, running, sessionComplete]);
 
   const animStyle = useMemo<React.CSSProperties>(() => {
     return {
       animationName: phase.anim,
       animationDuration: `${phase.seconds * 1000}ms`,
-      animationTimingFunction: "ease-in-out",
+      animationTimingFunction: "cubic-bezier(0.4, 0, 0.6, 1)", // More natural easing
       animationFillMode: "forwards",
       animationIterationCount: phase.isHold ? "infinite" : 1,
     };
@@ -175,9 +396,11 @@ export default function ColorBreathing({
 
   // Start breathing after reading instructions
   const startBreathing = () => {
-    // Batch state updates to reduce lag
-    setShowInstructions(false);
+    // Reset session state
+    setSessionComplete(false);
+    setCurrentRound(1);
     setPhaseIndex(0);
+    setShowInstructions(false);
     // Small delay to ensure smooth transition
     requestAnimationFrame(() => {
       setRunning(true);
@@ -195,6 +418,16 @@ export default function ColorBreathing({
 
   // Resume breathing from current state
   const resumeBreathing = () => {
+    if (!sessionComplete) {
+      setRunning(true);
+    }
+  };
+
+  // Restart the entire session
+  const restartSession = () => {
+    setSessionComplete(false);
+    setCurrentRound(1);
+    setPhaseIndex(0);
     setRunning(true);
   };
 
@@ -208,39 +441,142 @@ export default function ColorBreathing({
       />
       
       <div className="mx-auto max-w-5xl p-6 pb-16">
-        {/* Custom breathing animations */}
+        {/* Enhanced breathing animations with natural easing */}
         <style>{`
-          /* --- Color Breathing keyframes --- */
+          /* --- Refined Color Breathing keyframes --- */
 
-          /* Breathe In (expand over 4s) */
+          /* Breathe In (expand over 4s) - More natural expansion */
           @keyframes breatheIn {
-            0%   { transform: scale(1);   opacity: 0.9; }
-            100% { transform: scale(1.3); opacity: 1;   }
+            0%   { 
+              transform: scale(1) rotate(0deg); 
+              opacity: 0.85; 
+              filter: blur(0px) brightness(1);
+            }
+            50%  { 
+              transform: scale(1.15) rotate(1deg); 
+              opacity: 0.95; 
+              filter: blur(0.5px) brightness(1.05);
+            }
+            100% { 
+              transform: scale(1.3) rotate(0deg); 
+              opacity: 1; 
+              filter: blur(0px) brightness(1.1);
+            }
           }
 
-          /* Hold after inhale (gentle pulse at expanded size) */
+          /* Hold after inhale (gentle organic pulse) */
           @keyframes holdExpanded {
-            0%,100% { transform: scale(1.3); opacity: 1;   }
-            50%     { transform: scale(1.32); opacity: 0.95; }
+            0%   { 
+              transform: scale(1.3) rotate(0deg); 
+              opacity: 1; 
+              filter: brightness(1.1);
+            }
+            25%  { 
+              transform: scale(1.32) rotate(0.5deg); 
+              opacity: 0.98; 
+              filter: brightness(1.08);
+            }
+            50%  { 
+              transform: scale(1.34) rotate(0deg); 
+              opacity: 0.96; 
+              filter: brightness(1.12);
+            }
+            75%  { 
+              transform: scale(1.32) rotate(-0.5deg); 
+              opacity: 0.98; 
+              filter: brightness(1.08);
+            }
+            100% { 
+              transform: scale(1.3) rotate(0deg); 
+              opacity: 1; 
+              filter: brightness(1.1);
+            }
           }
 
-          /* Breathe Out (contract over 6s) */
+          /* Breathe Out (contract over 4s) - Smooth release */
           @keyframes breatheOut {
-            0%   { transform: scale(1.3); opacity: 1;   }
-            100% { transform: scale(1);   opacity: 0.9; }
+            0%   { 
+              transform: scale(1.3) rotate(0deg); 
+              opacity: 1; 
+              filter: blur(0px) brightness(1.1);
+            }
+            50%  { 
+              transform: scale(1.15) rotate(-1deg); 
+              opacity: 0.92; 
+              filter: blur(0.5px) brightness(1.02);
+            }
+            100% { 
+              transform: scale(1) rotate(0deg); 
+              opacity: 0.85; 
+              filter: blur(0px) brightness(1);
+            }
           }
 
-          /* Hold after exhale (gentle pulse at contracted size) */
+          /* Hold after exhale (subtle settling) */
           @keyframes holdContracted {
-            0%,100% { transform: scale(1);   opacity: 0.9; }
-            50%     { transform: scale(1.02); opacity: 1;   }
+            0%   { 
+              transform: scale(1) rotate(0deg); 
+              opacity: 0.85; 
+              filter: brightness(1);
+            }
+            25%  { 
+              transform: scale(1.01) rotate(0.2deg); 
+              opacity: 0.88; 
+              filter: brightness(1.02);
+            }
+            50%  { 
+              transform: scale(1.02) rotate(0deg); 
+              opacity: 0.9; 
+              filter: brightness(1.04);
+            }
+            75%  { 
+              transform: scale(1.01) rotate(-0.2deg); 
+              opacity: 0.88; 
+              filter: brightness(1.02);
+            }
+            100% { 
+              transform: scale(1) rotate(0deg); 
+              opacity: 0.85; 
+              filter: brightness(1);
+            }
           }
 
+          /* Icon hover animations */
+          .emotion-icon {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.6, 1);
+          }
 
+          .emotion-icon:hover {
+            transform: scale(1.1) translateY(-2px);
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
+          }
+
+          .emotion-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.6, 1);
+          }
+
+          .emotion-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+          }
+
+          .emotion-card.selected {
+            animation: selectedPulse 2s infinite;
+          }
+
+          @keyframes selectedPulse {
+            0%, 100% { transform: translateY(-2px) scale(1.01); }
+            50% { transform: translateY(-4px) scale(1.02); }
+          }
+
+          /* Floating animation for breathing circle */
+          .breathing-circle {
+            will-change: transform, opacity, filter;
+          }
         `}</style>
 
         <div className="text-center mb-8">
-          {!running && !showInstructions ? (
+          {!running && !showInstructions && !sessionComplete ? (
             <>
               <h1 className="font-heading text-3xl sm:text-4xl text-foreground/90 font-light mb-2">
                 Choose Your Emotion
@@ -254,12 +590,19 @@ export default function ColorBreathing({
               </h1>
               <p className="text-foreground/70 font-sans text-sm">Review the breathing pattern and prepare for your session</p>
             </>
+          ) : sessionComplete ? (
+            <>
+              <h1 className="font-heading text-3xl sm:text-4xl text-foreground/90 font-light mb-2">
+                Session Complete
+              </h1>
+              <p className="text-foreground/70 font-sans text-sm">You've completed 4 rounds of breathing with {selectedColor.name.toLowerCase()}</p>
+            </>
           ) : (
             <>
               <h1 className="font-heading text-3xl sm:text-4xl text-foreground/90 font-light mb-2">
                 Breathing Session
               </h1>
-              <p className="text-foreground/70 font-sans text-sm">Focus on your breath and let the emotion guide you</p>
+              <p className="text-foreground/70 font-sans text-sm">Round {currentRound} of {TOTAL_ROUNDS} • Focus on your breath and let the emotion guide you</p>
             </>
           )}
         </div>
@@ -267,103 +610,28 @@ export default function ColorBreathing({
         <Card className="p-6 border-0 shadow-soft relative overflow-hidden">
           <div aria-hidden className="absolute inset-0 -z-10" style={{
             background: `radial-gradient(60% 60% at 50% 30%, ${selectedColor.value}15 0%, transparent 70%)`,
-            transition: "background 500ms ease",
+            transition: "background 500ms cubic-bezier(0.4, 0, 0.6, 1)",
           }} />
 
-          {!running && !showInstructions ? (
+          {!running && !showInstructions && !sessionComplete ? (
             <>
-              {/* Color selection */}
+              {/* Color selection with refined icons */}
               <div className="text-center">
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-12">
                   {COLORS.map((c) => (
                     <button
                       key={c.name}
                       onClick={() => setSelectedColor(c)}
-                      className={`p-8 rounded-2xl transition-all duration-300 hover:scale-105 border-2 relative ${
+                      className={`emotion-card p-8 rounded-2xl border-2 relative group ${
                         selectedColor.value === c.value 
-                          ? 'border-primary shadow-lg scale-105' 
+                          ? 'border-primary shadow-lg selected' 
                           : 'border-border hover:border-primary/50'
                       }`}
                       style={{ backgroundColor: c.value }}
                       aria-label={`Choose ${c.name}`}
                     >
-                      <div className="mb-4 flex justify-center items-center transition-all duration-500 relative hover:scale-110 group-hover:animate-float-slow">
-                        {/* Simple whimsical icons */}
-                        {c.name === "Joy" && (
-                          <div className="group-hover:animate-pulse">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                              <circle cx="12" cy="12" r="4" fill="#FFD700" stroke="#FFB347" strokeWidth="2"/>
-                              <path d="M12 2v2M12 20v2M2 12h2M20 12h2M6 6l1 1M17 17l1 1M6 18l1-1M17 7l1-1" stroke="#FFD700" strokeWidth="2" strokeLinecap="round"/>
-                            </svg>
-                          </div>
-                        )}
-                        {c.name === "Sadness" && (
-                          <div className="group-hover:animate-pulse">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                              <path d="M6 10c0-3 2-5 6-5s6 2 6 5-1 3-3 3H9c-2 0-3 0-3-3z" fill="#A7FFEB" stroke="#4ECDC4" strokeWidth="2"/>
-                              <circle cx="10" cy="16" r="1" fill="#4ECDC4"/>
-                              <circle cx="14" cy="18" r="1" fill="#4ECDC4"/>
-                              <circle cx="12" cy="15" r="1" fill="#4ECDC4"/>
-                            </svg>
-                          </div>
-                        )}
-                        {c.name === "Love" && (
-                          <div className="group-hover:animate-pulse">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                              <path d="M12 21c-1-1-4-3-6-6s-1-6 2-6 4 0 4 3c0-3 1-3 4-3s4 3 2 6-5 5-6 6z" fill="#FFB6C1" stroke="#FF69B4" strokeWidth="2"/>
-                            </svg>
-                          </div>
-                        )}
-                        {c.name === "Growth" && (
-                          <div className="group-hover:animate-pulse">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                              <path d="M12 20v-8" stroke="#32CD32" strokeWidth="3" strokeLinecap="round"/>
-                              <path d="M8 8c2-2 4-2 4 2s2-4 4-2" stroke="#32CD32" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                              <circle cx="12" cy="6" r="2" fill="#FFD700"/>
-                            </svg>
-                          </div>
-                        )}
-                        {c.name === "Fear" && (
-                          <div className="group-hover:animate-pulse">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                              <path d="M12 2c4 0 8 4 8 8s-4 8-8 8c-1 0-2 0-3-1 3-1 5-4 5-7s-2-6-5-7c1-1 2-1 3-1z" fill="#E2D8F0" stroke="#D1C4E9" strokeWidth="2"/>
-                            </svg>
-                          </div>
-                        )}
-                        {c.name === "Peace" && (
-                          <div className="group-hover:animate-pulse">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                              <ellipse cx="12" cy="18" rx="6" ry="2" fill="#C8F0E0" stroke="#4ECDC4" strokeWidth="2"/>
-                              <ellipse cx="12" cy="14" rx="4" ry="2" fill="#A7FFEB" stroke="#4ECDC4" strokeWidth="2"/>
-                              <ellipse cx="12" cy="10" rx="3" ry="1.5" fill="#E0F4F1" stroke="#4ECDC4" strokeWidth="2"/>
-                            </svg>
-                          </div>
-                        )}
-                        {c.name === "Hope" && (
-                          <div className="group-hover:animate-pulse">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                              <path d="M12 2l2 6h6l-4 4 2 6-6-4-6 4 2-6-4-4h6l2-6z" fill="#FFD700" stroke="#FFB347" strokeWidth="2"/>
-                            </svg>
-                          </div>
-                        )}
-                        {c.name === "Gentle" && (
-                          <div className="group-hover:animate-pulse">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                              <circle cx="12" cy="8" r="3" fill="#F8C8D8" stroke="#FFB6C1" strokeWidth="2"/>
-                              <path d="M6 8c2-1 4-1 6 0s4 1 6 0" stroke="#F8C8D8" strokeWidth="2" fill="none"/>
-                              <path d="M12 11v5" stroke="#F8C8D8" strokeWidth="2" strokeLinecap="round"/>
-                            </svg>
-                          </div>
-                        )}
-                        {c.name === "Anxiety" && (
-                          <div className="group-hover:animate-pulse">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                              <path d="M4 8l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2" stroke="#FFB347" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                              <path d="M4 12l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2" stroke="#FFB347" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                              <path d="M4 16l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2" stroke="#FFB347" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                            </svg>
-                          </div>
-                        )}
+                      <div className="mb-4 flex justify-center items-center emotion-icon">
+                        <EmotionIcon emotion={c.name} size={48} />
                       </div>
                       
                       <span className="text-sm font-medium text-foreground/90">{c.name}</span>
@@ -376,88 +644,78 @@ export default function ColorBreathing({
                 </Button>
               </div>
             </>
+          ) : sessionComplete ? (
+            <>
+              {/* Clean Session Complete Screen */}
+              <div className="text-center max-w-lg mx-auto">
+                {/* Simple completion celebration */}
+                <div className="mb-10">
+                  <div className="w-16 h-16 mx-auto mb-6 flex items-center justify-center">
+                    <EmotionIcon emotion={selectedColor.name} size={48} className="opacity-80" />
+                  </div>
+                  <h3 className="font-heading text-2xl text-foreground/90 font-light mb-3">
+                    Session Complete
+                  </h3>
+                  <p className="font-sans text-foreground/60 text-sm leading-relaxed">
+                    You've spent a mindful minute with {selectedColor.name.toLowerCase()}. 
+                    Notice how you feel in this moment.
+                  </p>
+                </div>
+
+                {/* Clean insight card */}
+                <div className="mb-10 p-6 rounded-2xl border border-foreground/10" style={{ backgroundColor: `${selectedColor.value}20` }}>
+                  <h4 className="font-heading text-base text-foreground/90 font-medium mb-3">
+                    The essence of {selectedColor.name.toLowerCase()}
+                  </h4>
+                  <p className="font-sans text-foreground/70 text-sm leading-relaxed mb-4">
+                    {COLOR_INFO[selectedColor.name as keyof typeof COLOR_INFO].associations}
+                  </p>
+                  
+                  {/* Simple daily intention */}
+                  <div className="pt-3 border-t border-foreground/10">
+                    <p className="font-sans text-foreground/80 text-sm">
+                      {selectedColor.name === "Joy" && "Carry this warmth forward and share a smile with someone today."}
+                      {selectedColor.name === "Sadness" && "Honor this clarity and check in with someone who might need support."}
+                      {selectedColor.name === "Love" && "Let this tenderness guide your interactions with kindness."}
+                      {selectedColor.name === "Growth" && "Take one small step toward something that matters to you."}
+                      {selectedColor.name === "Fear" && "Remember this courage when facing today's challenges."}
+                      {selectedColor.name === "Peace" && "Return to this tranquility whenever you need grounding."}
+                      {selectedColor.name === "Hope" && "Plant one seed of possibility in your day ahead."}
+                      {selectedColor.name === "Gentle" && "Treat yourself with the same kindness you'd give a dear friend."}
+                      {selectedColor.name === "Anxiety" && "When overwhelmed, take three breaths and feel your feet on the ground."}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Simple action buttons */}
+                <div className="flex flex-col gap-4 items-center">
+                  <Button 
+                    onClick={restartSession}
+                    className="font-sans px-8 py-2 bg-foreground text-white hover:bg-foreground/90"
+                  >
+                    Breathe with {selectedColor.name} Again
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => {
+                      setSessionComplete(false);
+                      setShowInstructions(false);
+                    }}
+                    className="font-sans text-foreground/60 hover:text-foreground/80 text-sm"
+                  >
+                    Explore Another Emotion
+                  </Button>
+                </div>
+              </div>
+            </>
           ) : showInstructions ? (
             <>
-              {/* Instructional page */}
+              {/* Instructional page with refined icon */}
               <div className="text-center max-w-lg mx-auto">
                 {/* Emotion icon preview */}
                 <div className="mb-8">
-                  <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                    {selectedColor.name === "Joy" && (
-                      <div className="text-foreground/80">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                          <circle cx="12" cy="12" r="4" fill="#FFD700" stroke="#FFB347" strokeWidth="2"/>
-                          <path d="M12 2v2M12 20v2M2 12h2M20 12h2M6 6l1 1M17 17l1 1M6 18l1-1M17 7l1-1" stroke="#FFD700" strokeWidth="2" strokeLinecap="round"/>
-                        </svg>
-                      </div>
-                    )}
-                    {selectedColor.name === "Sadness" && (
-                      <div className="text-foreground/80">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                          <path d="M6 10c0-3 2-5 6-5s6 2 6 5-1 3-3 3H9c-2 0-3 0-3-3z" fill="#A7FFEB" stroke="#4ECDC4" strokeWidth="2"/>
-                          <circle cx="10" cy="16" r="1" fill="#4ECDC4"/>
-                          <circle cx="14" cy="18" r="1" fill="#4ECDC4"/>
-                          <circle cx="12" cy="15" r="1" fill="#4ECDC4"/>
-                        </svg>
-                      </div>
-                    )}
-                    {selectedColor.name === "Love" && (
-                      <div className="text-foreground/80">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                          <path d="M12 21c-1-1-4-3-6-6s-1-6 2-6 4 0 4 3c0-3 1-3 4-3s4 3 2 6-5 5-6 6z" fill="#FFB6C1" stroke="#FF69B4" strokeWidth="2"/>
-                        </svg>
-                      </div>
-                    )}
-                    {selectedColor.name === "Growth" && (
-                      <div className="text-foreground/80">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                          <path d="M12 20v-8" stroke="#32CD32" strokeWidth="3" strokeLinecap="round"/>
-                          <path d="M8 8c2-2 4-2 4 2s2-4 4-2" stroke="#32CD32" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                          <circle cx="12" cy="6" r="2" fill="#FFD700"/>
-                        </svg>
-                      </div>
-                    )}
-                    {selectedColor.name === "Fear" && (
-                      <div className="text-foreground/80">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                          <path d="M12 2c4 0 8 4 8 8s-4 8-8 8c-1 0-2 0-3-1 3-1 5-4 5-7s-2-6-5-7c1-1 2-1 3-1z" fill="#E2D8F0" stroke="#D1C4E9" strokeWidth="2"/>
-                        </svg>
-                      </div>
-                    )}
-                    {selectedColor.name === "Peace" && (
-                      <div className="text-foreground/80">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                          <ellipse cx="12" cy="18" rx="6" ry="2" fill="#C8F0E0" stroke="#4ECDC4" strokeWidth="2"/>
-                          <ellipse cx="12" cy="14" rx="4" ry="2" fill="#A7FFEB" stroke="#4ECDC4" strokeWidth="2"/>
-                          <ellipse cx="12" cy="10" rx="3" ry="1.5" fill="#E0F4F1" stroke="#4ECDC4" strokeWidth="2"/>
-                        </svg>
-                      </div>
-                    )}
-                    {selectedColor.name === "Hope" && (
-                      <div className="text-foreground/80">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                          <path d="M12 2l2 6h6l-4 4 2 6-6-4-6 4 2-6-4-4h6l2-6z" fill="#FFD700" stroke="#FFB347" strokeWidth="2"/>
-                        </svg>
-                      </div>
-                    )}
-                    {selectedColor.name === "Gentle" && (
-                      <div className="text-foreground/80">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                          <circle cx="12" cy="8" r="3" fill="#F8C8D8" stroke="#FFB6C1" strokeWidth="2"/>
-                          <path d="M6 8c2-1 4-1 6 0s4 1 6 0" stroke="#F8C8D8" strokeWidth="2" fill="none"/>
-                          <path d="M12 11v5" stroke="#F8C8D8" strokeWidth="2" strokeLinecap="round"/>
-                        </svg>
-                      </div>
-                    )}
-                    {selectedColor.name === "Anxiety" && (
-                      <div className="text-foreground/80">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-                          <path d="M4 8l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2" stroke="#FFB347" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                          <path d="M4 12l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2" stroke="#FFB347" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                          <path d="M4 16l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2" stroke="#FFB347" strokeWidth="2" fill="none" strokeLinecap="round"/>
-                        </svg>
-                      </div>
-                    )}
+                  <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center emotion-icon">
+                    <EmotionIcon emotion={selectedColor.name} size={64} />
                   </div>
                   <h3 className="font-heading text-2xl text-foreground/90 font-light mb-3">
                     {selectedColor.name === "Fear" || selectedColor.name === "Anxiety" 
@@ -465,19 +723,22 @@ export default function ColorBreathing({
                       : `Breathe with ${selectedColor.name}`
                     }
                   </h3>
+                  <p className="text-foreground/60 text-sm mb-4">
+                    This session will take just over a minute to complete
+                  </p>
                 </div>
 
                 {/* Simplified breathing pattern */}
                 <div className="mb-8">
-                  <p className="text-foreground/60 text-sm mb-3 tracking-wide font-medium">Breathing pattern</p>
+                  <p className="text-foreground/60 text-sm mb-3 tracking-wide font-medium">4 rounds • 64 seconds (1 min 4 sec)</p>
                   <div className="flex items-center justify-center gap-4 text-foreground/80 font-medium">
-                    <span className="px-3 py-2 bg-foreground/5 rounded-lg text-sm">Inhale</span>
+                    <span className="px-3 py-2 bg-foreground/5 rounded-lg text-sm">Inhale 4s</span>
                     <span className="text-foreground/40">•</span>
-                    <span className="px-3 py-2 bg-foreground/5 rounded-lg text-sm">Hold</span>
+                    <span className="px-3 py-2 bg-foreground/5 rounded-lg text-sm">Hold 4s</span>
                     <span className="text-foreground/40">•</span>
-                    <span className="px-3 py-2 bg-foreground/5 rounded-lg text-sm">Exhale</span>
+                    <span className="px-3 py-2 bg-foreground/5 rounded-lg text-sm">Exhale 4s</span>
                     <span className="text-foreground/40">•</span>
-                    <span className="px-3 py-2 bg-foreground/5 rounded-lg text-sm">Hold</span>
+                    <span className="px-3 py-2 bg-foreground/5 rounded-lg text-sm">Hold 4s</span>
                   </div>
                 </div>
 
@@ -502,84 +763,110 @@ export default function ColorBreathing({
             </>
           ) : (
             <>
-              {/* Breathing Session - Enhanced Design */}
+              {/* Minimalist Breathing Session */}
               <div className="flex flex-col items-center text-center">
-                {/* Enhanced breathing visualization */}
-                <div className="relative mt-16 mb-16">
-                  {/* Main breathing circle with emotion icon */}
+                {/* Clean breathing visualization */}
+                <div className="relative mt-20 mb-20">
+                  {/* Simplified breathing circle */}
                   <div className="relative">
-                    {/* Animated background rings */}
+                    {/* Single subtle background ring */}
                     <div className="absolute inset-0 -z-10">
                       <div 
-                        className="absolute inset-0 rounded-full opacity-20 transition-all duration-1000 ease-in-out"
+                        className="absolute inset-0 rounded-full opacity-10 transition-all duration-1000 ease-out"
                         style={{ 
-                          background: `radial-gradient(circle, ${selectedColor.value}40 0%, transparent 70%)`,
-                          transform: `scale(${phase.anim === "breatheIn" ? 1.4 : phase.anim === "holdExpanded" ? 1.4 : 1})`
-                        }}
-                      />
-                      <div 
-                        className="absolute inset-8 rounded-full opacity-15 transition-all duration-1000 ease-in-out"
-                        style={{ 
-                          background: `radial-gradient(circle, ${selectedColor.value}30 0%, transparent 70%)`,
-                          transform: `scale(${phase.anim === "breatheIn" ? 1.3 : phase.anim === "holdExpanded" ? 1.3 : 1})`
+                          background: `radial-gradient(circle, ${selectedColor.value}60 0%, transparent 70%)`,
+                          transform: `scale(${phase.anim === "breatheIn" || phase.anim === "holdExpanded" ? 1.3 : 1})`,
+                          filter: "blur(8px)"
                         }}
                       />
                     </div>
-                    {/* Breathing circle */}
+                    
+                    {/* Main breathing circle - cleaner design */}
                     <div 
-                      className="w-48 h-48 md:w-56 md:h-56 rounded-full shadow-soft relative overflow-hidden will-change-transform"
+                      className="breathing-circle w-40 h-40 md:w-48 md:h-48 rounded-full relative overflow-hidden"
                       style={{ 
                         ...animStyle,
-                        background: `radial-gradient(circle at 45% 35%, ${selectedColor.value}DD, ${selectedColor.value} 65%)`,
-                        boxShadow: `0 0 0 2px #ffffff88 inset, 0 20px 60px ${selectedColor.value}44`
+                        background: `radial-gradient(circle at 40% 30%, ${selectedColor.value}E6, ${selectedColor.value}CC 70%)`,
+                        boxShadow: `0 4px 20px ${selectedColor.value}30, 0 0 0 1px ${selectedColor.value}40`,
                       }}
                     >
-                      {/* Subtle inner glow */}
-                      <div 
-                        className="absolute inset-8 rounded-full opacity-20"
-                        style={{ 
-                          background: `radial-gradient(circle, ${selectedColor.value}80 0%, transparent 70%)`,
-                          filter: 'blur(12px)'
-                        }}
-                      />
                     </div>
                   </div>
                 </div>
 
-                {/* Fixed breathing instructions and counter */}
-                <div className="text-center mb-6 relative z-20 flex flex-col items-center">
-                  {/* Phase label */}
-                  <h2 className="text-lg md:text-xl font-heading text-foreground/90 font-light mb-3 tracking-wide">
+                {/* Minimal progress and instructions */}
+                <div className="text-center mb-8 space-y-6">
+                  {/* Simple round indicator */}
+                  <div className="flex items-center justify-center gap-1.5">
+                    {Array.from({ length: TOTAL_ROUNDS }, (_, i) => (
+                      <div
+                        key={i}
+                        className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                          i < currentRound - 1 
+                            ? 'bg-foreground/60' 
+                            : i === currentRound - 1 
+                              ? 'bg-foreground/80' 
+                              : 'bg-foreground/20'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  
+                  {/* Clean phase label */}
+                  <h2 className="font-heading text-lg font-light text-foreground/80 tracking-wide">
                     {phase.label}
                   </h2>
                   
                   {/* Large countdown timer */}
-                  <div className="text-3xl md:text-4xl font-mono text-foreground/80 font-light tracking-widest mb-2 text-center">
+                  <div 
+                    className="font-mono text-4xl md:text-5xl font-light text-foreground/70 tracking-wider"
+                    style={{
+                      fontFeatureSettings: '"tnum"', // Tabular numbers for consistent width
+                    }}
+                  >
                     {secondsLeft}
                   </div>
-                </div>
 
-                {/* Phase description below circle */}
-                <div className="text-center mb-10">
-                  <p className="text-foreground/70 text-base font-medium leading-relaxed tracking-wide">
-                    {phase.key === "inhale" && "Fill your lungs with gentle awareness"}
-                    {phase.key === "hold1" && "Rest in this moment of fullness"}
-                    {phase.key === "exhale" && "Release with ease and grace"}
-                    {phase.key === "hold2" && "Rest in this moment of emptiness"}
+                  {/* Whimsical place-based descriptions */}
+                  <p className="font-sans text-foreground/60 text-sm mt-4 max-w-xs mx-auto leading-relaxed">
+                    {phase.key === "inhale" && selectedColor.name === "Joy" && "Imagine golden sunlight streaming through your window"}
+                    {phase.key === "inhale" && selectedColor.name === "Sadness" && "Picture gentle rain falling on a quiet pond"}
+                    {phase.key === "inhale" && selectedColor.name === "Love" && "Envision warm rose petals floating in still water"}
+                    {phase.key === "inhale" && selectedColor.name === "Growth" && "See tender green shoots reaching toward morning light"}
+                    {phase.key === "inhale" && selectedColor.name === "Fear" && "Imagine soft lavender mist settling over a peaceful meadow"}
+                    {phase.key === "inhale" && selectedColor.name === "Peace" && "Picture calm mint-green waves lapping a quiet shore"}
+                    {phase.key === "inhale" && selectedColor.name === "Hope" && "Envision the first star appearing in a twilight sky"}
+                    {phase.key === "inhale" && selectedColor.name === "Gentle" && "See soft pink clouds drifting across an endless sky"}
+                    {phase.key === "inhale" && selectedColor.name === "Anxiety" && "Imagine warm sand beneath your feet on a quiet beach"}
+
+                    {phase.key === "hold1" && "Rest here in this peaceful place"}
+                    
+                    {phase.key === "exhale" && selectedColor.name === "Joy" && "Let the warmth spread through every part of you"}
+                    {phase.key === "exhale" && selectedColor.name === "Sadness" && "Feel the gentle cleansing wash through you"}
+                    {phase.key === "exhale" && selectedColor.name === "Love" && "Allow the tenderness to fill your heart"}
+                    {phase.key === "exhale" && selectedColor.name === "Growth" && "Sense yourself growing stronger and more rooted"}
+                    {phase.key === "exhale" && selectedColor.name === "Fear" && "Watch your worries dissolve into the mist"}
+                    {phase.key === "exhale" && selectedColor.name === "Peace" && "Let the tranquility flow through every cell"}
+                    {phase.key === "exhale" && selectedColor.name === "Hope" && "Feel new possibilities awakening within you"}
+                    {phase.key === "exhale" && selectedColor.name === "Gentle" && "Soften into this moment of pure kindness"}
+                    {phase.key === "exhale" && selectedColor.name === "Anxiety" && "Release your tension into the welcoming earth"}
+
+                    {phase.key === "hold2" && "Enjoy this moment of perfect stillness"}
                   </p>
                 </div>
 
-                {/* Simple controls */}
-                <div className="flex flex-col sm:flex-row items-center gap-4">
+                {/* Single CTA button */}
+                <div className="flex justify-center">
                   <Button
                     variant="ghost"
                     onClick={() => {
                       setRunning(false);
+                      setSessionComplete(false);
                       setShowInstructions(false);
                     }}
-                    className="text-foreground/60 hover:text-foreground/80 hover:bg-foreground/5 px-6 py-2"
-                    >
-                    Choose Different Emotion
+                    className="font-sans text-foreground/50 hover:text-foreground/70 text-sm"
+                  >
+                    Change Emotion
                   </Button>
                 </div>
               </div>

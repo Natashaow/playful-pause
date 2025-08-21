@@ -55,34 +55,40 @@ export const JoyIcon: React.FC<IconProps> = (props) => {
     <SvgWrapper {...props}>
       <WhimsyDefs id={id} />
       
-      {/* Magical sun with floating rays */}
+      {/* Sunflower with petals and center */}
       <g className="magicalFloat" stroke="currentColor" fill="none">
-        <circle cx="24" cy="24" r="12" strokeWidth="2" />
-        {/* Floating rays with staggered animation */}
-        {Array.from({ length: 8 }).map((_, i) => {
-          const a = (i * Math.PI) / 4;
-          const x1 = 24 + Math.cos(a) * 12;
-          const y1 = 24 + Math.sin(a) * 12;
-          const x2 = 24 + Math.cos(a) * 18;
-          const y2 = 24 + Math.sin(a) * 18;
+        {/* Sunflower petals */}
+        {Array.from({ length: 12 }).map((_, i) => {
+          const a = (i * Math.PI) / 6;
+          const x1 = 24 + Math.cos(a) * 8;
+          const y1 = 24 + Math.sin(a) * 8;
+          const x2 = 24 + Math.cos(a) * 16;
+          const y2 = 24 + Math.sin(a) * 16;
           return (
-            <line 
+            <ellipse 
               key={i} 
-              x1={x1} y1={y1} x2={x2} y2={y2} 
-              strokeWidth="2" 
+              cx={24 + Math.cos(a) * 12} 
+              cy={24 + Math.sin(a) * 12} 
+              rx="4" 
+              ry="2"
+              transform={`rotate(${i * 30} ${24 + Math.cos(a) * 12} ${24 + Math.sin(a) * 12})`}
+              fill="currentColor"
+              opacity="0.8"
               className="floatSlow"
-              style={{ animationDelay: `${i * 0.2}s` }}
+              style={{ animationDelay: `${i * 0.1}s` }}
             />
           );
         })}
       </g>
 
-      {/* Inner sun glow */}
-      <g stroke="currentColor" fill="currentColor" opacity={0.2} filter={`url(#${id}-glow)`}>
-        <circle cx="24" cy="24" r="8" className="motion-safe gentleBreathe" />
+      {/* Sunflower center */}
+      <g fill="currentColor">
+        <circle cx="24" cy="24" r="8" opacity="0.9" />
+        <circle cx="24" cy="24" r="6" opacity="0.7" />
+        <circle cx="24" cy="24" r="4" opacity="0.5" />
       </g>
 
-      {/* Magical sparkles */}
+      {/* Magical sparkles around sunflower */}
       <g fill="currentColor" opacity={0.9}>
         <circle className="sparkle" style={{ animationDelay: "0.3s" }} cx="10" cy="14" r="1.2" />
         <circle className="sparkle" style={{ animationDelay: "1.2s" }} cx="38" cy="20" r="1" />
@@ -183,52 +189,66 @@ export const GrowthIcon: React.FC<IconProps> = (props) => {
     <SvgWrapper {...props}>
       <WhimsyDefs id={id} />
       
-      {/* Growing stem with gentle sway */}
+      {/* Tree trunk with gentle sway */}
       <g className="gentleRotate" stroke="currentColor" fill="none">
-        <line
-          x1="24"
-          y1="40"
-          x2="24"
-          y2="20"
-          strokeWidth="3"
-          strokeLinecap="round"
+        {/* Main trunk */}
+        <rect
+          x="22"
+          y="32"
+          width="4"
+          height="16"
+          rx="2"
+          strokeWidth="2"
         />
         
-        {/* Left leaf with gentle movement */}
+        {/* Branches */}
         <path
-          d="M24 20c-8-4-12-2-12 4s4 8 12 4"
+          d="M24 28c-6-2-8-1-8 3s2 5 8 3"
           strokeWidth="2"
           className="floatSlow"
           style={{ animationDelay: "0.3s" }}
         />
-        
-        {/* Right leaf with gentle movement */}
         <path
-          d="M24 20c8-4 12-2 12 4s-4 8-12 4"
+          d="M24 28c6-2 8-1 8 3s-2 5-8 3"
           strokeWidth="2"
           className="floatSlow"
           style={{ animationDelay: "0.7s" }}
         />
+        <path
+          d="M24 24c-4-1-6-0.5-6 2s2 3 6 2"
+          strokeWidth="1.5"
+          className="floatSlow"
+          style={{ animationDelay: "0.5s" }}
+        />
+        <path
+          d="M24 24c4-1 6-0.5 6 2s-2 3-6 2"
+          strokeWidth="1.5"
+          className="floatSlow"
+          style={{ animationDelay: "0.9s" }}
+        />
       </g>
 
-      {/* Growing energy orbs at leaf tips */}
-      <g stroke="currentColor" fill="currentColor" opacity={0.2} filter={`url(#${id}-halo)`}>
-        <circle cx="12" cy="24" r="3" className="motion-safe softGlow" />
-        <circle cx="36" cy="24" r="3" className="motion-safe softGlow" style={{ animationDelay: "1.3s" }} />
+      {/* Tree foliage clusters */}
+      <g fill="currentColor" opacity="0.6">
+        <circle cx="16" cy="22" r="4" className="motion-safe softGlow" />
+        <circle cx="32" cy="22" r="4" className="motion-safe softGlow" style={{ animationDelay: "0.4s" }} />
+        <circle cx="20" cy="18" r="3" className="motion-safe softGlow" style={{ animationDelay: "0.8s" }} />
+        <circle cx="28" cy="18" r="3" className="motion-safe softGlow" style={{ animationDelay: "1.2s" }} />
+        <circle cx="24" cy="16" r="3.5" className="motion-safe softGlow" style={{ animationDelay: "0.6s" }} />
       </g>
 
-      {/* Floating growth particles */}
-      <g fill="currentColor" opacity={0.7}>
-        <circle className="floatSlow" style={{ animationDelay: "0.2s" }} cx="20" cy="12" r="0.8" />
-        <circle className="floatSlow" style={{ animationDelay: "0.8s" }} cx="28" cy="14" r="0.6" />
-        <circle className="floatSlow" style={{ animationDelay: "1.4s" }} cx="18" cy="18" r="0.7" />
+      {/* Growing buds */}
+      <g fill="currentColor" opacity="0.8">
+        <circle className="floatSlow" style={{ animationDelay: "0.2s" }} cx="18" cy="26" r="1.5" />
+        <circle className="floatSlow" style={{ animationDelay: "0.8s" }} cx="30" cy="26" r="1.5" />
+        <circle className="floatSlow" style={{ animationDelay: "1.4s" }} cx="24" cy="20" r="1.2" />
       </g>
       
       {/* Growth sparkles */}
       <g fill="currentColor" opacity={0.9}>
-        <circle className="sparkle" style={{ animationDelay: "0.5s" }} cx="18" cy="16" r="1" />
-        <circle className="sparkle" style={{ animationDelay: "1.1s" }} cx="30" cy="22" r="0.8" />
-        <circle className="sparkle" style={{ animationDelay: "1.7s" }} cx="14" cy="32" r="0.6" />
+        <circle className="sparkle" style={{ animationDelay: "0.5s" }} cx="14" cy="16" r="1" />
+        <circle className="sparkle" style={{ animationDelay: "1.1s" }} cx="34" cy="20" r="0.8" />
+        <circle className="sparkle" style={{ animationDelay: "1.7s" }} cx="22" cy="14" r="0.6" />
       </g>
     </SvgWrapper>
   );
@@ -278,20 +298,45 @@ export const PeaceIcon: React.FC<IconProps> = (props) => {
     <SvgWrapper {...props}>
       <WhimsyDefs id={id} />
       
-      {/* Peace symbol with gentle movement */}
+      {/* Peace dove with gentle movement */}
       <g className="magicalFloat" stroke="currentColor" fill="none">
-        {/* Outer circle */}
-        <circle cx="24" cy="24" r="16" strokeWidth="2" />
+        {/* Dove body */}
+        <ellipse cx="24" cy="28" rx="8" ry="6" strokeWidth="2" fill="currentColor" opacity="0.1" />
         
-        {/* Vertical line */}
-        <line x1="24" y1="8" x2="24" y2="40" strokeWidth="3" strokeLinecap="round" />
+        {/* Dove head */}
+        <circle cx="24" cy="20" r="4" strokeWidth="2" fill="currentColor" opacity="0.1" />
         
-        {/* Horizontal line */}
-        <line x1="8" y1="24" x2="40" y2="24" strokeWidth="3" strokeLinecap="round" />
+        {/* Dove wings with gentle flapping */}
+        <g className="floatSlow" style={{ animationDelay: "0.2s" }}>
+          {/* Left wing */}
+          <path 
+            d="M16 24 Q12 20 10 24 Q12 28 16 24" 
+            strokeWidth="2" 
+            fill="currentColor" 
+            opacity="0.15"
+          />
+          {/* Right wing */}
+          <path 
+            d="M32 24 Q36 20 38 24 Q36 28 32 24" 
+            strokeWidth="2" 
+            fill="currentColor" 
+            opacity="0.15"
+          />
+        </g>
         
-        {/* Diagonal lines */}
-        <line x1="16" y1="16" x2="32" y2="32" strokeWidth="2" strokeLinecap="round" />
-        <line x1="32" y1="16" x2="16" y2="32" strokeWidth="2" strokeLinecap="round" />
+        {/* Dove tail */}
+        <path 
+          d="M20 32 Q24 36 28 32" 
+          strokeWidth="2" 
+          fill="none"
+        />
+        
+        {/* Dove beak */}
+        <path 
+          d="M24 20 L26 18 L24 16" 
+          strokeWidth="1.5" 
+          fill="none"
+        />
       </g>
 
       {/* Inner peace glow */}
@@ -299,7 +344,7 @@ export const PeaceIcon: React.FC<IconProps> = (props) => {
         <circle cx="24" cy="24" r="6" className="motion-safe softGlow" />
       </g>
 
-      {/* Floating peace doves */}
+      {/* Floating peace sparkles */}
       <g fill="currentColor" opacity={0.6}>
         <circle className="floatSlow" style={{ animationDelay: "0.4s" }} cx="12" cy="12" r="1" />
         <circle className="floatSlow" style={{ animationDelay: "1.0s" }} cx="36" cy="12" r="1" />
@@ -322,26 +367,80 @@ export const HopeIcon: React.FC<IconProps> = (props) => {
     <SvgWrapper {...props}>
       <WhimsyDefs id={id} />
       
-      {/* Rising sun with gentle rays */}
+      {/* Sunflower stem and leaves */}
       <g className="gentleBreathe" stroke="currentColor" fill="none">
-        {/* Horizon line */}
-        <line x1="8" y1="32" x2="40" y2="32" strokeWidth="2" strokeLinecap="round" />
+        {/* Stem */}
+        <line x1="24" y1="40" x2="24" y2="28" strokeWidth="2" strokeLinecap="round" />
         
-        {/* Sun rays with staggered animation */}
-        <line x1="24" y1="20" x2="24" y2="16" strokeWidth="1.5" className="floatSlow" style={{ animationDelay: "0.2s" }} />
-        <line x1="24" y1="48" x2="24" y2="44" strokeWidth="1.5" className="floatSlow" style={{ animationDelay: "0.6s" }} />
-        <line x1="16" y1="24" x2="12" y2="24" strokeWidth="1.5" className="floatSlow" style={{ animationDelay: "1.0s" }} />
-        <line x1="36" y1="24" x2="40" y2="24" strokeWidth="1.5" className="floatSlow" style={{ animationDelay: "1.4s" }} />
+        {/* Leaves */}
+        <path
+          d="M24 32c-6-2-8-1-8 2s2 4 8 2"
+          strokeWidth="1.5"
+          className="floatSlow"
+          style={{ animationDelay: "0.2s" }}
+        />
+        <path
+          d="M24 32c6-2 8-1 8 2s-2 4-8 2"
+          strokeWidth="1.5"
+          className="floatSlow"
+          style={{ animationDelay: "0.6s" }}
+        />
       </g>
 
-      {/* Rising sun with inner glow */}
+      {/* Sunflower center */}
       <g fill="currentColor">
-        <circle cx="24" cy="32" r="8" className="motion-safe gentleBreathe" />
+        <circle cx="24" cy="24" r="6" className="motion-safe gentleBreathe" />
       </g>
 
-      {/* Sun halo effect */}
+      {/* Sunflower petals - outer layer */}
+      <g fill="currentColor" opacity="0.8">
+        {Array.from({ length: 12 }).map((_, i) => {
+          const a = (i * Math.PI) / 6;
+          const x = 24 + Math.cos(a) * 12;
+          const y = 24 + Math.sin(a) * 12;
+          const width = 3;
+          const height = 8;
+          return (
+            <ellipse
+              key={i}
+              cx={x}
+              cy={y}
+              rx={width}
+              ry={height}
+              transform={`rotate(${i * 30} ${x} ${y})`}
+              className="floatSlow"
+              style={{ animationDelay: `${i * 0.1}s` }}
+            />
+          );
+        })}
+      </g>
+
+      {/* Sunflower petals - inner layer */}
+      <g fill="currentColor" opacity="0.6">
+        {Array.from({ length: 8 }).map((_, i) => {
+          const a = (i * Math.PI) / 4;
+          const x = 24 + Math.cos(a) * 8;
+          const y = 24 + Math.sin(a) * 8;
+          const width = 2.5;
+          const height = 6;
+          return (
+            <ellipse
+              key={i}
+              cx={x}
+              cy={y}
+              rx={width}
+              ry={height}
+              transform={`rotate(${i * 45} ${x} ${y})`}
+              className="floatSlow"
+              style={{ animationDelay: `${i * 0.15}s` }}
+            />
+          );
+        })}
+      </g>
+
+      {/* Sunflower halo effect */}
       <g stroke="currentColor" fill="currentColor" opacity={0.15} filter={`url(#${id}-halo)`}>
-        <circle cx="24" cy="32" r="12" className="motion-safe softGlow" />
+        <circle cx="24" cy="24" r="18" className="motion-safe softGlow" />
       </g>
       
       {/* Floating hope particles */}
@@ -367,44 +466,62 @@ export const GentleIcon: React.FC<IconProps> = (props) => {
     <SvgWrapper {...props}>
       <WhimsyDefs id={id} />
       
-      {/* Soft feather with gentle movement */}
+      {/* Dove body and head with gentle movement */}
       <g className="gentleRotate" stroke="currentColor" fill="none">
-        {/* Main feather shape */}
+        {/* Dove body */}
+        <ellipse cx="24" cy="28" rx="8" ry="6" strokeWidth="2" />
+        
+        {/* Dove head */}
+        <circle cx="24" cy="20" r="4" strokeWidth="2" />
+        
+        {/* Beak */}
         <path
-          d="M16 16c0 0 8-8 16-8s16 8 16 8-8 8-16 8-16-8-16-8z"
-          strokeWidth="2"
+          d="M28 20l2 1l-1 1z"
+          strokeWidth="1.5"
+          fill="currentColor"
         />
         
-        {/* Feather details with soft movement */}
+        {/* Wings */}
         <path
-          d="M24 8c0 0 4 4 8 4s8-4 8-4"
+          d="M16 26c0 0-4-2-4-4s2-2 4-1"
           strokeWidth="1.5"
-          opacity="0.7"
           className="floatSlow"
-          style={{ animationDelay: "0.4s" }}
+          style={{ animationDelay: "0.3s" }}
+        />
+        <path
+          d="M32 26c0 0 4-2 4-4s-2-2-4-1"
+          strokeWidth="1.5"
+          className="floatSlow"
+          style={{ animationDelay: "0.7s" }}
+        />
+        
+        {/* Tail */}
+        <path
+          d="M16 32c0 0 2-2 4-2s4 2 4 2"
+          strokeWidth="1.5"
+          className="floatSlow"
+          style={{ animationDelay: "0.5s" }}
         />
       </g>
 
-      {/* Soft inner glow with breathing */}
-      <g stroke="currentColor" fill="currentColor" opacity={0.12} filter={`url(#${id}-glow)`}>
-        <path
-          d="M16 16c0 0 8-8 16-8s16 8 16 8-8 8-16 8-16-8-16-8z"
-          className="motion-safe gentleBreathe"
-        />
+      {/* Dove inner glow with breathing */}
+      <g stroke="currentColor" fill="currentColor" opacity="0.12" filter={`url(#${id}-glow)`}>
+        <ellipse cx="24" cy="28" rx="6" ry="4" className="motion-safe gentleBreathe" />
+        <circle cx="24" cy="20" r="2.5" className="motion-safe gentleBreathe" />
       </g>
 
       {/* Floating gentle particles */}
-      <g fill="currentColor" opacity={0.6}>
-        <circle className="floatSlow" style={{ animationDelay: "0.2s" }} cx="22" cy="12" r="0.8" />
-        <circle className="floatSlow" style={{ animationDelay: "0.8s" }} cx="26" cy="14" r="0.6" />
-        <circle className="floatSlow" style={{ animationDelay: "1.4s" }} cx="20" cy="18" r="0.7" />
+      <g fill="currentColor" opacity="0.6">
+        <circle className="floatSlow" style={{ animationDelay: "0.2s" }} cx="18" cy="16" r="0.8" />
+        <circle className="floatSlow" style={{ animationDelay: "0.8s" }} cx="30" cy="16" r="0.6" />
+        <circle className="floatSlow" style={{ animationDelay: "1.4s" }} cx="20" cy="36" r="0.7" />
       </g>
       
       {/* Gentle sparkles */}
-      <g fill="currentColor" opacity={0.8}>
-        <circle className="sparkle" style={{ animationDelay: "0.6s" }} cx="20" cy="12" r="1" />
-        <circle className="sparkle" style={{ animationDelay: "1.2s" }} cx="28" cy="20" r="0.8" />
-        <circle className="sparkle" style={{ animationDelay: "0.9s" }} cx="18" cy="34" r="0.6" />
+      <g fill="currentColor" opacity="0.8">
+        <circle className="sparkle" style={{ animationDelay: "0.6s" }} cx="16" cy="14" r="1" />
+        <circle className="sparkle" style={{ animationDelay: "1.2s" }} cx="32" cy="24" r="0.8" />
+        <circle className="sparkle" style={{ animationDelay: "0.9s" }} cx="22" cy="38" r="0.6" />
       </g>
     </SvgWrapper>
   );
